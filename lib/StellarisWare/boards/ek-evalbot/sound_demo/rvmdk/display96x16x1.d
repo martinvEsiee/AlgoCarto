@@ -1,0 +1,13 @@
+.\rvmdk\display96x16x1.o: ..\drivers\display96x16x1.c
+.\rvmdk\display96x16x1.o: C:\Keil\ARM\RV31\Inc\string.h
+.\rvmdk\display96x16x1.o: ..\..\..\inc/hw_i2c.h
+.\rvmdk\display96x16x1.o: ..\..\..\inc/hw_memmap.h
+.\rvmdk\display96x16x1.o: ..\..\..\inc/hw_sysctl.h
+.\rvmdk\display96x16x1.o: ..\..\..\inc/hw_types.h
+.\rvmdk\display96x16x1.o: ..\..\..\driverlib/debug.h
+.\rvmdk\display96x16x1.o: ..\..\..\driverlib/gpio.h
+.\rvmdk\display96x16x1.o: ..\..\..\driverlib/pin_map.h
+.\rvmdk\display96x16x1.o: ..\..\..\driverlib/i2c.h
+.\rvmdk\display96x16x1.o: ..\..\..\driverlib/sysctl.h
+.\rvmdk\display96x16x1.o: ..\..\..\driverlib/rom.h
+.\rvmdk\display96x16x1.o: ..\drivers/display96x16x1.h

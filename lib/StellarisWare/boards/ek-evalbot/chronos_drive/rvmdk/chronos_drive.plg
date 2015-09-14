@@ -1,0 +1,49 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\StellarisWare\boards\ek-evalbot\chronos_drive\chronos_drive.uvproj
+Project File Date:  01/03/2013
+
+<h2>Output:</h2>
+Load "C:\\StellarisWare\\boards\\ek-evalbot\\chronos_drive\\rvmdk\\chronos_drive.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Load "C:\\StellarisWare\\boards\\ek-evalbot\\chronos_drive\\rvmdk\\chronos_drive.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Connection failed!, error code=&d
+Rebuild target 'chronos_drive'
+compiling chronos_drive.c...
+chronos_drive.c(798): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(799): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(868): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(869): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(927): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(928): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(1068): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(1069): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(1758): warning:  #223-D: function "urand" declared implicitly
+chronos_drive.c(1833): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(1840): warning:  #188-D: enumerated type mixed with another type
+chronos_drive.c(1847): warning:  #223-D: function "urand" declared implicitly
+chronos_drive.c(1856): warning:  #223-D: function "urand" declared implicitly
+compiling dac.c...
+compiling display96x16x1.c...
+compiling io.c...
+compiling motor.c...
+compiling scheduler.c...
+compiling sensors.c...
+compiling simplicitilib.c...
+compiling sound.c...
+compiling sounds.c...
+assembling startup_rvmdk.S...
+compiling uartstdio.c...
+compiling ustdlib.c...
+compiling wav.c...
+linking...
+Program Size: Code=18480 RO-data=43188 RW-data=392 ZI-data=7216  
+User command #1: fromelf --bin --output .\rvmdk\chronos_drive.bin .\rvmdk\chronos_drive.axf
+".\rvmdk\chronos_drive.axf" - 0 Error(s), 13 Warning(s).

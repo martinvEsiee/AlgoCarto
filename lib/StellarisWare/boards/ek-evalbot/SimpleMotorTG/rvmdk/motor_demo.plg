@@ -1,0 +1,51 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\StellarisWare\boards\ek-evalbot\SimpleMotorTG\motor_demo.uvproj
+Project File Date:  09/26/2012
+
+<h2>Output:</h2>
+Rebuild target 'motor_demo'
+compiling io.c...
+compiling motor.c...
+compiling motor_demo.c...
+motor_demo.c(37): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(38): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(41): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(42): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(24): warning:  #177-D: variable "a" was declared but never referenced
+motor_demo.c(25): warning:  #177-D: variable "b" was declared but never referenced
+motor_demo.c(25): warning:  #177-D: variable "c" was declared but never referenced
+assembling startup_rvmdk.S...
+linking...
+Program Size: Code=1064 RO-data=136 RW-data=0 ZI-data=1024  
+User command #1: fromelf --bin --output .\rvmdk\motor_demo.bin .\rvmdk\motor_demo.axf
+".\rvmdk\motor_demo.axf" - 0 Error(s), 7 Warning(s).
+Load "C:\\StellarisWare\\boards\\ek-evalbot\\SimpleMotorTG\\rvmdk\\motor_demo.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Rebuild target 'motor_demo'
+compiling io.c...
+compiling motor.c...
+compiling motor_demo.c...
+motor_demo.c(37): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(38): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(41): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(42): warning:  #188-D: enumerated type mixed with another type
+motor_demo.c(24): warning:  #177-D: variable "a" was declared but never referenced
+motor_demo.c(25): warning:  #177-D: variable "b" was declared but never referenced
+motor_demo.c(25): warning:  #177-D: variable "c" was declared but never referenced
+assembling startup_rvmdk.S...
+linking...
+Program Size: Code=1080 RO-data=136 RW-data=0 ZI-data=1024  
+User command #1: fromelf --bin --output .\rvmdk\motor_demo.bin .\rvmdk\motor_demo.axf
+".\rvmdk\motor_demo.axf" - 0 Error(s), 7 Warning(s).
+Load "C:\\StellarisWare\\boards\\ek-evalbot\\SimpleMotorTG\\rvmdk\\motor_demo.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.

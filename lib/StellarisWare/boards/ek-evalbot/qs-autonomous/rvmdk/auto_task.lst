@@ -1,0 +1,1402 @@
+L 1 "auto_task.c"
+N//****************************************************************************
+N//
+N// auto_task.c - Autonomous task for EVALBOT
+N//
+N// Copyright (c) 2011-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//****************************************************************************
+N
+N#include "inc/hw_types.h"
+L 1 "..\..\..\inc/hw_types.h" 1
+N//*****************************************************************************
+N//
+N// hw_types.h - Common types and macros.
+N//
+N// Copyright (c) 2005-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __HW_TYPES_H__
+N#define __HW_TYPES_H__
+N
+N//*****************************************************************************
+N//
+N// Define a boolean type, and values for true and false.
+N//
+N//*****************************************************************************
+Ntypedef unsigned char tBoolean;
+N
+N#ifndef true
+N#define true 1
+N#endif
+N
+N#ifndef false
+N#define false 0
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Macros for hardware access, both direct and via the bit-band region.
+N//
+N//*****************************************************************************
+N#define HWREG(x)                                                              \
+N        (*((volatile unsigned long *)(x)))
+X#define HWREG(x)                                                                      (*((volatile unsigned long *)(x)))
+N#define HWREGH(x)                                                             \
+N        (*((volatile unsigned short *)(x)))
+X#define HWREGH(x)                                                                     (*((volatile unsigned short *)(x)))
+N#define HWREGB(x)                                                             \
+N        (*((volatile unsigned char *)(x)))
+X#define HWREGB(x)                                                                     (*((volatile unsigned char *)(x)))
+N#define HWREGBITW(x, b)                                                       \
+N        HWREG(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                \
+N              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITW(x, b)                                                               HWREG(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N#define HWREGBITH(x, b)                                                       \
+N        HWREGH(((unsigned long)(x) & 0xF0000000) | 0x02000000 |               \
+N               (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITH(x, b)                                                               HWREGH(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N#define HWREGBITB(x, b)                                                       \
+N        HWREGB(((unsigned long)(x) & 0xF0000000) | 0x02000000 |               \
+N               (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITB(x, b)                                                               HWREGB(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N
+N//*****************************************************************************
+N//
+N// Helper Macros for determining silicon revisions, etc.
+N//
+N// These macros will be used by Driverlib at "run-time" to create necessary
+N// conditional code blocks that will allow a single version of the Driverlib
+N// "binary" code to support multiple(all) Stellaris silicon revisions.
+N//
+N// It is expected that these macros will be used inside of a standard 'C'
+N// conditional block of code, e.g.
+N//
+N//     if(CLASS_IS_SANDSTORM)
+N//     {
+N//         do some Sandstorm-class specific code here.
+N//     }
+N//
+N// By default, these macros will be defined as run-time checks of the
+N// appropriate register(s) to allow creation of run-time conditional code
+N// blocks for a common DriverLib across the entire Stellaris family.
+N//
+N// However, if code-space optimization is required, these macros can be "hard-
+N// coded" for a specific version of Stellaris silicon.  Many compilers will
+N// then detect the "hard-coded" conditionals, and appropriately optimize the
+N// code blocks, eliminating any "unreachable" code.  This would result in
+N// a smaller Driverlib, thus producing a smaller final application size, but
+N// at the cost of limiting the Driverlib binary to a specific Stellaris
+N// silicon revision.
+N//
+N//*****************************************************************************
+N#ifndef CLASS_IS_SANDSTORM
+N#define CLASS_IS_SANDSTORM                                                    \
+N        (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_M) == SYSCTL_DID0_VER_0) ||   \
+N         ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SANDSTORM)))
+X#define CLASS_IS_SANDSTORM                                                            (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_M) == SYSCTL_DID0_VER_0) ||            ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==           (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SANDSTORM)))
+N#endif
+N
+N#ifndef CLASS_IS_FURY
+N#define CLASS_IS_FURY                                                        \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FURY))
+X#define CLASS_IS_FURY                                                                ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FURY))
+N#endif
+N
+N#ifndef CLASS_IS_DUSTDEVIL
+N#define CLASS_IS_DUSTDEVIL                                                   \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_DUSTDEVIL))
+X#define CLASS_IS_DUSTDEVIL                                                           ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_DUSTDEVIL))
+N#endif
+N
+N#ifndef CLASS_IS_TEMPEST
+N#define CLASS_IS_TEMPEST                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TEMPEST))
+X#define CLASS_IS_TEMPEST                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TEMPEST))
+N#endif
+N
+N#ifndef CLASS_IS_FIRESTORM
+N#define CLASS_IS_FIRESTORM                                                   \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FIRESTORM))
+X#define CLASS_IS_FIRESTORM                                                           ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FIRESTORM))
+N#endif
+N
+N#ifndef CLASS_IS_BLIZZARD
+N#define CLASS_IS_BLIZZARD                                                    \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_BLIZZARD))
+X#define CLASS_IS_BLIZZARD                                                            ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_BLIZZARD))
+N#endif
+N
+N#ifndef REVISION_IS_A0
+N#define REVISION_IS_A0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_A0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_A1
+N#define REVISION_IS_A1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_A1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_A2
+N#define REVISION_IS_A2                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_2))
+X#define REVISION_IS_A2                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_2))
+N#endif
+N
+N#ifndef REVISION_IS_B0
+N#define REVISION_IS_B0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_B0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_B1
+N#define REVISION_IS_B1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_1))
+X#define REVISION_IS_B1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_1))
+N#endif
+N
+N#ifndef REVISION_IS_C0
+N#define REVISION_IS_C0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_C0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_C1
+N#define REVISION_IS_C1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_1))
+X#define REVISION_IS_C1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_1))
+N#endif
+N
+N#ifndef REVISION_IS_C2
+N#define REVISION_IS_C2                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_2))
+X#define REVISION_IS_C2                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_2))
+N#endif
+N
+N#ifndef REVISION_IS_C3
+N#define REVISION_IS_C3                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_3))
+X#define REVISION_IS_C3                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_3))
+N#endif
+N
+N#ifndef REVISION_IS_C5
+N#define REVISION_IS_C5                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_5))
+X#define REVISION_IS_C5                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_5))
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Deprecated silicon class and revision detection macros.
+N//
+N//*****************************************************************************
+N#ifndef DEPRECATED
+N#define DEVICE_IS_SANDSTORM     CLASS_IS_SANDSTORM
+N#define DEVICE_IS_FURY          CLASS_IS_FURY
+N#define DEVICE_IS_REVA2         REVISION_IS_A2
+N#define DEVICE_IS_REVC1         REVISION_IS_C1
+N#define DEVICE_IS_REVC2         REVISION_IS_C2
+N#endif
+N
+N#endif // __HW_TYPES_H__
+L 26 "auto_task.c" 2
+N#include "utils/scheduler.h"
+L 1 "..\..\..\utils/scheduler.h" 1
+N//****************************************************************************
+N//
+N// scheduler.h - Public header for the simple timed function scheduler module.
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//****************************************************************************
+N#ifndef __SCHEDULER_H__
+N#define __SCHEDULER_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup scheduler_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototype of a function that the scheduler can call periodically.
+N//
+N//*****************************************************************************
+Ntypedef void (*tSchedulerFunction)(void *pvParam);
+N
+N//*****************************************************************************
+N//
+N//! The structure defining a function which the scheduler will call
+N//! periodically.
+N//
+N//*****************************************************************************
+Ntypedef struct
+N{
+N    //
+N    //! A pointer to the function which is to be called periodically by the
+N    //! scheduler.
+N    //
+N    void (*pfnFunction)(void *);
+N
+N    //
+N    //! The parameter which is to be passed to this function when it is called.
+N    //
+N    void *pvParam;
+N
+N    //
+N    //! The frequency the function is to be called expressed in terms of system
+N    //! ticks.  If this value is 0, the function will be called on every call
+N    //! to SchedulerRun.
+N    //
+N    unsigned long ulFrequencyTicks;
+N
+N    //
+N    //! Tick count when this function was last called.  This field is updated
+N    //! by the scheduler.
+N    //
+N    unsigned long ulLastCall;
+N
+N    //
+N    //! A flag indicating whether or not this task is active.  If true, the
+N    //! function will be called periodically.  If false, the function is
+N    //! disabled and will not be called.
+N    //
+N    tBoolean bActive;
+N}
+NtSchedulerTask;
+N
+N//*****************************************************************************
+N//
+N//! This global table must be populated by the client and contains information
+N//! on each function that the scheduler is to call.
+N//
+N//*****************************************************************************
+Nextern tSchedulerTask g_psSchedulerTable[];
+N
+N//*****************************************************************************
+N//
+N//! This global variable must be exported by the client.  It must contain the
+N//! number of entries in the g_psSchedulerTable array.
+N//
+N//*****************************************************************************
+Nextern unsigned long g_ulSchedulerNumTasks;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Public function prototypes
+N//
+N//*****************************************************************************
+Nextern void SchedulerSysTickIntHandler(void);
+Nextern void SchedulerInit(unsigned long ulTicksPerSecond);
+Nextern void SchedulerRun(void);
+Nextern void SchedulerTaskEnable(unsigned long ulIndex, tBoolean bRunNow);
+Nextern void SchedulerTaskDisable(unsigned long ulIndex);
+Nextern unsigned long SchedulerTickCountGet(void);
+Nextern unsigned long SchedulerElapsedTicksGet(unsigned long ulTickCount);
+Nextern unsigned long SchedulerElapsedTicksCalc(unsigned long ulTickStart,
+N                                               unsigned long ulTickEnd);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __ SCHEDULER_H_
+L 27 "auto_task.c" 2
+N#include "drivers/motor.h"
+L 1 "..\drivers/motor.h" 1
+N//*****************************************************************************
+N//
+N// motor.h - Public type definitions and prototypes provided by the motor
+N//           module.
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N#ifndef __MOTOR_H__
+N#define __MOTOR_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup motor_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N//! The enumerated type defining motor drive directions.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Run the motor in the forward direction.
+N    //
+N    FORWARD = 0,
+N
+N    //
+N    //! Run the motor in the reverse direction.
+N    //
+N    REVERSE
+N}
+NtDirection;
+N
+N//*****************************************************************************
+N//
+N//! The enumerated type defining one of the two EVALBOT motors.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Defines the left side motor.
+N    //
+N    LEFT_SIDE = 0,
+N
+N    //
+N    //! Defines the right side motor.
+N    //
+N    RIGHT_SIDE
+N} tSide;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern void MotorsInit(void);
+Nextern void MotorDir(tSide ucMotor, tDirection eDirection);
+Nextern void MotorRun(tSide ucMotor);
+Nextern void MotorStop(tSide ucMotor);
+Nextern void MotorSpeed(tSide ucMotor, unsigned short usPercent);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __MOTOR_H__
+L 28 "auto_task.c" 2
+N#include "drivers/sensors.h"
+L 1 "..\drivers/sensors.h" 1
+N//*****************************************************************************
+N//
+N// sensors.h - Public type definitions and prototypes provided by the sensors
+N//             module.
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N#ifndef __SENSORS_H__
+N#define __SENSORS_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup sensors_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N//! The enumerated type defining bumper left and right.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Left bump sensor.
+N    //
+N    BUMP_LEFT = 0,
+N
+N    //
+N    //! Right bump sensor.
+N    //
+N    BUMP_RIGHT
+N}
+NtBumper;
+N
+N//*****************************************************************************
+N//
+N//! The enumerated type defining wheel sensor left and right.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Left wheel sensor.
+N    //
+N    WHEEL_LEFT = 0,
+N
+N    //
+N    //! Right wheel sensor.
+N    //
+N    WHEEL_RIGHT
+N}
+NtWheel;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern void BumpSensorsInit (void);
+Nextern tBoolean BumpSensorGetStatus(tBumper eBumper);
+Nextern void BumpSensorDebouncer(void);
+Nextern tBoolean BumpSensorGetDebounced(tBumper eBumper);
+Nextern void WheelSensorsInit(void (*pfnCallback)(tWheel eWheel));
+Nextern void WheelSensorEnable(void);
+Nextern void WheelSensorDisable(void);
+Nextern void WheelSensorIntEnable(tWheel eWheel);
+Nextern void WheelSensorIntDisable(tWheel eWheel);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __SENSORS_H__
+L 29 "auto_task.c" 2
+N#include "drivers/io.h"
+L 1 "..\drivers/io.h" 1
+N//*****************************************************************************
+N//
+N// io.h - Public type definitions and prototypes related to pushbuttons and
+N//        LEDs on EVALBOT.
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N#ifndef __IO_H__
+N#define __IO_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup io_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N//! This enumerated type defines either one or both EVALBOT LEDs.  It is used
+N//! by functions which change the state of the LEDs.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Both LEDs will be affected.
+N    //
+N    BOTH_LEDS = 0,
+N
+N    //
+N    //! LED 1 on the right side of the EVALBOT will be affected.
+N    //
+N    LED_1,
+N
+N    //
+N    //! LED 2 on the left side of the EVALBOT will be affected.
+N    //
+N    LED_2
+N}
+NtLED;
+N
+N//*****************************************************************************
+N//
+N//! This enumerated type defines the two user switches on EVALBOT.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Switch 1 nearest the front on the right side of EVALBOT.
+N    //
+N    BUTTON_1 = 0,
+N
+N    //
+N    //! Switch 2 nearest the back on the right side of EVALBOT.
+N    //
+N    BUTTON_2
+N}
+NtButton;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern void LEDsInit(void);
+Nextern void LED_Off(tLED eLED);
+Nextern void LED_On(tLED eLED);
+Nextern void LED_Toggle(tLED eLED);
+Nextern void PushButtonsInit(void);
+Nextern tBoolean PushButtonGetStatus(tButton eButton);
+Nextern void PushButtonDebouncer(void);
+Nextern tBoolean PushButtonGetDebounced(tButton eButton);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __IO_H__
+L 30 "auto_task.c" 2
+N#include "utils/uartstdio.h"
+L 1 "..\..\..\utils/uartstdio.h" 1
+N//*****************************************************************************
+N//
+N// uartstdio.h - Prototypes for the UART console functions.
+N//
+N// Copyright (c) 2007-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __UARTSTDIO_H__
+N#define __UARTSTDIO_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N// If built for buffered operation, the following labels define the sizes of
+N// the transmit and receive buffers respectively.
+N//
+N//*****************************************************************************
+N#ifdef UART_BUFFERED
+N#ifndef UART_RX_BUFFER_SIZE
+N#define UART_RX_BUFFER_SIZE     128
+N#endif
+N#ifndef UART_TX_BUFFER_SIZE
+N#define UART_TX_BUFFER_SIZE     1024
+N#endif
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern void UARTStdioInit(unsigned long ulPort);
+Nextern void UARTStdioInitExpClk(unsigned long ulPort, unsigned long ulBaud);
+Nextern int UARTgets(char *pcBuf, unsigned long ulLen);
+Nextern unsigned char UARTgetc(void);
+Nextern void UARTprintf(const char *pcString, ...);
+Nextern int UARTwrite(const char *pcBuf, unsigned long ulLen);
+N#ifdef UART_BUFFERED
+Nextern int UARTPeek(unsigned char ucChar);
+Nextern void UARTFlushTx(tBoolean bDiscard);
+Nextern void UARTFlushRx(void);
+Nextern int UARTRxBytesAvail(void);
+Nextern int UARTTxBytesFree(void);
+Nextern void UARTEchoSet(tBoolean bEnable);
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __UARTSTDIO_H__
+L 31 "auto_task.c" 2
+N#include "drive_task.h"
+L 1 "drive_task.h" 1
+N//*****************************************************************************
+N//
+N// drive_task.h - Header and prototypes for motor drive controller
+N//
+N// Copyright (c) 2011-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __DRIVE_TASK_H__
+N#define __DRIVE_TASK_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Defines the motor, right or left.
+N//
+N//*****************************************************************************
+N#define MOTOR_DRIVE_LEFT    0
+N#define MOTOR_DRIVE_RIGHT   1
+N
+N//*****************************************************************************
+N//
+N// Defines the directions for commanding the motor drive.
+N//
+N//*****************************************************************************
+N#define MOTOR_DRIVE_TURN_LEFT 0
+N#define MOTOR_DRIVE_TURN_RIGHT 1
+N#define MOTOR_DRIVE_FORWARD 3
+N#define MOTOR_DRIVE_REVERSE 4
+N
+N//*****************************************************************************
+N//
+N// Function prototypes for the drive task module.
+N//
+N//*****************************************************************************
+Nextern void DriveTask(void *pvParam);
+Nextern void DriveStop(void);
+Nextern void DriveRun(unsigned long ulDirection, unsigned long ulSpeed);
+Nextern void DriveInit(void);
+Nextern long DriveSpeedGet(unsigned long ulMotor);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif
+L 32 "auto_task.c" 2
+N#include "random.h"
+L 1 "random.h" 1
+N//*****************************************************************************
+N//
+N// random.h - Header for random number generation functions.
+N//
+N// Copyright (c) 2011-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __RANDOM_H__
+N#define __RANDOM_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N//*****************************************************************************
+N//
+N// Prototypes for the random number generator functions.
+N//
+N//*****************************************************************************
+Nextern void RandomAddEntropy(unsigned long ulEntropy);
+Nextern void RandomSeed(void);
+Nextern unsigned long RandomNumber(void);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __RANDOM_H__
+L 33 "auto_task.c" 2
+N#include "sound_task.h"
+L 1 "sound_task.h" 1
+N//*****************************************************************************
+N//
+N// sound_task.h - Header for the EVALBOT QS example sound task.
+N//
+N// Copyright (c) 2011-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __SOUND_TASK_H__
+N#define __SOUND_TASK_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the functions in the sound_task module.
+N//
+N//*****************************************************************************
+Nextern void SoundTaskInit(void);
+Nextern void SoundTask(void *pvParam);
+Nextern void SoundTaskPlay(const unsigned char *pucSound);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif
+L 34 "auto_task.c" 2
+N#include "sounds.h"
+L 1 "sounds.h" 1
+N//****************************************************************************
+N//
+N// sounds.h - Exports the sound clips available in the sounds file.
+N//
+N// Copyright (c) 2011-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//****************************************************************************
+N#ifndef __SOUNDS_H__
+N#define __SOUNDS_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Declare the sound clips available in the sounds file.
+N//
+N//*****************************************************************************
+Nextern const unsigned char g_pcBumpSound[];
+Nextern const unsigned char g_pcReverseSound[];
+Nextern const unsigned char g_pcHornSound[];
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __SOUNDS_H__
+L 35 "auto_task.c" 2
+N
+N//****************************************************************************
+N//
+N// Define the minimum driving duration time, and the allowed random variation,
+N// in timer ticks.
+N//
+N//****************************************************************************
+N#define DRIVE_DURATION_MIN 700      // 7 seconds
+N#define DRIVE_DURATION_VAR 1300     // +13 seconds
+N
+N//****************************************************************************
+N//
+N// Define the minimum turning duration, and the allowed random variation,
+N// in timer ticks.
+N//
+N//****************************************************************************
+N#define TURN_DURATION_MIN 200      // 2 seconds
+N#define TURN_DURATION_VAR 200      // +2 seconds
+N
+N//****************************************************************************
+N//
+N// Define the wheel speed, in RPM, for driving and turning.
+N//
+N//****************************************************************************
+N#define AUTO_FORWARD_SPEED  40
+N#define AUTO_TURN_SPEED     25
+N
+N//****************************************************************************
+N//
+N// Define the possible states for the EVALBOT autonomous state machine
+N//
+N//****************************************************************************
+Ntypedef enum
+N{
+N    EVALBOT_STATE_IDLE,
+N    EVALBOT_STATE_DRIVING,
+N    EVALBOT_STATE_TURNING,
+N} tEvalbotState;
+N
+N//****************************************************************************
+N//
+N// This "task" is called periodically from the scheduler in the main app.
+N// It runs a state machine that tracks the EVALBOT motion, and changes
+N// the motion in reaction to external inputs.
+N//
+N//****************************************************************************
+Nvoid
+NAutoTask(void *pvParam)
+N{
+N    static tEvalbotState sState = EVALBOT_STATE_IDLE;
+N    static unsigned long ulLastTicks = 0;
+N    static unsigned long ulDurationTicks = 0;
+N
+N    //
+N    // Process according to the current state
+N    //
+N    switch(sState)
+N    {
+N        //
+N        // IDLE - in this state, the EVALBOT is waiting for a press of
+N        // button 1, which will start the motion.
+N        //
+N        case EVALBOT_STATE_IDLE:
+N        {
+N            //
+N            // Check for press of button 1
+N            //
+N            if(!PushButtonGetStatus(BUTTON_1))
+N            {
+N                //
+N                // Whenever there is an external event, add to the entropy
+N                // of the random number generator.
+N                //
+N                RandomAddEntropy(SchedulerTickCountGet());
+N                RandomSeed();
+N
+N                //
+N                // Get the current tick, which will be used for measuring
+N                // the duration of time in a state.
+N                //
+N                ulLastTicks = SchedulerTickCountGet();
+N
+N                //
+N                // Generate a random duration in timer ticks.
+N                //
+N                ulDurationTicks = (RandomNumber() % DRIVE_DURATION_VAR) +
+X                ulDurationTicks = (RandomNumber() % 1300) +
+N                                  DRIVE_DURATION_MIN;
+X                                  700;
+N
+N                //
+N                // Command the drive to start running forward, update the
+N                // state machine, and notify action via serial port
+N                //
+N                DriveRun(MOTOR_DRIVE_FORWARD, AUTO_FORWARD_SPEED);
+X                DriveRun(3, 40);
+N                sState = EVALBOT_STATE_DRIVING;
+N                UARTprintf("button 1 - driving for %u\n", ulDurationTicks);
+N            }
+N            break;
+N        }
+N
+N        //
+N        // DRIVING - in this state the EVALBOT is driving forward.  It is
+N        // waiting for one of the bump sensors, which will initiate a turn, or
+N        // the user to press button 2 (to stop), or for the driving duration
+N        // to time out, initiating a random turn.
+N        //
+N        case EVALBOT_STATE_DRIVING:
+N        {
+N            //
+N            // Check for left bumper sensor
+N            //
+W "auto_task.c" 145 37 enumerated type mixed with another type
+N            if(!BumpSensorGetStatus(LEFT_SIDE))
+N            {
+N                //
+N                // Play bumper sound
+N                //
+N                SoundTaskPlay(g_pcBumpSound);
+N
+N                //
+N                // Update random entropy
+N                //
+N                RandomAddEntropy(SchedulerTickCountGet());
+N                RandomSeed();
+N
+N                //
+N                // Save current tick, and compute random turn duration
+N                //
+N                ulLastTicks = SchedulerTickCountGet();
+N                ulDurationTicks = (RandomNumber() % TURN_DURATION_VAR) +
+X                ulDurationTicks = (RandomNumber() % 200) +
+N                                  TURN_DURATION_MIN;
+X                                  200;
+N
+N                //
+N                // Command the drive to start turning, update the
+N                // state machine, and notify action via serial port
+N                //
+N                DriveRun(MOTOR_DRIVE_TURN_RIGHT, AUTO_TURN_SPEED);
+X                DriveRun(1, 25);
+N                sState = EVALBOT_STATE_TURNING;
+N                UARTprintf("left sensor - turn right for %u\n", ulDurationTicks);
+N            }
+N
+N            //
+N            // Else, check for right bumper sensor
+N            //
+W "auto_task.c" 177 42 enumerated type mixed with another type
+N            else if(!BumpSensorGetStatus(RIGHT_SIDE))
+N            {
+N                //
+N                // Play bumper sound
+N                //
+N                SoundTaskPlay(g_pcBumpSound);
+N
+N                //
+N                // Update random entropy
+N                //
+N                RandomAddEntropy(SchedulerTickCountGet());
+N                RandomSeed();
+N
+N                //
+N                // Save current tick, and compute random turn duration
+N                //
+N                ulLastTicks = SchedulerTickCountGet();
+N                ulDurationTicks = (RandomNumber() % TURN_DURATION_VAR) +
+X                ulDurationTicks = (RandomNumber() % 200) +
+N                                  TURN_DURATION_MIN;
+X                                  200;
+N
+N                //
+N                // Command the drive to start turning, update the
+N                // state machine, and notify action via serial port
+N                //
+N                DriveRun(MOTOR_DRIVE_TURN_LEFT, AUTO_TURN_SPEED);
+X                DriveRun(0, 25);
+N                sState = EVALBOT_STATE_TURNING;
+N                UARTprintf("right sensor - turn left for %u\n", ulDurationTicks);
+N            }
+N
+N            //
+N            // Else, check for user press of button 2
+N            //
+N            else if(!PushButtonGetStatus(BUTTON_2))
+N            {
+N                //
+N                // Update random entropy
+N                //
+N                RandomAddEntropy(SchedulerTickCountGet());
+N                RandomSeed();
+N
+N                //
+N                // Command the drive to stop the motion
+N                //
+N                DriveRun(MOTOR_DRIVE_FORWARD, 0);
+X                DriveRun(3, 0);
+N                DriveStop();
+N
+N                //
+N                // Update the state machine and notify action via serial port
+N                //
+N                sState = EVALBOT_STATE_IDLE;
+N                UARTprintf("button 2 - stopping\n");
+N            }
+N
+N            //
+N            // Else, check to see if the (random) drive duration has timed
+N            // out
+N            //
+N            else if(SchedulerElapsedTicksGet(ulLastTicks) > ulDurationTicks)
+N            {
+N                //
+N                // Save current tick, and compute random turn duration
+N                //
+N                ulLastTicks = SchedulerTickCountGet();
+N                ulDurationTicks = (RandomNumber() % TURN_DURATION_VAR) +
+X                ulDurationTicks = (RandomNumber() % 200) +
+N                                  TURN_DURATION_MIN;
+X                                  200;
+N
+N                //
+N                // Command the drive to turn, randomly selecting left or
+N                // right turn
+N                //
+N                DriveRun((RandomNumber() & 1) ?
+N                              MOTOR_DRIVE_TURN_LEFT : MOTOR_DRIVE_TURN_RIGHT,
+X                              0 : 1,
+N                              AUTO_TURN_SPEED);
+X                              25);
+N
+N                //
+N                // Update the state and notify the user via serial port
+N                //
+N                sState = EVALBOT_STATE_TURNING;
+N                UARTprintf("random turn - turn for %u\n", ulDurationTicks);
+N            }
+N
+N            //
+N            // Done with this state
+N            //
+N            break;
+N        }
+N
+N        //
+N        // In this state, EVALBOT is turning.  It will continue to turn
+N        // until the randomly chosen turn duration has elapsed, at which time
+N        // it will then resume driving forward
+N        //
+N        case EVALBOT_STATE_TURNING:
+N        {
+N            if(SchedulerElapsedTicksGet(ulLastTicks) > ulDurationTicks)
+N            {
+N                //
+N                // Get the current tick, and determine a random drive duration
+N                //
+N                ulLastTicks = SchedulerTickCountGet();
+N                ulDurationTicks = (RandomNumber() % DRIVE_DURATION_VAR) +
+X                ulDurationTicks = (RandomNumber() % 1300) +
+N                                  DRIVE_DURATION_MIN;
+X                                  700;
+N
+N                //
+N                // Command the drive to go forward, update the state machine
+N                // and notify action via serial port
+N                //
+N                DriveRun(MOTOR_DRIVE_FORWARD, AUTO_FORWARD_SPEED);
+X                DriveRun(3, 40);
+N                sState = EVALBOT_STATE_DRIVING;
+N                UARTprintf("done turning, forward for %u\n", ulDurationTicks);
+N            }
+N
+N            //
+N            // Done with this state
+N            //
+N            break;
+N        }
+N    }
+N}
+N
+N//****************************************************************************
+N//
+N// This function is used to perform any needed initialization for the
+N// autonomous driving "task".
+N//
+N//****************************************************************************
+Nvoid
+NAutoTaskInit(void *pvParam)
+N{
+N    PushButtonsInit();
+N    BumpSensorsInit();
+N}

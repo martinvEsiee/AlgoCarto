@@ -1,0 +1,56 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\titi\Desktop\EvalbotBlinkyASM\SimulationBlinkyASM_LM3S1968\Blinky.uvproj
+Project File Date:  09/26/2012
+
+<h2>Output:</h2>
+Rebuild target 'LM3S1968 Flash'
+assembling Startup.s...
+assembling main.s...
+main.s(61): warning: A1581W: Added 2 bytes of padding at address 0x42
+linking...
+.\Flash\Blinky.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=344 RO-data=0 RW-data=0 ZI-data=256  
+".\Flash\Blinky.axf" - 0 Error(s), 2 Warning(s).
+Load "C:\\Users\\titi\\Desktop\\EvalbotBlinkyASM\\SimulationBlinkyASM_LM3S1968\\Flash\\Blinky.AXF" 
+Internal DLL Error
+Load "C:\\Users\\titi\\Desktop\\EvalbotBlinkyASM\\SimulationBlinkyASM_LM3S1968\\Flash\\Blinky.AXF" 
+Warning: OSC to JTAG clock ratio violation - JTAG clock has been automatically adjusted to comply.
+Connecting: Mode=JTAG, Speed=600000Hz
+Connection failed!, error code=&d
+Load "C:\\Users\\titi\\Desktop\\EvalbotBlinkyASM\\SimulationBlinkyASM_LM3S1968\\Flash\\Blinky.AXF" 
+Warning: OSC to JTAG clock ratio violation - JTAG clock has been automatically adjusted to comply.
+Connecting: Mode=JTAG, Speed=600000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Rebuild target 'LM3S1968 Flash'
+assembling Startup.s...
+assembling main.s...
+main.s(61): warning: A1581W: Added 2 bytes of padding at address 0x42
+linking...
+.\Flash\Blinky.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=344 RO-data=0 RW-data=0 ZI-data=256  
+".\Flash\Blinky.axf" - 0 Error(s), 2 Warning(s).
+Load "C:\\Users\\titi\\Desktop\\EvalbotBlinkyASM\\SimulationBlinkyASM_LM3S1968\\Flash\\Blinky.AXF" 
+Warning: OSC to JTAG clock ratio violation - JTAG clock has been automatically adjusted to comply.
+Connecting: Mode=JTAG, Speed=600000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Rebuild target 'LM3S1968 Flash'
+assembling Startup.s...
+assembling main.s...
+main.s(61): warning: A1581W: Added 2 bytes of padding at address 0x42
+linking...
+.\Flash\Blinky.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=344 RO-data=0 RW-data=0 ZI-data=256  
+".\Flash\Blinky.axf" - 0 Error(s), 2 Warning(s).
+Load "C:\\Users\\titi\\Desktop\\EvalbotBlinkyASM\\SimulationBlinkyASM_LM3S1968\\Flash\\Blinky.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.

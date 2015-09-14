@@ -1,0 +1,10 @@
+.\motor.o: ..\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c
+.\motor.o: ..\lib\StellarisWare\inc/hw_memmap.h
+.\motor.o: ..\lib\StellarisWare\inc/hw_types.h
+.\motor.o: ..\lib\StellarisWare\driverlib/debug.h
+.\motor.o: ..\lib\StellarisWare\driverlib/gpio.h
+.\motor.o: ..\lib\StellarisWare\driverlib/pin_map.h
+.\motor.o: ..\lib\StellarisWare\driverlib/pwm.h
+.\motor.o: ..\lib\StellarisWare\driverlib/rom.h
+.\motor.o: ..\lib\StellarisWare\driverlib/sysctl.h
+.\motor.o: ..\lib\StellarisWare\boards\ek-evalbot\drivers\motor.h

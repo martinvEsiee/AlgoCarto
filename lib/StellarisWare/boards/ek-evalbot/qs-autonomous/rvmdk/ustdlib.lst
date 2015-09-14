@@ -1,0 +1,2501 @@
+L 1 "..\..\..\utils\ustdlib.c"
+N//*****************************************************************************
+N//
+N// ustdlib.c - Simple standard library functions.
+N//
+N// Copyright (c) 2007-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#include <string.h>
+L 1 "C:\Keil\ARM\RV31\Inc\string.h" 1
+N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
+N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
+N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
+N/* version 0.04 */
+N
+N/*
+N * RCS $Revision: 137748 $
+N * Checkin $Date: 2008-09-11 17:34:24 +0100 (Thu, 11 Sep 2008) $
+N */
+N
+N/*
+N * string.h declares one type and several functions, and defines one macro
+N * useful for manipulating character arrays and other objects treated as
+N * character arrays. Various methods are used for determining the lengths of
+N * the arrays, but in all cases a char * or void * argument points to the
+N * initial (lowest addresses) character of the array. If an array is written
+N * beyond the end of an object, the behaviour is undefined.
+N */
+N
+N#ifndef __string_h
+N#define __string_h
+N
+N#define _ARMABI __declspec(__nothrow)
+N
+N  #ifndef __STRING_DECLS
+N  #define __STRING_DECLS
+N
+N    #undef __CLIBNS
+N
+N    #ifdef __cplusplus
+S        namespace std {
+S        #define __CLIBNS std::
+S        extern "C" {
+N    #else
+N      #define __CLIBNS
+N    #endif  /* __cplusplus */
+N
+N#if defined(__cplusplus) || !defined(__STRICT_ANSI__)
+X#if 0L || !0L
+N /* unconditional in C++ and non-strict C for consistency of debug info */
+N  typedef unsigned int size_t;
+N#elif !defined(__size_t)
+S  #define __size_t 1
+S  typedef unsigned int size_t;   /* see <stddef.h> */
+N#endif
+N
+N#undef NULL
+N#define NULL 0                   /* see <stddef.h> */
+N
+Nextern _ARMABI void *memcpy(void * __restrict /*s1*/,
+Xextern __declspec(__nothrow) void *memcpy(void * __restrict  ,
+N                    const void * __restrict /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * copies n characters from the object pointed to by s2 into the object
+N    * pointed to by s1. If copying takes place between objects that overlap,
+N    * the behaviour is undefined.
+N    * Returns: the value of s1.
+N    */
+Nextern _ARMABI void *memmove(void * /*s1*/,
+Xextern __declspec(__nothrow) void *memmove(void *  ,
+N                    const void * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * copies n characters from the object pointed to by s2 into the object
+N    * pointed to by s1. Copying takes place as if the n characters from the
+N    * object pointed to by s2 are first copied into a temporary array of n
+N    * characters that does not overlap the objects pointed to by s1 and s2,
+N    * and then the n characters from the temporary array are copied into the
+N    * object pointed to by s1.
+N    * Returns: the value of s1.
+N    */
+Nextern _ARMABI char *strcpy(char * __restrict /*s1*/, const char * __restrict /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) char *strcpy(char * __restrict  , const char * __restrict  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * copies the string pointed to by s2 (including the terminating nul
+N    * character) into the array pointed to by s1. If copying takes place
+N    * between objects that overlap, the behaviour is undefined.
+N    * Returns: the value of s1.
+N    */
+Nextern _ARMABI char *strncpy(char * __restrict /*s1*/, const char * __restrict /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) char *strncpy(char * __restrict  , const char * __restrict  , size_t  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * copies not more than n characters (characters that follow a null
+N    * character are not copied) from the array pointed to by s2 into the array
+N    * pointed to by s1. If copying takes place between objects that overlap,
+N    * the behaviour is undefined.
+N    * Returns: the value of s1.
+N    */
+N
+Nextern _ARMABI char *strcat(char * __restrict /*s1*/, const char * __restrict /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) char *strcat(char * __restrict  , const char * __restrict  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * appends a copy of the string pointed to by s2 (including the terminating
+N    * null character) to the end of the string pointed to by s1. The initial
+N    * character of s2 overwrites the null character at the end of s1.
+N    * Returns: the value of s1.
+N    */
+Nextern _ARMABI char *strncat(char * __restrict /*s1*/, const char * __restrict /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) char *strncat(char * __restrict  , const char * __restrict  , size_t  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * appends not more than n characters (a null character and characters that
+N    * follow it are not appended) from the array pointed to by s2 to the end of
+N    * the string pointed to by s1. The initial character of s2 overwrites the
+N    * null character at the end of s1. A terminating null character is always
+N    * appended to the result.
+N    * Returns: the value of s1.
+N    */
+N
+N/*
+N * The sign of a nonzero value returned by the comparison functions is
+N * determined by the sign of the difference between the values of the first
+N * pair of characters (both interpreted as unsigned char) that differ in the
+N * objects being compared.
+N */
+N
+Nextern _ARMABI int memcmp(const void * /*s1*/, const void * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) int memcmp(const void *  , const void *  , size_t  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * compares the first n characters of the object pointed to by s1 to the
+N    * first n characters of the object pointed to by s2.
+N    * Returns: an integer greater than, equal to, or less than zero, according
+N    *          as the object pointed to by s1 is greater than, equal to, or
+N    *          less than the object pointed to by s2.
+N    */
+Nextern _ARMABI int strcmp(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) int strcmp(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * compares the string pointed to by s1 to the string pointed to by s2.
+N    * Returns: an integer greater than, equal to, or less than zero, according
+N    *          as the string pointed to by s1 is greater than, equal to, or
+N    *          less than the string pointed to by s2.
+N    */
+Nextern _ARMABI int strncmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) int strncmp(const char *  , const char *  , size_t  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * compares not more than n characters (characters that follow a null
+N    * character are not compared) from the array pointed to by s1 to the array
+N    * pointed to by s2.
+N    * Returns: an integer greater than, equal to, or less than zero, according
+N    *          as the string pointed to by s1 is greater than, equal to, or
+N    *          less than the string pointed to by s2.
+N    */
+Nextern _ARMABI int strcasecmp(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) int strcasecmp(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * compares the string pointed to by s1 to the string pointed to by s2,
+N    * case-insensitively as defined by the current locale.
+N    * Returns: an integer greater than, equal to, or less than zero, according
+N    *          as the string pointed to by s1 is greater than, equal to, or
+N    *          less than the string pointed to by s2.
+N    */
+Nextern _ARMABI int strncasecmp(const char * /*s1*/, const char * /*s2*/, size_t /*n*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) int strncasecmp(const char *  , const char *  , size_t  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * compares not more than n characters (characters that follow a null
+N    * character are not compared) from the array pointed to by s1 to the array
+N    * pointed to by s2, case-insensitively as defined by the current locale.
+N    * Returns: an integer greater than, equal to, or less than zero, according
+N    *          as the string pointed to by s1 is greater than, equal to, or
+N    *          less than the string pointed to by s2.
+N    */
+Nextern _ARMABI int strcoll(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) int strcoll(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * compares the string pointed to by s1 to the string pointed to by s2, both
+N    * interpreted as appropriate to the LC_COLLATE category of the current
+N    * locale.
+N    * Returns: an integer greater than, equal to, or less than zero, according
+N    *          as the string pointed to by s1 is greater than, equal to, or
+N    *          less than the string pointed to by s2 when both are interpreted
+N    *          as appropriate to the current locale.
+N    */
+N
+Nextern _ARMABI size_t strxfrm(char * __restrict /*s1*/, const char * __restrict /*s2*/, size_t /*n*/) __attribute__((__nonnull__(2)));
+Xextern __declspec(__nothrow) size_t strxfrm(char * __restrict  , const char * __restrict  , size_t  ) __attribute__((__nonnull__(2)));
+N   /*
+N    * transforms the string pointed to by s2 and places the resulting string
+N    * into the array pointed to by s1. The transformation function is such that
+N    * if the strcmp function is applied to two transformed strings, it returns
+N    * a value greater than, equal to or less than zero, corresponding to the
+N    * result of the strcoll function applied to the same two original strings.
+N    * No more than n characters are placed into the resulting array pointed to
+N    * by s1, including the terminating null character. If n is zero, s1 is
+N    * permitted to be a null pointer. If copying takes place between objects
+N    * that overlap, the behaviour is undefined.
+N    * Returns: The length of the transformed string is returned (not including
+N    *          the terminating null character). If the value returned is n or
+N    *          more, the contents of the array pointed to by s1 are
+N    *          indeterminate.
+N    */
+N
+N
+N#ifdef __cplusplus
+Sextern _ARMABI const void *memchr(const void * /*s*/, int /*c*/, size_t /*n*/) __attribute__((__nonnull__(1)));
+Sextern "C++" void *memchr(void * __s, int __c, size_t __n) __attribute__((__nonnull__(1)));
+Sextern "C++" inline void *memchr(void * __s, int __c, size_t __n)
+S    { return const_cast<void *>(memchr(const_cast<const void *>(__s), __c, __n)); }
+N#else
+Nextern _ARMABI void *memchr(const void * /*s*/, int /*c*/, size_t /*n*/) __attribute__((__nonnull__(1)));
+Xextern __declspec(__nothrow) void *memchr(const void *  , int  , size_t  ) __attribute__((__nonnull__(1)));
+N#endif
+N   /*
+N    * locates the first occurence of c (converted to an unsigned char) in the
+N    * initial n characters (each interpreted as unsigned char) of the object
+N    * pointed to by s.
+N    * Returns: a pointer to the located character, or a null pointer if the
+N    *          character does not occur in the object.
+N    */
+N
+N#ifdef __cplusplus
+Sextern _ARMABI const char *strchr(const char * /*s*/, int /*c*/) __attribute__((__nonnull__(1)));
+Sextern "C++" char *strchr(char * __s, int __c) __attribute__((__nonnull__(1)));
+Sextern "C++" inline char *strchr(char * __s, int __c)
+S    { return const_cast<char *>(strchr(const_cast<const char *>(__s), __c)); }
+N#else
+Nextern _ARMABI char *strchr(const char * /*s*/, int /*c*/) __attribute__((__nonnull__(1)));
+Xextern __declspec(__nothrow) char *strchr(const char *  , int  ) __attribute__((__nonnull__(1)));
+N#endif
+N   /*
+N    * locates the first occurence of c (converted to an char) in the string
+N    * pointed to by s (including the terminating null character).
+N    * Returns: a pointer to the located character, or a null pointer if the
+N    *          character does not occur in the string.
+N    */
+N
+Nextern _ARMABI size_t strcspn(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) size_t strcspn(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * computes the length of the initial segment of the string pointed to by s1
+N    * which consists entirely of characters not from the string pointed to by
+N    * s2. The terminating null character is not considered part of s2.
+N    * Returns: the length of the segment.
+N    */
+N
+N#ifdef __cplusplus
+Sextern _ARMABI const char *strpbrk(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Sextern "C++" char *strpbrk(char * __s1, const char * __s2) __attribute__((__nonnull__(1,2)));
+Sextern "C++" inline char *strpbrk(char * __s1, const char * __s2)
+S    { return const_cast<char *>(strpbrk(const_cast<const char *>(__s1), __s2)); }
+N#else
+Nextern _ARMABI char *strpbrk(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) char *strpbrk(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
+N#endif
+N   /*
+N    * locates the first occurence in the string pointed to by s1 of any
+N    * character from the string pointed to by s2.
+N    * Returns: returns a pointer to the character, or a null pointer if no
+N    *          character form s2 occurs in s1.
+N    */
+N
+N#ifdef __cplusplus
+Sextern _ARMABI const char *strrchr(const char * /*s*/, int /*c*/) __attribute__((__nonnull__(1)));
+Sextern "C++" char *strrchr(char * __s, int __c) __attribute__((__nonnull__(1)));
+Sextern "C++" inline char *strrchr(char * __s, int __c)
+S    { return const_cast<char *>(strrchr(const_cast<const char *>(__s), __c)); }
+N#else
+Nextern _ARMABI char *strrchr(const char * /*s*/, int /*c*/) __attribute__((__nonnull__(1)));
+Xextern __declspec(__nothrow) char *strrchr(const char *  , int  ) __attribute__((__nonnull__(1)));
+N#endif
+N   /*
+N    * locates the last occurence of c (converted to a char) in the string
+N    * pointed to by s. The terminating null character is considered part of
+N    * the string.
+N    * Returns: returns a pointer to the character, or a null pointer if c does
+N    *          not occur in the string.
+N    */
+N
+Nextern _ARMABI size_t strspn(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) size_t strspn(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * computes the length of the initial segment of the string pointed to by s1
+N    * which consists entirely of characters from the string pointed to by S2
+N    * Returns: the length of the segment.
+N    */
+N
+N#ifdef __cplusplus
+Sextern _ARMABI const char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Sextern "C++" char *strstr(char * __s1, const char * __s2) __attribute__((__nonnull__(1,2)));
+Sextern "C++" inline char *strstr(char * __s1, const char * __s2)
+S    { return const_cast<char *>(strstr(const_cast<const char *>(__s1), __s2)); }
+N#else
+Nextern _ARMABI char *strstr(const char * /*s1*/, const char * /*s2*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) char *strstr(const char *  , const char *  ) __attribute__((__nonnull__(1,2)));
+N#endif
+N   /*
+N    * locates the first occurence in the string pointed to by s1 of the
+N    * sequence of characters (excluding the terminating null character) in the
+N    * string pointed to by s2.
+N    * Returns: a pointer to the located string, or a null pointer if the string
+N    *          is not found.
+N    */
+N
+Nextern _ARMABI char *strtok(char * __restrict /*s1*/, const char * __restrict /*s2*/) __attribute__((__nonnull__(2)));
+Xextern __declspec(__nothrow) char *strtok(char * __restrict  , const char * __restrict  ) __attribute__((__nonnull__(2)));
+Nextern _ARMABI char *_strtok_r(char * /*s1*/, const char * /*s2*/, char ** /*ptr*/) __attribute__((__nonnull__(2,3)));
+Xextern __declspec(__nothrow) char *_strtok_r(char *  , const char *  , char **  ) __attribute__((__nonnull__(2,3)));
+N#ifndef __STRICT_ANSI__
+Nextern _ARMABI char *strtok_r(char * /*s1*/, const char * /*s2*/, char ** /*ptr*/) __attribute__((__nonnull__(2,3)));
+Xextern __declspec(__nothrow) char *strtok_r(char *  , const char *  , char **  ) __attribute__((__nonnull__(2,3)));
+N#endif
+N   /*
+N    * A sequence of calls to the strtok function breaks the string pointed to
+N    * by s1 into a sequence of tokens, each of which is delimited by a
+N    * character from the string pointed to by s2. The first call in the
+N    * sequence has s1 as its first argument, and is followed by calls with a
+N    * null pointer as their first argument. The separator string pointed to by
+N    * s2 may be different from call to call.
+N    * The first call in the sequence searches for the first character that is
+N    * not contained in the current separator string s2. If no such character
+N    * is found, then there are no tokens in s1 and the strtok function returns
+N    * a null pointer. If such a character is found, it is the start of the
+N    * first token.
+N    * The strtok function then searches from there for a character that is
+N    * contained in the current separator string. If no such character is found,
+N    * the current token extends to the end of the string pointed to by s1, and
+N    * subsequent searches for a token will fail. If such a character is found,
+N    * it is overwritten by a null character, which terminates the current
+N    * token. The strtok function saves a pointer to the following character,
+N    * from which the next search for a token will start.
+N    * Each subsequent call, with a null pointer as the value for the first
+N    * argument, starts searching from the saved pointer and behaves as
+N    * described above.
+N    * Returns: pointer to the first character of a token, or a null pointer if
+N    *          there is no token.
+N    *
+N    * strtok_r() is a common extension which works exactly like
+N    * strtok(), but instead of storing its state in a hidden
+N    * library variable, requires the user to pass in a pointer to a
+N    * char * variable which will be used instead. Any sequence of
+N    * calls to strtok_r() passing the same char ** pointer should
+N    * behave exactly like the corresponding sequence of calls to
+N    * strtok(). This means that strtok_r() can safely be used in
+N    * multi-threaded programs, and also that you can tokenise two
+N    * strings in parallel.
+N    */
+N
+Nextern _ARMABI void *memset(void * /*s*/, int /*c*/, size_t /*n*/) __attribute__((__nonnull__(1)));
+Xextern __declspec(__nothrow) void *memset(void *  , int  , size_t  ) __attribute__((__nonnull__(1)));
+N   /*
+N    * copies the value of c (converted to an unsigned char) into each of the
+N    * first n charactes of the object pointed to by s.
+N    * Returns: the value of s.
+N    */
+Nextern _ARMABI char *strerror(int /*errnum*/);
+Xextern __declspec(__nothrow) char *strerror(int  );
+N   /*
+N    * maps the error number in errnum to an error message string.
+N    * Returns: a pointer to the string, the contents of which are
+N    *          implementation-defined. The array pointed to shall not be
+N    *          modified by the program, but may be overwritten by a
+N    *          subsequent call to the strerror function.
+N    */
+Nextern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
+Xextern __declspec(__nothrow) size_t strlen(const char *  ) __attribute__((__nonnull__(1)));
+N   /*
+N    * computes the length of the string pointed to by s.
+N    * Returns: the number of characters that precede the terminating null
+N    *          character.
+N    */
+N
+Nextern _ARMABI size_t strlcpy(char * /*dst*/, const char * /*src*/, size_t /*len*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) size_t strlcpy(char *  , const char *  , size_t  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * copies the string src into the string dst, using no more than
+N    * len bytes of dst. Always null-terminates dst _within the
+N    * length len (i.e. will copy at most len-1 bytes of string plus
+N    * a NUL), unless len is actually zero.
+N    * 
+N    * Return value is the length of the string that _would_ have
+N    * been written, i.e. the length of src. Thus, the operation
+N    * succeeded without truncation if and only if ret < len;
+N    * otherwise, the value in ret tells you how big to make dst if
+N    * you decide to reallocate it. (That value does _not_ include
+N    * the NUL.)
+N    * 
+N    * This is a BSD-derived library extension, which we are
+N    * permitted to declare in a standard header because ISO defines
+N    * function names beginning with 'str' as reserved for future
+N    * expansion of <string.h>.
+N    */
+N
+Nextern _ARMABI size_t strlcat(char * /*dst*/, const char * /*src*/, size_t /*len*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) size_t strlcat(char *  , const char *  , size_t  ) __attribute__((__nonnull__(1,2)));
+N   /*
+N    * concatenates the string src to the string dst, using no more
+N    * than len bytes of dst. Always null-terminates dst _within the
+N    * length len (i.e. will copy at most len-1 bytes of string plus
+N    * a NUL), unless len is actually zero.
+N    * 
+N    * Return value is the length of the string that _would_ have
+N    * been written, i.e. the length of src plus the original length
+N    * of dst. Thus, the operation succeeded without truncation if
+N    * and only if ret < len; otherwise, the value in ret tells you
+N    * how big to make dst if you decide to reallocate it. (That
+N    * value does _not_ include the NUL.)
+N    * 
+N    * If no NUL is encountered within the first len bytes of dst,
+N    * then the length of dst is considered to have been equal to
+N    * len for the purposes of the return value (as if there were a
+N    * NUL at dst[len]). Thus, the return value in this case is len
+N    * + strlen(src).
+N    * 
+N    * This is a BSD-derived library extension, which we are
+N    * permitted to declare in a standard header because ISO defines
+N    * function names beginning with 'str' as reserved for future
+N    * expansion of <string.h>.
+N    */
+N
+Nextern _ARMABI void _membitcpybl(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitcpybl(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitcpybb(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitcpybb(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitcpyhl(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitcpyhl(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitcpyhb(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitcpyhb(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitcpywl(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitcpywl(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitcpywb(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitcpywb(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitmovebl(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitmovebl(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitmovebb(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitmovebb(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitmovehl(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitmovehl(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitmovehb(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitmovehb(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitmovewl(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitmovewl(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+Nextern _ARMABI void _membitmovewb(void * /*dest*/, const void * /*src*/, int /*destoffset*/, int /*srcoffset*/, size_t /*nbits*/) __attribute__((__nonnull__(1,2)));
+Xextern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  , int  , size_t  ) __attribute__((__nonnull__(1,2)));
+N    /*
+N     * Copies or moves a piece of memory from one place to another,
+N     * with one-bit granularity. So you can start or finish a copy
+N     * part way through a byte, and you can copy between regions
+N     * with different alignment within a byte.
+N     * 
+N     * All these functions have the same prototype: two void *
+N     * pointers for destination and source, then two integers
+N     * giving the bit offset from those pointers, and finally the
+N     * number of bits to copy.
+N     * 
+N     * Just like memcpy and memmove, the "cpy" functions copy as
+N     * fast as they can in the assumption that the memory regions
+N     * do not overlap, while the "move" functions cope correctly
+N     * with overlap.
+N     *
+N     * Treating memory as a stream of individual bits requires
+N     * defining a convention about what order those bits are
+N     * considered to be arranged in. The above functions support
+N     * multiple conventions:
+N     * 
+N     *  - the "bl" functions consider the unit of memory to be the
+N     *    byte, and consider the bits within each byte to be
+N     *    arranged in little-endian fashion, so that the LSB comes
+N     *    first. (For example, membitcpybl(a,b,0,7,1) would copy
+N     *    the MSB of the byte at b to the LSB of the byte at a.)
+N     * 
+N     *  - the "bb" functions consider the unit of memory to be the
+N     *    byte, and consider the bits within each byte to be
+N     *    arranged in big-endian fashion, so that the MSB comes
+N     *    first.
+N     * 
+N     *  - the "hl" functions consider the unit of memory to be the
+N     *    16-bit halfword, and consider the bits within each word
+N     *    to be arranged in little-endian fashion.
+N     * 
+N     *  - the "hb" functions consider the unit of memory to be the
+N     *    16-bit halfword, and consider the bits within each word
+N     *    to be arranged in big-endian fashion.
+N     * 
+N     *  - the "wl" functions consider the unit of memory to be the
+N     *    32-bit word, and consider the bits within each word to be
+N     *    arranged in little-endian fashion.
+N     * 
+N     *  - the "wb" functions consider the unit of memory to be the
+N     *    32-bit word, and consider the bits within each word to be
+N     *    arranged in big-endian fashion.
+N     */
+N
+N    #ifdef __cplusplus
+S         }  /* extern "C" */
+S      }  /* namespace std */
+N    #endif /* __cplusplus */
+N  #endif /* __STRING_DECLS */
+N
+N  #ifdef __cplusplus
+S    #ifndef __STRING_NO_EXPORTS
+S      using ::std::size_t;
+S      using ::std::memcpy;
+S      using ::std::memmove;
+S      using ::std::strcpy;
+S      using ::std::strncpy;
+S      using ::std::strcat;
+S      using ::std::strncat;
+S      using ::std::memcmp;
+S      using ::std::strcmp;
+S      using ::std::strncmp;
+S      using ::std::strcasecmp;
+S      using ::std::strncasecmp;
+S      using ::std::strcoll;
+S      using ::std::strxfrm;
+S      using ::std::memchr;
+S      using ::std::strchr;
+S      using ::std::strcspn;
+S      using ::std::strpbrk;
+S      using ::std::strrchr;
+S      using ::std::strspn;
+S      using ::std::strstr;
+S      using ::std::strtok;
+S#ifndef __STRICT_ANSI__
+S      using ::std::strtok_r;
+S#endif
+S      using ::std::_strtok_r;
+S      using ::std::memset;
+S      using ::std::strerror;
+S      using ::std::strlen;
+S      using ::std::strlcpy;
+S      using ::std::strlcat;
+S      using ::std::_membitcpybl;
+S      using ::std::_membitcpybb;
+S      using ::std::_membitcpyhl;
+S      using ::std::_membitcpyhb;
+S      using ::std::_membitcpywl;
+S      using ::std::_membitcpywb;
+S      using ::std::_membitmovebl;
+S      using ::std::_membitmovebb;
+S      using ::std::_membitmovehl;
+S      using ::std::_membitmovehb;
+S      using ::std::_membitmovewl;
+S      using ::std::_membitmovewb;
+S    #endif /* __STRING_NO_EXPORTS */
+N  #endif /* __cplusplus */
+N
+N#endif
+N
+N/* end of string.h */
+L 26 "..\..\..\utils\ustdlib.c" 2
+N#include "driverlib/debug.h"
+L 1 "..\..\..\driverlib/debug.h" 1
+N//*****************************************************************************
+N//
+N// debug.h - Macros for assisting debug of the driver library.
+N//
+N// Copyright (c) 2006-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Peripheral Driver Library.
+N//
+N//*****************************************************************************
+N
+N#ifndef __DEBUG_H__
+N#define __DEBUG_H__
+N
+N//*****************************************************************************
+N//
+N// Prototype for the function that is called when an invalid argument is passed
+N// to an API.  This is only used when doing a DEBUG build.
+N//
+N//*****************************************************************************
+Nextern void __error__(char *pcFilename, unsigned long ulLine);
+N
+N//*****************************************************************************
+N//
+N// The ASSERT macro, which does the actual assertion checking.  Typically, this
+N// will be for procedure arguments.
+N//
+N//*****************************************************************************
+N#ifdef DEBUG
+S#define ASSERT(expr) {                                      \
+S                         if(!(expr))                        \
+S                         {                                  \
+S                             __error__(__FILE__, __LINE__); \
+S                         }                                  \
+S                     }
+X#define ASSERT(expr) {                                                               if(!(expr))                                                 {                                                               __error__(__FILE__, __LINE__);                          }                                                       }
+N#else
+N#define ASSERT(expr)
+N#endif
+N
+N#endif // __DEBUG_H__
+L 27 "..\..\..\utils\ustdlib.c" 2
+N#include "utils/ustdlib.h"
+L 1 "..\..\..\utils/ustdlib.h" 1
+N//*****************************************************************************
+N//
+N// ustdlib.h - Prototypes for simple standard library functions.
+N//
+N// Copyright (c) 2007-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __USTDLIB_H__
+N#define __USTDLIB_H__
+N
+N#include <stdarg.h>
+L 1 "C:\Keil\ARM\RV31\Inc\stdarg.h" 1
+N/* stdarg.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.8 */
+N/* Copyright (C) Codemist Ltd., 1988                            */
+N/* Copyright (C) ARM Ltd., 1991-1999. All rights reserved */
+N
+N/*
+N * RCS $Revision: 157865 $
+N * Checkin $Date: 2010-06-30 13:43:11 +0100 (Wed, 30 Jun 2010) $
+N * Revising $Author: agrant $
+N */
+N
+N#ifndef __stdarg_h
+N#define __stdarg_h
+N
+N  #ifndef __STDARG_DECLS
+N  #define __STDARG_DECLS
+N
+N    #undef __CLIBNS
+N
+N    #ifdef __cplusplus
+S      namespace std {
+S          #define __CLIBNS ::std::
+S          extern "C" {
+N    #else
+N      #define __CLIBNS
+N    #endif  /* __cplusplus */
+N
+N/*
+N * stdarg.h declares a type and defines macros for advancing through a
+N * list of arguments whose number and types are not known to the called
+N * function when it is translated. A function may be called with a variable
+N * number of arguments of differing types. Its parameter list contains one or
+N * more parameters. The rightmost parameter plays a special role in the access
+N * mechanism, and will be called parmN in this description.
+N */
+N
+N/* N.B. <stdio.h> is required to declare vfprintf() without defining      */
+N/* va_list.  Clearly the type __va_list there must keep in step.          */
+N  typedef struct __va_list { void *__ap; } va_list;
+N
+N   /*
+N    * an array type suitable for holding information needed by the macro va_arg
+N    * and the function va_end. The called function shall declare a variable
+N    * (referred to as ap) having type va_list. The variable ap may be passed as
+N    * an argument to another function.
+N    * Note: va_list is an array type so that when an object of that type
+N    * is passed as an argument it gets passed by reference.
+N    */
+N  #define va_start(ap, parmN) __va_start(ap, parmN)
+N
+N   /*
+N    * The va_start macro shall be executed before any access to the unnamed
+N    * arguments. The parameter ap points to an object that has type va_list.
+N    * The va_start macro initialises ap for subsequent use by va_arg and
+N    * va_end. The parameter parmN is the identifier of the rightmost parameter
+N    * in the variable parameter list in the function definition (the one just
+N    * before the '...'). If the parameter parmN is declared with the register
+N    * storage class an error is given.
+N    * If parmN is a narrow type (char, short, float) an error is given in
+N    * strict ANSI mode, or a warning otherwise.
+N    * Returns: no value.
+N    */
+N  #define va_arg(ap, type) __va_arg(ap, type)
+N
+N   /*
+N    * The va_arg macro expands to an expression that has the type and value of
+N    * the next argument in the call. The parameter ap shall be the same as the
+N    * va_list ap initialised by va_start. Each invocation of va_arg modifies
+N    * ap so that successive arguments are returned in turn. The parameter
+N    * 'type' is a type name such that the type of a pointer to an object that
+N    * has the specified type can be obtained simply by postfixing a * to
+N    * 'type'. If type is a narrow type, an error is given in strict ANSI
+N    * mode, or a warning otherwise. If the type is an array or function type,
+N    * an error is given.
+N    * In non-strict ANSI mode, 'type' is allowed to be any expression.
+N    * Returns: The first invocation of the va_arg macro after that of the
+N    *          va_start macro returns the value of the argument after that
+N    *          specified by parmN. Successive invocations return the values of
+N    *          the remaining arguments in succession.
+N    *          The result is cast to 'type', even if 'type' is narrow.
+N    */
+N
+N#define __va_copy(dest, src) ((void)((dest) = (src)))
+N
+N#if !defined(__STRICT_ANSI__) || (defined(__STDC_VERSION__) && 199901L <= __STDC_VERSION__)
+X#if !0L || (1L && 199901L <= 199409L)
+N   /* va_copy is in C99 and non-strict C90 and non-strict C++
+N    * __va_copy is always present.
+N    */
+N  #define va_copy(dest, src) ((void)((dest) = (src)))
+N
+N   /* The va_copy macro makes the va_list dest be a copy of
+N    * the va_list src, as if the va_start macro had been applied
+N    * to it followed by the same sequence of uses of the va_arg
+N    * macro as had previously been used to reach the present state
+N    * of src.
+N    */
+N#endif
+N
+N#define va_end(ap) __va_end(ap)
+N   /*
+N    * The va_end macro facilitates a normal return from the function whose
+N    * variable argument list was referenced by the expansion of va_start that
+N    * initialised the va_list ap. If the va_end macro is not invoked before
+N    * the return, the behaviour is undefined.
+N    * Returns: no value.
+N    */
+N
+N    #ifdef __cplusplus
+S         }  /* extern "C" */
+S      }  /* namespace std */
+N    #endif /* __cplusplus */
+N
+N    #ifdef __GNUC__
+S     /* be cooperative with glibc */
+S     typedef __CLIBNS va_list __gnuc_va_list;
+S     #define __GNUC_VA_LIST
+S     #undef __need___va_list
+N    #endif
+N
+N  #endif /* __STDARG_DECLS */
+N
+N  #ifdef __cplusplus
+S    #ifndef __STDARG_NO_EXPORTS
+S      using ::std::va_list;
+S    #endif
+N  #endif /* __cplusplus */
+N
+N#endif
+N
+N/* end of stdarg.h */
+L 29 "..\..\..\utils/ustdlib.h" 2
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup ustdlib_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N//! A structure that contains the broken down date and time.
+N//
+N//*****************************************************************************
+Ntypedef struct
+N{
+N    //
+N    //! The number of years since 0 AD.
+N    //
+N    unsigned short usYear;
+N
+N    //
+N    //! The month, where January is 0 and December is 11.
+N    //
+N    unsigned char ucMon;
+N
+N    //
+N    //! The day of the month.
+N    //
+N    unsigned char ucMday;
+N
+N    //
+N    //! The day of the week, where Sunday is 0 and Saturday is 6.
+N    //
+N    unsigned char ucWday;
+N
+N    //
+N    //! The number of hours.
+N    //
+N    unsigned char ucHour;
+N
+N    //
+N    //! The number of minutes.
+N    //
+N    unsigned char ucMin;
+N
+N    //
+N    //! The number of seconds.
+N    //
+N    unsigned char ucSec;
+N}
+NtTime;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern int uvsnprintf(char *pcBuf, unsigned long ulSize, const char *pcString,
+N                      va_list vaArgP);
+Nextern int usprintf(char *pcBuf, const char *pcString, ...);
+Nextern int usnprintf(char *pcBuf, unsigned long ulSize, const char *pcString,
+N                     ...);
+Nextern void ulocaltime(unsigned long ulTime, tTime *psTime);
+Nextern unsigned long umktime(tTime *psTime);
+Nextern int ustrlen (const char *pcStr);
+Nextern char *ustrncpy (char *pcDst, const char *pcSrc, int iNum);
+Nextern unsigned long ustrtoul(const char *pcStr, const char **ppcStrRet,
+N                              int iBase);
+Nextern char *ustrstr(const char *pcHaystack, const char *pcNeedle);
+Nextern int ustrnicmp(const char *pcStr1, const char *pcStr2, int iCount);
+Nextern int ustrncmp(const char *pcStr1, const char *pcStr2, int iCount);
+Nextern int ustrcmp(const char *pcStr1, const char *pcStr2);
+Nextern int ustrcasecmp(const char *pcStr1, const char *pcStr2);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __USTDLIB_H__
+L 28 "..\..\..\utils\ustdlib.c" 2
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup ustdlib_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// A mapping from an integer between 0 and 15 to its ASCII character
+N// equivalent.
+N//
+N//*****************************************************************************
+Nstatic const char * const g_pcHex = "0123456789abcdef";
+N
+N//*****************************************************************************
+N//
+N//! Copies a certain number of characters from one string to another.
+N//!
+N//! \param pcDst is a pointer to the destination buffer into which characters
+N//!   are to be copied.
+N//! \param pcSrc is a pointer to the string from which characters are to be
+N//!   copied.
+N//! \param iNum is the number of characters to copy to the destination buffer.
+N//!
+N//! This function copies at most \e iNum characters from the string pointed to
+N//! by \e pcSrc into the buffer pointed to by \e pcDst.  If the end of \e
+N//! pcSrc is found before \e iNum characters have been copied, remaining
+N//! characters in \e pcDst will be padded with zeroes until \e iNum characters
+N//! have been written.  Note that the destination string will only be NULL
+N//! terminated if the number of characters to be copied is greater than the
+N//! length of \e pcSrc.
+N//!
+N//! \return Returns \e pcDst.
+N//
+N//*****************************************************************************
+Nchar *
+Nustrncpy (char *pcDst, const char *pcSrc, int iNum)
+N{
+N    int iCount;
+N
+N    ASSERT(pcSrc);
+X    ;
+N    ASSERT(pcDst);
+X    ;
+N
+N    //
+N    // Start at the beginning of the source string.
+N    //
+N    iCount = 0;
+N
+N    //
+N    // Copy the source string until we run out of source characters or
+N    // destination space.
+N    //
+N    while(iNum && pcSrc[iCount])
+N    {
+N        pcDst[iCount] = pcSrc[iCount];
+N        iCount++;
+N        iNum--;
+N    }
+N
+N    //
+N    // Pad the destination if we are not yet done.
+N    //
+N    while(iNum)
+N    {
+N        pcDst[iCount++] = (char)0;
+N        iNum--;
+N    }
+N
+N    //
+N    // Pass the destination pointer back to the caller.
+N    //
+N    return(pcDst);
+N}
+N
+N//*****************************************************************************
+N//
+N//! A simple vsnprintf function supporting \%c, \%d, \%p, \%s, \%u, \%x, and
+N//! \%X.
+N//!
+N//! \param pcBuf points to the buffer where the converted string is stored.
+N//! \param ulSize is the size of the buffer.
+N//! \param pcString is the format string.
+N//! \param vaArgP is the list of optional arguments, which depend on the
+N//! contents of the format string.
+N//!
+N//! This function is very similar to the C library <tt>vsnprintf()</tt>
+N//! function.  Only the following formatting characters are supported:
+N//!
+N//! - \%c to print a character
+N//! - \%d to print a decimal value
+N//! - \%s to print a string
+N//! - \%u to print an unsigned decimal value
+N//! - \%x to print a hexadecimal value using lower case letters
+N//! - \%X to print a hexadecimal value using lower case letters (not upper case
+N//! letters as would typically be used)
+N//! - \%p to print a pointer as a hexadecimal value
+N//! - \%\% to print out a \% character
+N//!
+N//! For \%d, \%p, \%s, \%u, \%x, and \%X, an optional number may reside between
+N//! the \% and the format character, which specifies the minimum number of
+N//! characters to use for that value; if preceded by a 0 then the extra
+N//! characters will be filled with zeros instead of spaces.  For example,
+N//! ``\%8d'' will use eight characters to print the decimal value with spaces
+N//! added to reach eight; ``\%08d'' will use eight characters as well but will
+N//! add zeroes instead of spaces.
+N//!
+N//! The type of the arguments after \e pcString must match the requirements of
+N//! the format string.  For example, if an integer was passed where a string
+N//! was expected, an error of some kind will most likely occur.
+N//!
+N//! The \e ulSize parameter limits the number of characters that will be stored
+N//! in the buffer pointed to by \e pcBuf to prevent the possibility of a buffer
+N//! overflow.  The buffer size should be large enough to hold the expected
+N//! converted output string, including the null termination character.
+N//!
+N//! The function will return the number of characters that would be converted
+N//! as if there were no limit on the buffer size.  Therefore it is possible for
+N//! the function to return a count that is greater than the specified buffer
+N//! size.  If this happens, it means that the output was truncated.
+N//!
+N//! \return Returns the number of characters that were to be stored, not
+N//! including the NULL termination character, regardless of space in the
+N//! buffer.
+N//
+N//*****************************************************************************
+Nint
+Nuvsnprintf(char *pcBuf, unsigned long ulSize, const char *pcString,
+N           va_list vaArgP)
+N{
+N    unsigned long ulIdx, ulValue, ulCount, ulBase, ulNeg;
+N    char *pcStr, cFill;
+N    int iConvertCount = 0;
+N
+N    //
+N    // Check the arguments.
+N    //
+N    ASSERT(pcString != 0);
+X    ;
+N    ASSERT(pcBuf != 0);
+X    ;
+N    ASSERT(ulSize != 0);
+X    ;
+N
+N    //
+N    // Adjust buffer size limit to allow one space for null termination.
+N    //
+N    if(ulSize)
+N    {
+N        ulSize--;
+N    }
+N
+N    //
+N    // Initialize the count of characters converted.
+N    //
+N    iConvertCount = 0;
+N
+N    //
+N    // Loop while there are more characters in the format string.
+N    //
+N    while(*pcString)
+N    {
+N        //
+N        // Find the first non-% character, or the end of the string.
+N        //
+N        for(ulIdx = 0; (pcString[ulIdx] != '%') && (pcString[ulIdx] != '\0');
+N            ulIdx++)
+N        {
+N        }
+N
+N        //
+N        // Write this portion of the string to the output buffer.  If there are
+N        // more characters to write than there is space in the buffer, then
+N        // only write as much as will fit in the buffer.
+N        //
+N        if(ulIdx > ulSize)
+N        {
+N            ustrncpy(pcBuf, pcString, ulSize);
+N            pcBuf += ulSize;
+N            ulSize = 0;
+N        }
+N        else
+N        {
+N            ustrncpy(pcBuf, pcString, ulIdx);
+N            pcBuf += ulIdx;
+N            ulSize -= ulIdx;
+N        }
+N
+N        //
+N        // Update the conversion count.  This will be the number of characters
+N        // that should have been written, even if there was not room in the
+N        // buffer.
+N        //
+N        iConvertCount += ulIdx;
+N
+N        //
+N        // Skip the portion of the format string that was written.
+N        //
+N        pcString += ulIdx;
+N
+N        //
+N        // See if the next character is a %.
+N        //
+N        if(*pcString == '%')
+N        {
+N            //
+N            // Skip the %.
+N            //
+N            pcString++;
+N
+N            //
+N            // Set the digit count to zero, and the fill character to space
+N            // (that is, to the defaults).
+N            //
+N            ulCount = 0;
+N            cFill = ' ';
+N
+N            //
+N            // It may be necessary to get back here to process more characters.
+N            // Goto's aren't pretty, but effective.  I feel extremely dirty for
+N            // using not one but two of the beasts.
+N            //
+Nagain:
+N
+N            //
+N            // Determine how to handle the next character.
+N            //
+N            switch(*pcString++)
+N            {
+N                //
+N                // Handle the digit characters.
+N                //
+N                case '0':
+N                case '1':
+N                case '2':
+N                case '3':
+N                case '4':
+N                case '5':
+N                case '6':
+N                case '7':
+N                case '8':
+N                case '9':
+N                {
+N                    //
+N                    // If this is a zero, and it is the first digit, then the
+N                    // fill character is a zero instead of a space.
+N                    //
+N                    if((pcString[-1] == '0') && (ulCount == 0))
+N                    {
+N                        cFill = '0';
+N                    }
+N
+N                    //
+N                    // Update the digit count.
+N                    //
+N                    ulCount *= 10;
+N                    ulCount += pcString[-1] - '0';
+N
+N                    //
+N                    // Get the next character.
+N                    //
+N                    goto again;
+N                }
+N
+N                //
+N                // Handle the %c command.
+N                //
+N                case 'c':
+N                {
+N                    //
+N                    // Get the value from the varargs.
+N                    //
+N                    ulValue = va_arg(vaArgP, unsigned long);
+X                    ulValue = __va_arg(vaArgP, unsigned long);
+N
+N                    //
+N                    // Copy the character to the output buffer, if there is
+N                    // room.  Update the buffer size remaining.
+N                    //
+N                    if(ulSize != 0)
+N                    {
+N                        *pcBuf++ = (char)ulValue;
+N                        ulSize--;
+N                    }
+N
+N                    //
+N                    // Update the conversion count.
+N                    //
+N                    iConvertCount++;
+N
+N                    //
+N                    // This command has been handled.
+N                    //
+N                    break;
+N                }
+N
+N                //
+N                // Handle the %d command.
+N                //
+N                case 'd':
+N                {
+N                    //
+N                    // Get the value from the varargs.
+N                    //
+N                    ulValue = va_arg(vaArgP, unsigned long);
+X                    ulValue = __va_arg(vaArgP, unsigned long);
+N
+N                    //
+N                    // If the value is negative, make it positive and indicate
+N                    // that a minus sign is needed.
+N                    //
+N                    if((long)ulValue < 0)
+N                    {
+N                        //
+N                        // Make the value positive.
+N                        //
+N                        ulValue = -(long)ulValue;
+N
+N                        //
+N                        // Indicate that the value is negative.
+N                        //
+N                        ulNeg = 1;
+N                    }
+N                    else
+N                    {
+N                        //
+N                        // Indicate that the value is positive so that a
+N                        // negative sign isn't inserted.
+N                        //
+N                        ulNeg = 0;
+N                    }
+N
+N                    //
+N                    // Set the base to 10.
+N                    //
+N                    ulBase = 10;
+N
+N                    //
+N                    // Convert the value to ASCII.
+N                    //
+N                    goto convert;
+N                }
+N
+N                //
+N                // Handle the %s command.
+N                //
+N                case 's':
+N                {
+N                    //
+N                    // Get the string pointer from the varargs.
+N                    //
+N                    pcStr = va_arg(vaArgP, char *);
+X                    pcStr = __va_arg(vaArgP, char *);
+N
+N                    //
+N                    // Determine the length of the string.
+N                    //
+N                    for(ulIdx = 0; pcStr[ulIdx] != '\0'; ulIdx++)
+N                    {
+N                    }
+N
+N                    //
+N                    // Update the convert count to include any padding that
+N                    // should be necessary (regardless of whether we have space
+N                    // to write it or not).
+N                    //
+N                    if(ulCount > ulIdx)
+N                    {
+N                        iConvertCount += (ulCount - ulIdx);
+N                    }
+N
+N                    //
+N                    // Copy the string to the output buffer.  Only copy as much
+N                    // as will fit in the buffer.  Update the output buffer
+N                    // pointer and the space remaining.
+N                    //
+N                    if(ulIdx > ulSize)
+N                    {
+N                        ustrncpy(pcBuf, pcStr, ulSize);
+N                        pcBuf += ulSize;
+N                        ulSize = 0;
+N                    }
+N                    else
+N                    {
+N                        ustrncpy(pcBuf, pcStr, ulIdx);
+N                        pcBuf += ulIdx;
+N                        ulSize -= ulIdx;
+N
+N                        //
+N                        // Write any required padding spaces assuming there is
+N                        // still space in the buffer.
+N                        //
+N                        if(ulCount > ulIdx)
+N                        {
+N                            ulCount -= ulIdx;
+N                            if(ulCount > ulSize)
+N                            {
+N                                ulCount = ulSize;
+N                            }
+N                            ulSize =- ulCount;
+N
+N                            while(ulCount--)
+N                            {
+N                                *pcBuf++ = ' ';
+N                            }
+N                        }
+N                    }
+N
+N                    //
+N                    // Update the conversion count.  This will be the number of
+N                    // characters that should have been written, even if there
+N                    // was not room in the buffer.
+N                    //
+N                    iConvertCount += ulIdx;
+N
+N                    //
+N                    // This command has been handled.
+N                    //
+N                    break;
+N                }
+N
+N                //
+N                // Handle the %u command.
+N                //
+N                case 'u':
+N                {
+N                    //
+N                    // Get the value from the varargs.
+N                    //
+N                    ulValue = va_arg(vaArgP, unsigned long);
+X                    ulValue = __va_arg(vaArgP, unsigned long);
+N
+N                    //
+N                    // Set the base to 10.
+N                    //
+N                    ulBase = 10;
+N
+N                    //
+N                    // Indicate that the value is positive so that a minus sign
+N                    // isn't inserted.
+N                    //
+N                    ulNeg = 0;
+N
+N                    //
+N                    // Convert the value to ASCII.
+N                    //
+N                    goto convert;
+N                }
+N
+N                //
+N                // Handle the %x and %X commands.  Note that they are treated
+N                // identically; that is, %X will use lower case letters for a-f
+N                // instead of the upper case letters is should use.  We also
+N                // alias %p to %x.
+N                //
+N                case 'x':
+N                case 'X':
+N                case 'p':
+N                {
+N                    //
+N                    // Get the value from the varargs.
+N                    //
+N                    ulValue = va_arg(vaArgP, unsigned long);
+X                    ulValue = __va_arg(vaArgP, unsigned long);
+N
+N                    //
+N                    // Set the base to 16.
+N                    //
+N                    ulBase = 16;
+N
+N                    //
+N                    // Indicate that the value is positive so that a minus sign
+N                    // isn't inserted.
+N                    //
+N                    ulNeg = 0;
+N
+N                    //
+N                    // Determine the number of digits in the string version of
+N                    // the value.
+N                    //
+Nconvert:
+N                    for(ulIdx = 1;
+N                        (((ulIdx * ulBase) <= ulValue) &&
+N                         (((ulIdx * ulBase) / ulBase) == ulIdx));
+N                        ulIdx *= ulBase, ulCount--)
+N                    {
+N                    }
+N
+N                    //
+N                    // If the value is negative, reduce the count of padding
+N                    // characters needed.
+N                    //
+N                    if(ulNeg)
+N                    {
+N                        ulCount--;
+N                    }
+N
+N                    //
+N                    // If the value is negative and the value is padded with
+N                    // zeros, then place the minus sign before the padding.
+N                    //
+N                    if(ulNeg && (ulSize != 0) && (cFill == '0'))
+N                    {
+N                        //
+N                        // Place the minus sign in the output buffer.
+N                        //
+N                        *pcBuf++ = '-';
+N                        ulSize--;
+N
+N                        //
+N                        // Update the conversion count.
+N                        //
+N                        iConvertCount++;
+N
+N                        //
+N                        // The minus sign has been placed, so turn off the
+N                        // negative flag.
+N                        //
+N                        ulNeg = 0;
+N                    }
+N
+N                    //
+N                    // See if there are more characters in the specified field
+N                    // width than there are in the conversion of this value.
+N                    //
+N                    if((ulCount > 1) && (ulCount < 65536))
+N                    {
+N                        //
+N                        // Loop through the required padding characters.
+N                        //
+N                        for(ulCount--; ulCount; ulCount--)
+N                        {
+N                            //
+N                            // Copy the character to the output buffer if there
+N                            // is room.
+N                            //
+N                            if(ulSize != 0)
+N                            {
+N                                *pcBuf++ = cFill;
+N                                ulSize--;
+N                            }
+N
+N                            //
+N                            // Update the conversion count.
+N                            //
+N                            iConvertCount++;
+N                        }
+N                    }
+N
+N                    //
+N                    // If the value is negative, then place the minus sign
+N                    // before the number.
+N                    //
+N                    if(ulNeg && (ulSize != 0))
+N                    {
+N                        //
+N                        // Place the minus sign in the output buffer.
+N                        //
+N                        *pcBuf++ = '-';
+N                        ulSize--;
+N
+N                        //
+N                        // Update the conversion count.
+N                        //
+N                        iConvertCount++;
+N                    }
+N
+N                    //
+N                    // Convert the value into a string.
+N                    //
+N                    for(; ulIdx; ulIdx /= ulBase)
+N                    {
+N                        //
+N                        // Copy the character to the output buffer if there is
+N                        // room.
+N                        //
+N                        if(ulSize != 0)
+N                        {
+N                            *pcBuf++ = g_pcHex[(ulValue / ulIdx) % ulBase];
+N                            ulSize--;
+N                        }
+N
+N                        //
+N                        // Update the conversion count.
+N                        //
+N                        iConvertCount++;
+N                    }
+N
+N                    //
+N                    // This command has been handled.
+N                    //
+N                    break;
+N                }
+N
+N                //
+N                // Handle the %% command.
+N                //
+N                case '%':
+N                {
+N                    //
+N                    // Simply write a single %.
+N                    //
+N                    if(ulSize != 0)
+N                    {
+N                        *pcBuf++ = pcString[-1];
+N                        ulSize--;
+N                    }
+N
+N                    //
+N                    // Update the conversion count.
+N                    //
+N                    iConvertCount++;
+N
+N                    //
+N                    // This command has been handled.
+N                    //
+N                    break;
+N                }
+N
+N                //
+N                // Handle all other commands.
+N                //
+N                default:
+N                {
+N                    //
+N                    // Indicate an error.
+N                    //
+N                    if(ulSize >= 5)
+N                    {
+N                        ustrncpy(pcBuf, "ERROR", 5);
+N                        pcBuf += 5;
+N                        ulSize -= 5;
+N                    }
+N                    else
+N                    {
+N                        ustrncpy(pcBuf, "ERROR", ulSize);
+N                        pcBuf += ulSize;
+N                        ulSize = 0;
+N                    }
+N
+N                    //
+N                    // Update the conversion count.
+N                    //
+N                    iConvertCount += 5;
+N
+N                    //
+N                    // This command has been handled.
+N                    //
+N                    break;
+N                }
+N            }
+N        }
+N    }
+N
+N    //
+N    // Null terminate the string in the buffer.
+N    //
+N    *pcBuf = 0;
+N
+N    //
+N    // Return the number of characters in the full converted string.
+N    //
+N    return(iConvertCount);
+N}
+N
+N//*****************************************************************************
+N//
+N//! A simple sprintf function supporting \%c, \%d, \%p, \%s, \%u, \%x, and \%X.
+N//!
+N//! \param pcBuf is the buffer where the converted string is stored.
+N//! \param pcString is the format string.
+N//! \param ... are the optional arguments, which depend on the contents of the
+N//! format string.
+N//!
+N//! This function is very similar to the C library <tt>sprintf()</tt> function.
+N//! Only the following formatting characters are supported:
+N//!
+N//! - \%c to print a character
+N//! - \%d to print a decimal value
+N//! - \%s to print a string
+N//! - \%u to print an unsigned decimal value
+N//! - \%x to print a hexadecimal value using lower case letters
+N//! - \%X to print a hexadecimal value using lower case letters (not upper case
+N//! letters as would typically be used)
+N//! - \%p to print a pointer as a hexadecimal value
+N//! - \%\% to print out a \% character
+N//!
+N//! For \%d, \%p, \%s, \%u, \%x, and \%X, an optional number may reside between
+N//! the \% and the format character, which specifies the minimum number of
+N//! characters to use for that value; if preceded by a 0 then the extra
+N//! characters will be filled with zeros instead of spaces.  For example,
+N//! ``\%8d'' will use eight characters to print the decimal value with spaces
+N//! added to reach eight; ``\%08d'' will use eight characters as well but will
+N//! add zeros instead of spaces.
+N//!
+N//! The type of the arguments after \e pcString must match the requirements of
+N//! the format string.  For example, if an integer was passed where a string
+N//! was expected, an error of some kind will most likely occur.
+N//!
+N//! The caller must ensure that the buffer \e pcBuf is large enough to hold the
+N//! entire converted string, including the null termination character.
+N//!
+N//! \return Returns the count of characters that were written to the output
+N//! buffer, not including the NULL termination character.
+N//
+N//*****************************************************************************
+Nint
+Nusprintf(char *pcBuf, const char *pcString, ...)
+N{
+N    va_list vaArgP;
+N    int iRet;
+N
+N    //
+N    // Start the varargs processing.
+N    //
+N    va_start(vaArgP, pcString);
+X    __va_start(vaArgP, pcString);
+N
+N    //
+N    // Call vsnprintf to perform the conversion.  Use a large number for the
+N    // buffer size.
+N    //
+N    iRet = uvsnprintf(pcBuf, 0xffff, pcString, vaArgP);
+N
+N    //
+N    // End the varargs processing.
+N    //
+N    va_end(vaArgP);
+X    __va_end(vaArgP);
+N
+N    //
+N    // Return the conversion count.
+N    //
+N    return(iRet);
+N}
+N
+N//*****************************************************************************
+N//
+N//! A simple snprintf function supporting \%c, \%d, \%p, \%s, \%u, \%x, and
+N//! \%X.
+N//!
+N//! \param pcBuf is the buffer where the converted string is stored.
+N//! \param ulSize is the size of the buffer.
+N//! \param pcString is the format string.
+N//! \param ... are the optional arguments, which depend on the contents of the
+N//! format string.
+N//!
+N//! This function is very similar to the C library <tt>sprintf()</tt> function.
+N//! Only the following formatting characters are supported:
+N//!
+N//! - \%c to print a character
+N//! - \%d to print a decimal value
+N//! - \%s to print a string
+N//! - \%u to print an unsigned decimal value
+N//! - \%x to print a hexadecimal value using lower case letters
+N//! - \%X to print a hexadecimal value using lower case letters (not upper case
+N//! letters as would typically be used)
+N//! - \%p to print a pointer as a hexadecimal value
+N//! - \%\% to print out a \% character
+N//!
+N//! For \%d, \%p, \%s, \%u, \%x, and \%X, an optional number may reside between
+N//! the \% and the format character, which specifies the minimum number of
+N//! characters to use for that value; if preceded by a 0 then the extra
+N//! characters will be filled with zeros instead of spaces.  For example,
+N//! ``\%8d'' will use eight characters to print the decimal value with spaces
+N//! added to reach eight; ``\%08d'' will use eight characters as well but will
+N//! add zeros instead of spaces.
+N//!
+N//! The type of the arguments after \e pcString must match the requirements of
+N//! the format string.  For example, if an integer was passed where a string
+N//! was expected, an error of some kind will most likely occur.
+N//!
+N//! The function will copy at most \e ulSize - 1 characters into the buffer
+N//! \e pcBuf.  One space is reserved in the buffer for the null termination
+N//! character.
+N//!
+N//! The function will return the number of characters that would be converted
+N//! as if there were no limit on the buffer size.  Therefore it is possible for
+N//! the function to return a count that is greater than the specified buffer
+N//! size.  If this happens, it means that the output was truncated.
+N//!
+N//! \return Returns the number of characters that were to be stored, not
+N//! including the NULL termination character, regardless of space in the
+N//! buffer.
+N//
+N//*****************************************************************************
+Nint
+Nusnprintf(char *pcBuf, unsigned long ulSize, const char *pcString, ...)
+N{
+N    int iRet;
+N    va_list vaArgP;
+N
+N    //
+N    // Start the varargs processing.
+N    //
+N    va_start(vaArgP, pcString);
+X    __va_start(vaArgP, pcString);
+N
+N    //
+N    // Call vsnprintf to perform the conversion.
+N    //
+N    iRet = uvsnprintf(pcBuf, ulSize, pcString, vaArgP);
+N
+N    //
+N    // End the varargs processing.
+N    //
+N    va_end(vaArgP);
+X    __va_end(vaArgP);
+N
+N    //
+N    // Return the conversion count.
+N    //
+N    return(iRet);
+N}
+N
+N//*****************************************************************************
+N//
+N// This array contains the number of days in a year at the beginning of each
+N// month of the year, in a non-leap year.
+N//
+N//*****************************************************************************
+Nstatic const short g_psDaysToMonth[12] =
+N{
+N    0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
+N};
+N
+N//*****************************************************************************
+N//
+N//! Converts from seconds to calendar date and time.
+N//!
+N//! \param ulTime is the number of seconds.
+N//! \param psTime is a pointer to the time structure that is filled in with the
+N//! broken down date and time.
+N//!
+N//! This function converts a number of seconds since midnight GMT on January 1,
+N//! 1970 (traditional Unix epoch) into the equivalent month, day, year, hours,
+N//! minutes, and seconds representation.
+N//!
+N//! \return None.
+N//
+N//*****************************************************************************
+Nvoid
+Nulocaltime(unsigned long ulTime, tTime *psTime)
+N{
+N    unsigned long ulTemp, ulMonths;
+N
+N    //
+N    // Extract the number of seconds, converting time to the number of minutes.
+N    //
+N    ulTemp = ulTime / 60;
+N    psTime->ucSec = ulTime - (ulTemp * 60);
+N    ulTime = ulTemp;
+N
+N    //
+N    // Extract the number of minutes, converting time to the number of hours.
+N    //
+N    ulTemp = ulTime / 60;
+N    psTime->ucMin = ulTime - (ulTemp * 60);
+N    ulTime = ulTemp;
+N
+N    //
+N    // Extract the number of hours, converting time to the number of days.
+N    //
+N    ulTemp = ulTime / 24;
+N    psTime->ucHour = ulTime - (ulTemp * 24);
+N    ulTime = ulTemp;
+N
+N    //
+N    // Compute the day of the week.
+N    //
+N    psTime->ucWday = (ulTime + 4) % 7;
+N
+N    //
+N    // Compute the number of leap years that have occurred since 1968, the
+N    // first leap year before 1970.  For the beginning of a leap year, cut the
+N    // month loop below at March so that the leap day is classified as February
+N    // 29 followed by March 1, instead of March 1 followed by another March 1.
+N    //
+N    ulTime += 366 + 365;
+N    ulTemp = ulTime / ((4 * 365) + 1);
+N    if((ulTime - (ulTemp * ((4 * 365) + 1))) > (31 + 28))
+N    {
+N        ulTemp++;
+N        ulMonths = 12;
+N    }
+N    else
+N    {
+N        ulMonths = 2;
+N    }
+N
+N    //
+N    // Extract the year.
+N    //
+N    psTime->usYear = ((ulTime - ulTemp) / 365) + 1968;
+N    ulTime -= ((psTime->usYear - 1968) * 365) + ulTemp;
+N
+N    //
+N    // Extract the month.
+N    //
+N    for(ulTemp = 0; ulTemp < ulMonths; ulTemp++)
+N    {
+N        if(g_psDaysToMonth[ulTemp] > ulTime)
+N        {
+N            break;
+N        }
+N    }
+N    psTime->ucMon = ulTemp - 1;
+N
+N    //
+N    // Extract the day of the month.
+N    //
+N    psTime->ucMday = ulTime - g_psDaysToMonth[ulTemp - 1] + 1;
+N}
+N
+N//*****************************************************************************
+N//
+N//! Compares two time structures and determines if one is greater than,
+N//! less than, or equal to the other.
+N//!
+N//! \param pTime1 is the first time structure to compare.
+N//! \param pTime2 is the second time structure to compare.
+N//!
+N//! This function compares two time structures and returns a signed number
+N//! to indicate the result of the comparison.  If the time represented by
+N//! \e pTime1 is greater than the time represented by \e pTime2 then a positive
+N//! number is returned.  Likewise if \e pTime1 is less than \e pTime2 then a
+N//! negative number is returned.  If the two times are equal then the function
+N//! returns 0.
+N//!
+N//! \return Returns 0 if the two times are equal, +1 if \e pTime1 is greater
+N//! than \e pTime2, and -1 if \e pTime1 is less than \e pTime2.
+N//
+N//*****************************************************************************
+Nstatic int
+Nucmptime(tTime *pTime1, tTime *pTime2)
+N{
+N    //
+N    // Compare each field in descending signficance to determine if
+N    // greater than, less than, or equal.
+N    //
+N    if(pTime1->usYear > pTime2->usYear)
+N    {
+N        return(1);
+N    }
+N    else if(pTime1->usYear < pTime2->usYear)
+N    {
+N        return(-1);
+N    }
+N    else if(pTime1->ucMon > pTime2->ucMon)
+N    {
+N        return(1);
+N    }
+N    else if(pTime1->ucMon < pTime2->ucMon)
+N    {
+N        return(-1);
+N    }
+N    else if(pTime1->ucMday > pTime2->ucMday)
+N    {
+N        return(1);
+N    }
+N    else if(pTime1->ucMday < pTime2->ucMday)
+N    {
+N        return(-1);
+N    }
+N    else if(pTime1->ucHour > pTime2->ucHour)
+N    {
+N        return(1);
+N    }
+N    else if(pTime1->ucHour < pTime2->ucHour)
+N    {
+N        return(-1);
+N    }
+N    else if(pTime1->ucMin > pTime2->ucMin)
+N    {
+N        return(1);
+N    }
+N    else if(pTime1->ucMin < pTime2->ucMin)
+N    {
+N        return(-1);
+N    }
+N    else if(pTime1->ucSec > pTime2->ucSec)
+N    {
+N        return(1);
+N    }
+N    else if(pTime1->ucSec < pTime2->ucSec)
+N    {
+N        return(-1);
+N    }
+N    else
+N    {
+N        //
+N        // Reaching this branch of the conditional means that all of the
+N        // fields are equal, and thus the two times are equal.
+N        //
+N        return(0);
+N    }
+N}
+N
+N//*****************************************************************************
+N//
+N//! Converts calendar date and time to seconds.
+N//!
+N//! \param psTime is a pointer to the time structure that is filled in with the
+N//! broken down date and time.
+N//!
+N//! This function converts the date and time represented by the \e psTime
+N//! structure pointer to the number of seconds since midnight GMT on January 1,
+N//! 1970 (traditional Unix epoch).
+N//!
+N//! \return Returns the calendar time and date as seconds.  If the conversion
+N//! was not possible then the function returns (unsigned long)(-1).
+N//
+N//*****************************************************************************
+Nunsigned long
+Numktime(tTime *psTime)
+N{
+N    tTime sTimeGuess;
+N    unsigned long ulTimeGuess = 0x80000000;
+N    unsigned long ulAdjust = 0x40000000;
+N    int iSign;
+N
+N    //
+N    // Seed the binary search with the first guess.
+N    //
+N    ulocaltime(ulTimeGuess, &sTimeGuess);
+N    iSign = ucmptime(psTime, &sTimeGuess);
+N
+N    //
+N    // While the time is not yet found, execute a binary search.
+N    //
+N    while(iSign && ulAdjust)
+N    {
+N        //
+N        // Adjust the time guess up or down depending on the result of the
+N        // last compare.
+N        //
+N        ulTimeGuess = (iSign > 0) ? (ulTimeGuess + ulAdjust) :
+N                                    (ulTimeGuess - ulAdjust);
+N        ulAdjust /= 2;
+N
+N        //
+N        // Compare the new time guess against the time pointed at by the
+N        // function parameters.
+N        //
+N        ulocaltime(ulTimeGuess, &sTimeGuess);
+N        iSign = ucmptime(psTime, &sTimeGuess);
+N    };
+N
+N    //
+N    // If the above loop was exited with iSign == 0, that means that the
+N    // time in seconds was found, so return that value to the caller.
+N    //
+N    if(iSign == 0)
+N    {
+N        return(ulTimeGuess);
+N    }
+N
+N    //
+N    // Otherwise the time could not be converted so return an error.
+N    //
+N    else
+N    {
+N        return((unsigned long)-1);
+N    }
+N}
+N
+N//*****************************************************************************
+N//
+N//! Converts a string into its numeric equivalent.
+N//!
+N//! \param pcStr is a pointer to the string containing the integer.
+N//! \param ppcStrRet is a pointer that will be set to the first character past
+N//! the integer in the string.
+N//! \param iBase is the radix to use for the conversion; can be zero to
+N//! auto-select the radix or between 2 and 16 to explicitly specify the radix.
+N//!
+N//! This function is very similar to the C library <tt>strtoul()</tt> function.
+N//! It scans a string for the first token (that is, non-white space) and
+N//! converts the value at that location in the string into an integer value.
+N//!
+N//! \return Returns the result of the conversion.
+N//
+N//*****************************************************************************
+Nunsigned long
+Nustrtoul(const char *pcStr, const char **ppcStrRet, int iBase)
+N{
+N    unsigned long ulRet, ulDigit, ulNeg, ulValid;
+N    const char *pcPtr;
+N
+N    //
+N    // Check the arguments.
+N    //
+N    ASSERT(pcStr);
+X    ;
+N    ASSERT((iBase == 0) || ((iBase > 1) && (iBase <= 16)));
+X    ;
+N
+N    //
+N    // Initially, the result is zero.
+N    //
+N    ulRet = 0;
+N    ulNeg = 0;
+N    ulValid = 0;
+N
+N    //
+N    // Skip past any leading white space.
+N    //
+N    pcPtr = pcStr;
+N    while((*pcPtr == ' ') || (*pcPtr == '\t'))
+N    {
+N        pcPtr++;
+N    }
+N
+N    //
+N    // Take a leading + or - from the value.
+N    //
+N    if(*pcPtr == '-')
+N    {
+N        ulNeg = 1;
+N        pcPtr++;
+N    }
+N    else if(*pcPtr == '+')
+N    {
+N        pcPtr++;
+N    }
+N
+N    //
+N    // See if the radix was not specified, or is 16, and the value starts with
+N    // "0x" or "0X" (to indicate a hex value).
+N    //
+N    if(((iBase == 0) || (iBase == 16)) && (*pcPtr == '0') &&
+N       ((pcPtr[1] == 'x') || (pcPtr[1] == 'X')))
+N    {
+N        //
+N        // Skip the leading "0x".
+N        //
+N        pcPtr += 2;
+N
+N        //
+N        // Set the radix to 16.
+N        //
+N        iBase = 16;
+N    }
+N
+N    //
+N    // See if the radix was not specified.
+N    //
+N    if(iBase == 0)
+N    {
+N        //
+N        // See if the value starts with "0".
+N        //
+N        if(*pcPtr == '0')
+N        {
+N            //
+N            // Values that start with "0" are assumed to be radix 8.
+N            //
+N            iBase = 8;
+N        }
+N        else
+N        {
+N            //
+N            // Otherwise, the values are assumed to be radix 10.
+N            //
+N            iBase = 10;
+N        }
+N    }
+N
+N    //
+N    // Loop while there are more valid digits to consume.
+N    //
+N    while(1)
+N    {
+N        //
+N        // See if this character is a number.
+N        //
+N        if((*pcPtr >= '0') && (*pcPtr <= '9'))
+N        {
+N            //
+N            // Convert the character to its integer equivalent.
+N            //
+N            ulDigit = *pcPtr++ - '0';
+N        }
+N
+N        //
+N        // Otherwise, see if this character is an upper case letter.
+N        //
+N        else if((*pcPtr >= 'A') && (*pcPtr <= 'Z'))
+N        {
+N            //
+N            // Convert the character to its integer equivalent.
+N            //
+N            ulDigit = *pcPtr++ - 'A' + 10;
+N        }
+N
+N        //
+N        // Otherwise, see if this character is a lower case letter.
+N        //
+N        else if((*pcPtr >= 'a') && (*pcPtr <= 'z'))
+N        {
+N            //
+N            // Convert the character to its integer equivalent.
+N            //
+N            ulDigit = *pcPtr++ - 'a' + 10;
+N        }
+N
+N        //
+N        // Otherwise, this is not a valid character.
+N        //
+N        else
+N        {
+N            //
+N            // Stop converting this value.
+N            //
+N            break;
+N        }
+N
+N        //
+N        // See if this digit is valid for the chosen radix.
+N        //
+N        if(ulDigit >= iBase)
+N        {
+N            //
+N            // Since this was not a valid digit, move the pointer back to the
+N            // character that therefore should not have been consumed.
+N            //
+N            pcPtr--;
+N
+N            //
+N            // Stop converting this value.
+N            //
+N            break;
+N        }
+N
+N        //
+N        // Add this digit to the converted value.
+N        //
+N        ulRet *= iBase;
+N        ulRet += ulDigit;
+N
+N        //
+N        // Since a digit has been added, this is now a valid result.
+N        //
+N        ulValid = 1;
+N    }
+N
+N    //
+N    // Set the return string pointer to the first character not consumed.
+N    //
+N    if(ppcStrRet)
+N    {
+N        *ppcStrRet = ulValid ? pcPtr : pcStr;
+N    }
+N
+N    //
+N    // Return the converted value.
+N    //
+N    return(ulNeg ? (0 - ulRet) : ulRet);
+N}
+N
+N//*****************************************************************************
+N//
+N//! Retruns the length of a null-terminated string.
+N//!
+N//! \param pcStr is a pointer to the string whose length is to be found.
+N//!
+N//! This function is very similar to the C library <tt>strlen()</tt> function.
+N//! It determines the length of the null-terminated string passed and returns
+N//! this to the caller.
+N//!
+N//! This implementation assumes that single byte character strings are passed
+N//! and will return incorrect values if passed some UTF-8 strings.
+N//!
+N//! \return Returns the length of the string pointed to by \e pcStr.
+N//
+N//*****************************************************************************
+Nint
+Nustrlen(const char * pcStr)
+N{
+N    int iLen;
+N
+N    ASSERT(pcStr);
+X    ;
+N
+N    //
+N    // Initialize the length.
+N    //
+N    iLen = 0;
+N
+N    //
+N    // Step throug the string looking for a zero character (marking its end).
+N    //
+N    while(pcStr[iLen])
+N    {
+N        //
+N        // Zero not found so move on to the next character.
+N        //
+N        iLen++;
+N    }
+N
+N    return(iLen);
+N}
+N
+N//*****************************************************************************
+N//
+N//! Finds a substring within a string.
+N//!
+N//! \param pcHaystack is a pointer to the string that will be searched.
+N//! \param pcNeedle is a pointer to the substring that is to be found within
+N//! \e pcHaystack.
+N//!
+N//! This function is very similar to the C library <tt>strstr()</tt> function.
+N//! It scans a string for the first instance of a given substring and returns
+N//! a pointer to that substring.  If the substring cannot be found, a NULL
+N//! pointer is returned.
+N//!
+N//! \return Returns a pointer to the first occurrence of \e pcNeedle within
+N//! \e pcHaystack or NULL if no match is found.
+N//
+N//*****************************************************************************
+Nchar *
+Nustrstr(const char *pcHaystack, const char *pcNeedle)
+N{
+N    unsigned long ulLength;
+N
+N    //
+N    // Get the length of the string to be found.
+N    //
+N    ulLength = ustrlen(pcNeedle);
+N
+N    //
+N    // Loop while we have not reached the end of the string.
+N    //
+N    while(*pcHaystack)
+N    {
+N        //
+N        // Check to see if the substring appears at this position.
+N        //
+N        if(ustrncmp(pcNeedle, pcHaystack, ulLength) == 0)
+N        {
+N            //
+N            // It does so return the pointer.
+N            //
+N            return((char *)pcHaystack);
+N        }
+N
+N        //
+N        // Move to the next position in the string being searched.
+N        //
+N        pcHaystack++;
+N    }
+N
+N    //
+N    // We reached the end of the string without finding the substring so
+N    // return NULL.
+N    //
+N    return((char *)0);
+N}
+N
+N//*****************************************************************************
+N//
+N//! Compares two strings without regard to case.
+N//!
+N//! \param pcStr1 points to the first string to be compared.
+N//! \param pcStr2 points to the second string to be compared.
+N//! \param iCount is the maximum number of characters to compare.
+N//!
+N//! This function is very similar to the C library <tt>strnicmp()</tt> function.
+N//! It compares at most \e iCount characters of two strings without regard to
+N//! case.  The comparison ends if a terminating NULL character is found in
+N//! either string before \e iCount characters are compared.  In this case, the
+N//! shorter string is deemed the lesser.
+N//!
+N//! \return Returns 0 if the two strings are equal, -1 if \e pcStr1 is less
+N//! than \e pcStr2 and 1 if \e pcStr1 is greater than \e pcStr2.
+N//
+N//*****************************************************************************
+Nint
+Nustrnicmp(const char *pcStr1, const char *pcStr2, int iCount)
+N{
+N    char cL1, cL2;
+N
+N    while(iCount)
+N    {
+N        //
+N        // If we reached a NULL in both strings, they must be equal so
+N        // we end the comparison and return 0
+N        //
+N        if(!*pcStr1 && !*pcStr2)
+N        {
+N            return(0);
+N        }
+N
+N        //
+N        // Lower case the characters at the current position before we compare.
+N        //
+N        cL1 = (((*pcStr1 >= 'A') && (*pcStr1 <= 'Z')) ?
+N                            (*pcStr1 + ('a' - 'A')) : *pcStr1);
+N        cL2 = (((*pcStr2 >= 'A') && (*pcStr2 <= 'Z')) ?
+N                            (*pcStr2  + ('a' - 'A')) : *pcStr2);
+N        //
+N        // Compare the two characters and, if different, return the relevant
+N        // return code.
+N        //
+N        if(cL2 < cL1)
+N        {
+N            return(1);
+N        }
+N        if(cL1 < cL2)
+N        {
+N            return(-1);
+N        }
+N
+N        //
+N        // Move on to the next character.
+N        //
+N        pcStr1++;
+N        pcStr2++;
+N        iCount--;
+N    }
+N
+N    //
+N    // If we fall out, the strings must be equal for at least the first iCount
+N    // characters so return 0 to indicate this.
+N    //
+N    return(0);
+N}
+N
+N//*****************************************************************************
+N//
+N//! Compares two strings without regard to case.
+N//!
+N//! \param pcStr1 points to the first string to be compared.
+N//! \param pcStr2 points to the second string to be compared.
+N//!
+N//! This function is very similar to the C library <tt>strcasecmp()</tt>
+N//! function.  It compares two strings without regard to case.  The comparison
+N//! ends if a terminating NULL character is found in either string.  In this
+N//! case, the shorter string is deemed the lesser.
+N//!
+N//! \return Returns 0 if the two strings are equal, -1 if \e pcStr1 is less
+N//! than \e pcStr2 and 1 if \e pcStr1 is greater than \e pcStr2.
+N//
+N//*****************************************************************************
+Nint
+Nustrcasecmp(const char *pcStr1, const char *pcStr2)
+N{
+N    //
+N    // Just let ustrnicmp() handle this.
+N    //
+N    return(ustrnicmp(pcStr1, pcStr2, -1));
+N}
+N
+N//*****************************************************************************
+N//
+N//! Compares two strings.
+N//!
+N//! \param pcStr1 points to the first string to be compared.
+N//! \param pcStr2 points to the second string to be compared.
+N//! \param iCount is the maximum number of characters to compare.
+N//!
+N//! This function is very similar to the C library <tt>strncmp()</tt> function.
+N//! It compares at most \e iCount characters of two strings taking case into
+N//! account.  The comparison ends if a terminating NULL character is found in
+N//! either string before \e iCount characters are compared.  In this case, the
+N//! shorter string is deemed the lesser.
+N//!
+N//! \return Returns 0 if the two strings are equal, -1 if \e pcStr1 is less
+N//! than \e pcStr2 and 1 if \e pcStr1 is greater than \e pcStr2.
+N//
+N//*****************************************************************************
+Nint
+Nustrncmp(const char *pcStr1, const char *pcStr2, int iCount)
+N{
+N    while(iCount)
+N    {
+N        //
+N        // If we reached a NULL in both strings, they must be equal so
+N        // we end the comparison and return 0
+N        //
+N        if(!*pcStr1 && !*pcStr2)
+N        {
+N            return(0);
+N        }
+N
+N        //
+N        // Compare the two characters and, if different, return the relevant
+N        // return code.
+N        //
+N        if(*pcStr2 < *pcStr1)
+N        {
+N            return(1);
+N        }
+N        if(*pcStr1 < *pcStr2)
+N        {
+N            return(-1);
+N        }
+N
+N        //
+N        // Move on to the next character.
+N        //
+N        pcStr1++;
+N        pcStr2++;
+N        iCount--;
+N    }
+N
+N    //
+N    // If we fall out, the strings must be equal for at least the first iCount
+N    // characters so return 0 to indicate this.
+N    //
+N    return(0);
+N
+N}
+N
+N//*****************************************************************************
+N//
+N//! Compares two strings.
+N//!
+N//! \param pcStr1 points to the first string to be compared.
+N//! \param pcStr2 points to the second string to be compared.
+N//!
+N//! This function is very similar to the C library <tt>strcmp()</tt>
+N//! function.  It compares two strings, taking case into account.  The
+N//! comparison ends if a terminating NULL character is found in either string.
+N//! In this case, the shorter string is deemed the lesser.
+N//!
+N//! \return Returns 0 if the two strings are equal, -1 if \e pcStr1 is less
+N//! than \e pcStr2 and 1 if \e pcStr1 is greater than \e pcStr2.
+N//
+N//*****************************************************************************
+Nint
+Nustrcmp(const char *pcStr1, const char *pcStr2)
+N{
+N    //
+N    // Pass this on to ustrncmp.
+N    //
+N    return(ustrncmp(pcStr1, pcStr2, -1));
+N}
+N
+N//*****************************************************************************
+N//
+N// Random Number Generator Seed Value
+N//
+N//*****************************************************************************
+Nstatic unsigned long g_ulRandomSeed = 1;
+N
+N//*****************************************************************************
+N//
+N//! Set the random number generator seed.
+N//!
+N//! \param ulSeed is the new seed value to use for the random number generator.
+N//!
+N//! This function is very similar to the C library <tt>srand()</tt> function.
+N//! It will set the seed value used in the <tt>urand()</tt> function.
+N//!
+N//! \return None
+N//
+N//*****************************************************************************
+Nvoid
+Nusrand(unsigned long ulSeed)
+N{
+N    g_ulRandomSeed = ulSeed;
+N}
+N
+N//*****************************************************************************
+N//
+N//! Generate a new (pseudo) random number
+N//!
+N//! This function is very similar to the C library <tt>rand()</tt> function.
+N//! It will generate a pseudo-random number sequence based on the seed value.
+N//!
+N//! \return A pseudo-random number will be returned.
+N//
+N//*****************************************************************************
+Nint
+Nurand(void)
+N{
+N    //
+N    // Generate a new pseudo-random number with a linear congruence random
+N    // number generator.  This new random number becomes the seed for the next
+N    // random number.
+N    //
+N    g_ulRandomSeed = (g_ulRandomSeed * 1664525) + 1013904223;
+N
+N    //
+N    // Return the new random number.
+N    //
+N    return((int)g_ulRandomSeed);
+N}
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************

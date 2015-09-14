@@ -1,0 +1,807 @@
+ARM Linker, 4.1 [Build 894] [Evaluation]
+
+==============================================================================
+
+Section Cross References
+
+    dac.o(i.DACClassDDis) refers to dac.o(i.DACWriteRegister) for DACWriteRegister
+    dac.o(i.DACClassDEn) refers to dac.o(i.DACWriteRegister) for DACWriteRegister
+    dac.o(i.DACInit) refers to sysctl.o(.emb_text) for SysCtlDelay
+    dac.o(i.DACInit) refers to gpio.o(i.GPIOPinConfigure) for GPIOPinConfigure
+    dac.o(i.DACInit) refers to sysctl.o(i.SysCtlClockGet) for SysCtlClockGet
+    dac.o(i.DACInit) refers to dac.o(i.DACWriteRegister) for DACWriteRegister
+    dac.o(i.DACInit) refers to dac.o(i.DACReadRegister) for DACReadRegister
+    dac.o(i.DACVolumeGet) refers to dac.o(.data) for .data
+    dac.o(i.DACVolumeSet) refers to dac.o(i.DACWriteRegister) for DACWriteRegister
+    dac.o(i.DACVolumeSet) refers to dac.o(.data) for .data
+    display96x16x1.o(i.Display96x16x1Clear) refers to display96x16x1.o(i.Display96x16x1ClearLine) for Display96x16x1ClearLine
+    display96x16x1.o(i.Display96x16x1ClearLine) refers to display96x16x1.o(i.Display96x16x1WriteFirst) for Display96x16x1WriteFirst
+    display96x16x1.o(i.Display96x16x1ClearLine) refers to display96x16x1.o(i.Display96x16x1WriteArray) for Display96x16x1WriteArray
+    display96x16x1.o(i.Display96x16x1ClearLine) refers to display96x16x1.o(i.Display96x16x1WriteByte) for Display96x16x1WriteByte
+    display96x16x1.o(i.Display96x16x1ClearLine) refers to display96x16x1.o(i.Display96x16x1WriteFinal) for Display96x16x1WriteFinal
+    display96x16x1.o(i.Display96x16x1ClearLine) refers to display96x16x1.o(.constdata) for .constdata
+    display96x16x1.o(i.Display96x16x1DisplayOff) refers to display96x16x1.o(i.Display96x16x1WriteFirst) for Display96x16x1WriteFirst
+    display96x16x1.o(i.Display96x16x1DisplayOff) refers to display96x16x1.o(i.Display96x16x1WriteByte) for Display96x16x1WriteByte
+    display96x16x1.o(i.Display96x16x1DisplayOff) refers to display96x16x1.o(i.Display96x16x1WriteFinal) for Display96x16x1WriteFinal
+    display96x16x1.o(i.Display96x16x1DisplayOn) refers to display96x16x1.o(i.Display96x16x1WriteFirst) for Display96x16x1WriteFirst
+    display96x16x1.o(i.Display96x16x1DisplayOn) refers to display96x16x1.o(i.Display96x16x1WriteArray) for Display96x16x1WriteArray
+    display96x16x1.o(i.Display96x16x1DisplayOn) refers to display96x16x1.o(i.Display96x16x1WriteFinal) for Display96x16x1WriteFinal
+    display96x16x1.o(i.Display96x16x1DisplayOn) refers to display96x16x1.o(.constdata) for .constdata
+    display96x16x1.o(i.Display96x16x1ImageDraw) refers to display96x16x1.o(i.Display96x16x1WriteFirst) for Display96x16x1WriteFirst
+    display96x16x1.o(i.Display96x16x1ImageDraw) refers to display96x16x1.o(i.Display96x16x1WriteByte) for Display96x16x1WriteByte
+    display96x16x1.o(i.Display96x16x1ImageDraw) refers to display96x16x1.o(i.Display96x16x1WriteArray) for Display96x16x1WriteArray
+    display96x16x1.o(i.Display96x16x1ImageDraw) refers to display96x16x1.o(i.Display96x16x1WriteFinal) for Display96x16x1WriteFinal
+    display96x16x1.o(i.Display96x16x1Init) refers to sysctl.o(.emb_text) for SysCtlDelay
+    display96x16x1.o(i.Display96x16x1Init) refers to gpio.o(i.GPIOPinConfigure) for GPIOPinConfigure
+    display96x16x1.o(i.Display96x16x1Init) refers to display96x16x1.o(i.Display96x16x1WriteFirst) for Display96x16x1WriteFirst
+    display96x16x1.o(i.Display96x16x1Init) refers to display96x16x1.o(i.Display96x16x1WriteArray) for Display96x16x1WriteArray
+    display96x16x1.o(i.Display96x16x1Init) refers to display96x16x1.o(i.Display96x16x1WriteFinal) for Display96x16x1WriteFinal
+    display96x16x1.o(i.Display96x16x1Init) refers to display96x16x1.o(i.Display96x16x1Clear) for Display96x16x1Clear
+    display96x16x1.o(i.Display96x16x1Init) refers to display96x16x1.o(i.Display96x16x1DisplayOn) for Display96x16x1DisplayOn
+    display96x16x1.o(i.Display96x16x1Init) refers to display96x16x1.o(.constdata) for .constdata
+    display96x16x1.o(i.Display96x16x1StringDraw) refers to display96x16x1.o(i.Display96x16x1StringDrawLen) for Display96x16x1StringDrawLen
+    display96x16x1.o(i.Display96x16x1StringDrawCentered) refers to strlen.o(.text) for strlen
+    display96x16x1.o(i.Display96x16x1StringDrawCentered) refers to display96x16x1.o(i.Display96x16x1ClearLine) for Display96x16x1ClearLine
+    display96x16x1.o(i.Display96x16x1StringDrawCentered) refers to display96x16x1.o(i.Display96x16x1StringDrawLen) for Display96x16x1StringDrawLen
+    display96x16x1.o(i.Display96x16x1StringDrawLen) refers to display96x16x1.o(i.Display96x16x1WriteFirst) for Display96x16x1WriteFirst
+    display96x16x1.o(i.Display96x16x1StringDrawLen) refers to display96x16x1.o(i.Display96x16x1WriteByte) for Display96x16x1WriteByte
+    display96x16x1.o(i.Display96x16x1StringDrawLen) refers to display96x16x1.o(i.Display96x16x1WriteArray) for Display96x16x1WriteArray
+    display96x16x1.o(i.Display96x16x1StringDrawLen) refers to display96x16x1.o(i.Display96x16x1WriteFinal) for Display96x16x1WriteFinal
+    display96x16x1.o(i.Display96x16x1StringDrawLen) refers to display96x16x1.o(.constdata) for .constdata
+    io.o(i.LEDsInit) refers to io.o(i.LED_Off) for LED_Off
+    io.o(i.PushButtonDebouncer) refers to io.o(.data) for .data
+    io.o(i.PushButtonGetDebounced) refers to io.o(.data) for .data
+    sensors.o(i.BumpSensorDebouncer) refers to sensors.o(.data) for .data
+    sensors.o(i.BumpSensorGetDebounced) refers to sensors.o(.data) for .data
+    sensors.o(i.WheelSensorIntHandler) refers to sensors.o(.data) for .data
+    sensors.o(i.WheelSensorsInit) refers to sensors.o(.data) for .data
+    sound.o(i.SoundBufferPlay) refers to i2s.o(i.I2STxEnable) for I2STxEnable
+    sound.o(i.SoundBufferPlay) refers to sound.o(.data) for .data
+    sound.o(i.SoundBufferPlay) refers to sound.o(.bss) for .bss
+    sound.o(i.SoundClassDDis) refers to dac.o(i.DACClassDDis) for DACClassDDis
+    sound.o(i.SoundClassDEn) refers to dac.o(i.DACClassDEn) for DACClassDEn
+    sound.o(i.SoundInit) refers to gpio.o(i.GPIOPinConfigure) for GPIOPinConfigure
+    sound.o(i.SoundInit) refers to gpio.o(i.GPIOPinTypeI2S) for GPIOPinTypeI2S
+    sound.o(i.SoundInit) refers to dac.o(i.DACInit) for DACInit
+    sound.o(i.SoundInit) refers to i2s.o(i.I2STxFIFOLimitSet) for I2STxFIFOLimitSet
+    sound.o(i.SoundInit) refers to i2s.o(i.I2SIntClear) for I2SIntClear
+    sound.o(i.SoundInit) refers to i2s.o(i.I2STxEnable) for I2STxEnable
+    sound.o(i.SoundInit) refers to sound.o(.data) for .data
+    sound.o(i.SoundInit) refers to sound_demo.o(.bss) for sDMAControlTable
+    sound.o(i.SoundIntHandler) refers to i2s.o(i.I2SIntStatus) for I2SIntStatus
+    sound.o(i.SoundIntHandler) refers to i2s.o(i.I2SIntClear) for I2SIntClear
+    sound.o(i.SoundIntHandler) refers to sound.o(.data) for .data
+    sound.o(i.SoundIntHandler) refers to sound.o(.bss) for .bss
+    sound.o(i.SoundSampleRateGet) refers to sound.o(.data) for .data
+    sound.o(i.SoundSetFormat) refers to i2s.o(i.I2SMasterClockSelect) for I2SMasterClockSelect
+    sound.o(i.SoundSetFormat) refers to i2s.o(i.I2STxConfigSet) for I2STxConfigSet
+    sound.o(i.SoundSetFormat) refers to sysctl.o(i.SysCtlI2SMClkSet) for SysCtlI2SMClkSet
+    sound.o(i.SoundSetFormat) refers to sound.o(.data) for .data
+    sound.o(i.SoundVolumeDown) refers to dac.o(i.DACVolumeSet) for DACVolumeSet
+    sound.o(i.SoundVolumeDown) refers to sound.o(.data) for .data
+    sound.o(i.SoundVolumeGet) refers to sound.o(.data) for .data
+    sound.o(i.SoundVolumeSet) refers to dac.o(i.DACVolumeSet) for DACVolumeSet
+    sound.o(i.SoundVolumeUp) refers to dac.o(i.DACVolumeSet) for DACVolumeSet
+    sound.o(i.SoundVolumeUp) refers to sound.o(.data) for .data
+    sound_demo.o(i.SysTickHandler) refers to io.o(i.LED_Toggle) for LED_Toggle
+    sound_demo.o(i.SysTickHandler) refers to io.o(i.PushButtonDebouncer) for PushButtonDebouncer
+    sound_demo.o(i.SysTickHandler) refers to sensors.o(i.BumpSensorDebouncer) for BumpSensorDebouncer
+    sound_demo.o(i.SysTickHandler) refers to sound_demo.o(.data) for .data
+    sound_demo.o(i.main) refers to display96x16x1.o(i.Display96x16x1Init) for Display96x16x1Init
+    sound_demo.o(i.main) refers to display96x16x1.o(i.Display96x16x1DisplayOn) for Display96x16x1DisplayOn
+    sound_demo.o(i.main) refers to display96x16x1.o(i.Display96x16x1StringDraw) for Display96x16x1StringDraw
+    sound_demo.o(i.main) refers to sysctl.o(.emb_text) for SysCtlDelay
+    sound_demo.o(i.main) refers to display96x16x1.o(i.Display96x16x1Clear) for Display96x16x1Clear
+    sound_demo.o(i.main) refers to io.o(i.LEDsInit) for LEDsInit
+    sound_demo.o(i.main) refers to io.o(i.LED_On) for LED_On
+    sound_demo.o(i.main) refers to io.o(i.PushButtonsInit) for PushButtonsInit
+    sound_demo.o(i.main) refers to sensors.o(i.BumpSensorsInit) for BumpSensorsInit
+    sound_demo.o(i.main) refers to sound.o(i.SoundInit) for SoundInit
+    sound_demo.o(i.main) refers to display96x16x1.o(i.Display96x16x1StringDrawCentered) for Display96x16x1StringDrawCentered
+    sound_demo.o(i.main) refers to io.o(i.PushButtonGetDebounced) for PushButtonGetDebounced
+    sound_demo.o(i.main) refers to sensors.o(i.BumpSensorGetDebounced) for BumpSensorGetDebounced
+    sound_demo.o(i.main) refers to wav.o(i.WaveOpen) for WaveOpen
+    sound_demo.o(i.main) refers to wav.o(i.WavePlayStart) for WavePlayStart
+    sound_demo.o(i.main) refers to wav.o(i.WaveStop) for WaveStop
+    sound_demo.o(i.main) refers to wav.o(i.WavePlayContinue) for WavePlayContinue
+    sound_demo.o(i.main) refers to wav.o(i.WaveGetTime) for WaveGetTime
+    sound_demo.o(i.main) refers to sound_demo.o(.constdata) for .constdata
+    sound_demo.o(.constdata) refers to sounds.o(.constdata) for g_ucSoundWav1
+    sound_demo.o(.constdata) refers to sound_demo.o(.conststring) for .conststring
+    sound_demo.o(.constdata) refers to sounds.o(.constdata) for g_ucSoundWav2
+    sound_demo.o(.constdata) refers to sounds.o(.constdata) for g_ucSoundWav3
+    sound_demo.o(.constdata) refers to sounds.o(.constdata) for g_ucSoundWav4
+    sound_demo.o(.constdata) refers to sounds.o(.constdata) for g_ucSoundWav5
+    startup_rvmdk.o(RESET) refers to startup_rvmdk.o(STACK) for StackMem
+    startup_rvmdk.o(RESET) refers to sound_demo.o(i.SysTickHandler) for SysTickHandler
+    startup_rvmdk.o(RESET) refers to sound.o(i.SoundIntHandler) for SoundIntHandler
+    startup_rvmdk.o(RESET) refers to entry.o(.ARM.Collect$$$$00000000) for __main
+    ustdlib.o(i.ulocaltime) refers to ustdlib.o(.constdata) for .constdata
+    ustdlib.o(i.umktime) refers to ustdlib.o(i.ulocaltime) for ulocaltime
+    ustdlib.o(i.umktime) refers to ustdlib.o(i.ucmptime) for ucmptime
+    ustdlib.o(i.urand) refers to ustdlib.o(.data) for .data
+    ustdlib.o(i.usnprintf) refers to ustdlib.o(i.uvsnprintf) for uvsnprintf
+    ustdlib.o(i.usprintf) refers to ustdlib.o(i.uvsnprintf) for uvsnprintf
+    ustdlib.o(i.usrand) refers to ustdlib.o(.data) for .data
+    ustdlib.o(i.ustrcasecmp) refers to ustdlib.o(i.ustrnicmp) for ustrnicmp
+    ustdlib.o(i.ustrcmp) refers to ustdlib.o(i.ustrncmp) for ustrncmp
+    ustdlib.o(i.ustrstr) refers to ustdlib.o(i.ustrlen) for ustrlen
+    ustdlib.o(i.ustrstr) refers to ustdlib.o(i.ustrncmp) for ustrncmp
+    ustdlib.o(i.uvsnprintf) refers to ustdlib.o(i.ustrncpy) for ustrncpy
+    ustdlib.o(i.uvsnprintf) refers to ustdlib.o(.constdata) for .constdata
+    ustdlib.o(.constdata) refers to ustdlib.o(.conststring) for .conststring
+    wav.o(i.BufferCallback) refers to wav.o(.bss) for .bss
+    wav.o(i.BufferCallback) refers to wav.o(.data) for .data
+    wav.o(i.WaveGetTime) refers to ustdlib.o(i.usnprintf) for usnprintf
+    wav.o(i.WaveGetTime) refers to wav.o(.data) for .data
+    wav.o(i.WaveOpen) refers to sound.o(i.SoundSetFormat) for SoundSetFormat
+    wav.o(i.WaveOpen) refers to wav.o(.data) for .data
+    wav.o(i.WavePlayContinue) refers to wav.o(i.WaveRead) for WaveRead
+    wav.o(i.WavePlayContinue) refers to sound.o(i.SoundBufferPlay) for SoundBufferPlay
+    wav.o(i.WavePlayContinue) refers to sound.o(i.SoundClassDDis) for SoundClassDDis
+    wav.o(i.WavePlayContinue) refers to wav.o(.data) for .data
+    wav.o(i.WavePlayContinue) refers to wav.o(.bss) for .bss
+    wav.o(i.WavePlayContinue) refers to wav.o(i.BufferCallback) for BufferCallback
+    wav.o(i.WavePlayStart) refers to sound.o(i.SoundClassDEn) for SoundClassDEn
+    wav.o(i.WavePlayStart) refers to wav.o(.data) for .data
+    wav.o(i.WavePlaybackStatus) refers to wav.o(.data) for .data
+    wav.o(i.WaveRead) refers to wav.o(.data) for .data
+    wav.o(i.WaveStop) refers to wav.o(.data) for .data
+    gpio.o(i.GPIOPinConfigure) refers to gpio.o(.constdata) for .constdata
+    gpio.o(i.GPIOPinTypeADC) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeADC) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeCAN) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeCAN) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeComparator) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeComparator) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeEPI) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeEPI) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeEthernetLED) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeEthernetLED) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeEthernetMII) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeEthernetMII) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeFan) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeFan) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeGPIOInput) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeGPIOInput) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeGPIOOutput) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeGPIOOutput) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeGPIOOutputOD) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeGPIOOutputOD) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeI2C) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeI2C) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeI2CSCL) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeI2CSCL) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeI2S) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeI2S) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeLPC) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeLPC) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypePECIRx) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypePECIRx) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypePECITx) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypePECITx) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypePWM) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypePWM) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeQEI) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeQEI) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeSSI) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeSSI) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeTimer) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeTimer) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeUART) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeUART) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeUSBAnalog) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeUSBAnalog) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPinTypeUSBDigital) refers to gpio.o(i.GPIODirModeSet) for GPIODirModeSet
+    gpio.o(i.GPIOPinTypeUSBDigital) refers to gpio.o(i.GPIOPadConfigSet) for GPIOPadConfigSet
+    gpio.o(i.GPIOPortIntRegister) refers to gpio.o(i.GPIOGetIntNumber) for GPIOGetIntNumber
+    gpio.o(i.GPIOPortIntRegister) refers to interrupt.o(i.IntRegister) for IntRegister
+    gpio.o(i.GPIOPortIntRegister) refers to interrupt.o(i.IntEnable) for IntEnable
+    gpio.o(i.GPIOPortIntUnregister) refers to gpio.o(i.GPIOGetIntNumber) for GPIOGetIntNumber
+    gpio.o(i.GPIOPortIntUnregister) refers to interrupt.o(i.IntDisable) for IntDisable
+    gpio.o(i.GPIOPortIntUnregister) refers to interrupt.o(i.IntUnregister) for IntUnregister
+    i2s.o(i.I2SIntRegister) refers to interrupt.o(i.IntRegister) for IntRegister
+    i2s.o(i.I2SIntRegister) refers to interrupt.o(i.IntEnable) for IntEnable
+    i2s.o(i.I2SIntUnregister) refers to interrupt.o(i.IntDisable) for IntDisable
+    i2s.o(i.I2SIntUnregister) refers to interrupt.o(i.IntUnregister) for IntUnregister
+    sysctl.o(i.SysCtlClockGet) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlClockSet) refers to sysctl.o(.emb_text) for SysCtlDelay
+    sysctl.o(i.SysCtlDeepSleep) refers to cpu.o(.emb_text) for CPUwfi
+    sysctl.o(i.SysCtlI2SMClkSet) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlIntRegister) refers to interrupt.o(i.IntRegister) for IntRegister
+    sysctl.o(i.SysCtlIntRegister) refers to interrupt.o(i.IntEnable) for IntEnable
+    sysctl.o(i.SysCtlIntUnregister) refers to interrupt.o(i.IntDisable) for IntDisable
+    sysctl.o(i.SysCtlIntUnregister) refers to interrupt.o(i.IntUnregister) for IntUnregister
+    sysctl.o(i.SysCtlPeripheralDeepSleepDisable) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralDeepSleepEnable) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralDisable) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralEnable) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralPowerOff) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralPowerOn) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralPresent) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralReady) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralReset) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralSleepDisable) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlPeripheralSleepEnable) refers to sysctl.o(.constdata) for .constdata
+    sysctl.o(i.SysCtlSleep) refers to cpu.o(.emb_text) for CPUwfi
+    interrupt.o(i.IntDisable) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntEnable) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntIsEnabled) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntMasterDisable) refers to cpu.o(.emb_text) for CPUcpsid
+    interrupt.o(i.IntMasterEnable) refers to cpu.o(.emb_text) for CPUcpsie
+    interrupt.o(i.IntPendClear) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntPendSet) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntPriorityGet) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntPriorityGroupingGet) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntPriorityGroupingSet) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntPriorityMaskGet) refers to cpu.o(.emb_text) for CPUbasepriGet
+    interrupt.o(i.IntPriorityMaskSet) refers to cpu.o(.emb_text) for CPUbasepriSet
+    interrupt.o(i.IntPrioritySet) refers to interrupt.o(.constdata) for .constdata
+    interrupt.o(i.IntRegister) refers to interrupt.o(vtable) for vtable
+    interrupt.o(i.IntUnregister) refers to interrupt.o(i.IntDefaultHandler) for IntDefaultHandler
+    interrupt.o(i.IntUnregister) refers to interrupt.o(vtable) for vtable
+    entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry7b.o(.ARM.Collect$$$$00000008) for _main_clock
+    entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry8.o(.ARM.Collect$$$$00000009) for _main_init
+    entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry5.o(.ARM.Collect$$$$00000004) for _main_scatterload
+    entry.o(.ARM.Collect$$$$00000000) refers (Special) to entry2.o(.ARM.Collect$$$$00000001) for _main_stk
+    entry2.o(.ARM.Collect$$$$00000001) refers to entry2.o(.ARM.Collect$$$$00002712) for __lit__00000000
+    entry2.o(.ARM.Collect$$$$00002712) refers to startup_rvmdk.o(STACK) for __initial_sp
+    entry2.o(__vectab_stack_and_reset_area) refers to startup_rvmdk.o(STACK) for __initial_sp
+    entry2.o(__vectab_stack_and_reset_area) refers to entry.o(.ARM.Collect$$$$00000000) for __main
+    entry5.o(.ARM.Collect$$$$00000004) refers to init.o(.text) for __scatterload
+    entry8.o(.ARM.Collect$$$$00000009) refers to sound_demo.o(i.main) for main
+    init.o(.text) refers to entry5.o(.ARM.Collect$$$$00000004) for __main_after_scatterload
+
+
+==============================================================================
+
+Removing Unused input sections from the image.
+
+    Removing dac.o(i.DACVolumeGet), (12 bytes).
+    Removing dac.o(i.DACVolumeSet), (44 bytes).
+    Removing dac.o(.data), (1 bytes).
+    Removing display96x16x1.o(i.Display96x16x1DisplayOff), (42 bytes).
+    Removing display96x16x1.o(i.Display96x16x1ImageDraw), (104 bytes).
+    Removing io.o(i.PushButtonGetStatus), (48 bytes).
+    Removing sensors.o(i.BumpSensorGetStatus), (52 bytes).
+    Removing sensors.o(i.WheelSensorDisable), (20 bytes).
+    Removing sensors.o(i.WheelSensorEnable), (20 bytes).
+    Removing sensors.o(i.WheelSensorIntDisable), (28 bytes).
+    Removing sensors.o(i.WheelSensorIntEnable), (52 bytes).
+    Removing sensors.o(i.WheelSensorIntHandler), (140 bytes).
+    Removing sensors.o(i.WheelSensorsInit), (172 bytes).
+    Removing sound.o(i.SoundSampleRateGet), (12 bytes).
+    Removing sound.o(i.SoundVolumeDown), (28 bytes).
+    Removing sound.o(i.SoundVolumeGet), (12 bytes).
+    Removing sound.o(i.SoundVolumeSet), (4 bytes).
+    Removing sound.o(i.SoundVolumeUp), (28 bytes).
+    Removing sounds.o(.constdata), (4 bytes).
+    Removing sounds.o(.constdata), (4 bytes).
+    Removing sounds.o(.constdata), (4 bytes).
+    Removing sounds.o(.constdata), (4 bytes).
+    Removing sounds.o(.constdata), (4 bytes).
+    Removing sounds.o(.constdata), (23960 bytes).
+    Removing sounds.o(.constdata), (4 bytes).
+    Removing startup_rvmdk.o(HEAP), (0 bytes).
+    Removing startup_rvmdk.o(.text), (0 bytes).
+    Removing ustdlib.o(i.ucmptime), (82 bytes).
+    Removing ustdlib.o(i.ulocaltime), (168 bytes).
+    Removing ustdlib.o(i.umktime), (54 bytes).
+    Removing ustdlib.o(i.urand), (28 bytes).
+    Removing ustdlib.o(i.usprintf), (22 bytes).
+    Removing ustdlib.o(i.usrand), (12 bytes).
+    Removing ustdlib.o(i.ustrcasecmp), (8 bytes).
+    Removing ustdlib.o(i.ustrcmp), (8 bytes).
+    Removing ustdlib.o(i.ustrlen), (16 bytes).
+    Removing ustdlib.o(i.ustrncmp), (46 bytes).
+    Removing ustdlib.o(i.ustrnicmp), (70 bytes).
+    Removing ustdlib.o(i.ustrstr), (42 bytes).
+    Removing ustdlib.o(i.ustrtoul), (160 bytes).
+    Removing ustdlib.o(.data), (4 bytes).
+    Removing wav.o(i.WavePlaybackStatus), (16 bytes).
+    Removing gpio.o(i.GPIOADCTriggerDisable), (14 bytes).
+    Removing gpio.o(i.GPIOADCTriggerEnable), (14 bytes).
+    Removing gpio.o(i.GPIODMATriggerDisable), (14 bytes).
+    Removing gpio.o(i.GPIODMATriggerEnable), (14 bytes).
+    Removing gpio.o(i.GPIODirModeGet), (34 bytes).
+    Removing gpio.o(i.GPIOGetIntNumber), (216 bytes).
+    Removing gpio.o(i.GPIOIntTypeGet), (48 bytes).
+    Removing gpio.o(i.GPIOIntTypeSet), (58 bytes).
+    Removing gpio.o(i.GPIOPadConfigGet), (140 bytes).
+    Removing gpio.o(i.GPIOPinIntClear), (6 bytes).
+    Removing gpio.o(i.GPIOPinIntDisable), (14 bytes).
+    Removing gpio.o(i.GPIOPinIntEnable), (14 bytes).
+    Removing gpio.o(i.GPIOPinIntStatus), (14 bytes).
+    Removing gpio.o(i.GPIOPinRead), (6 bytes).
+    Removing gpio.o(i.GPIOPinTypeADC), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeCAN), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeComparator), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeEPI), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeEthernetLED), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeEthernetMII), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeFan), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeGPIOInput), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeGPIOOutput), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeGPIOOutputOD), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeI2C), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeI2CSCL), (72 bytes).
+    Removing gpio.o(i.GPIOPinTypeLPC), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypePECIRx), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypePECITx), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypePWM), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeQEI), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeSSI), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeTimer), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeUART), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeUSBAnalog), (28 bytes).
+    Removing gpio.o(i.GPIOPinTypeUSBDigital), (28 bytes).
+    Removing gpio.o(i.GPIOPinWrite), (6 bytes).
+    Removing gpio.o(i.GPIOPortIntRegister), (26 bytes).
+    Removing gpio.o(i.GPIOPortIntUnregister), (22 bytes).
+    Removing i2s.o(i.I2SIntDisable), (14 bytes).
+    Removing i2s.o(i.I2SIntEnable), (14 bytes).
+    Removing i2s.o(i.I2SIntRegister), (18 bytes).
+    Removing i2s.o(i.I2SIntUnregister), (18 bytes).
+    Removing i2s.o(i.I2SRxConfigSet), (60 bytes).
+    Removing i2s.o(i.I2SRxDataGet), (16 bytes).
+    Removing i2s.o(i.I2SRxDataGetNonBlocking), (22 bytes).
+    Removing i2s.o(i.I2SRxDisable), (16 bytes).
+    Removing i2s.o(i.I2SRxEnable), (22 bytes).
+    Removing i2s.o(i.I2SRxFIFOLevelGet), (6 bytes).
+    Removing i2s.o(i.I2SRxFIFOLimitGet), (12 bytes).
+    Removing i2s.o(i.I2SRxFIFOLimitSet), (6 bytes).
+    Removing i2s.o(i.I2STxDataPut), (10 bytes).
+    Removing i2s.o(i.I2STxDataPutNonBlocking), (14 bytes).
+    Removing i2s.o(i.I2STxDisable), (16 bytes).
+    Removing i2s.o(i.I2STxFIFOLevelGet), (4 bytes).
+    Removing i2s.o(i.I2STxFIFOLimitGet), (4 bytes).
+    Removing i2s.o(i.I2STxRxConfigSet), (70 bytes).
+    Removing i2s.o(i.I2STxRxDisable), (16 bytes).
+    Removing i2s.o(i.I2STxRxEnable), (24 bytes).
+    Removing sysctl.o(i.SysCtlADCSpeedGet), (16 bytes).
+    Removing sysctl.o(i.SysCtlADCSpeedSet), (32 bytes).
+    Removing sysctl.o(i.SysCtlBrownOutConfigSet), (16 bytes).
+    Removing sysctl.o(i.SysCtlClkVerificationClear), (20 bytes).
+    Removing sysctl.o(i.SysCtlClockSet), (332 bytes).
+    Removing sysctl.o(i.SysCtlDeepSleep), (32 bytes).
+    Removing sysctl.o(i.SysCtlDeepSleepClockSet), (12 bytes).
+    Removing sysctl.o(i.SysCtlFlashSizeGet), (20 bytes).
+    Removing sysctl.o(i.SysCtlGPIOAHBDisable), (20 bytes).
+    Removing sysctl.o(i.SysCtlGPIOAHBEnable), (16 bytes).
+    Removing sysctl.o(i.SysCtlIOSCVerificationSet), (24 bytes).
+    Removing sysctl.o(i.SysCtlIntClear), (12 bytes).
+    Removing sysctl.o(i.SysCtlIntDisable), (16 bytes).
+    Removing sysctl.o(i.SysCtlIntEnable), (16 bytes).
+    Removing sysctl.o(i.SysCtlIntRegister), (20 bytes).
+    Removing sysctl.o(i.SysCtlIntStatus), (16 bytes).
+    Removing sysctl.o(i.SysCtlIntUnregister), (18 bytes).
+    Removing sysctl.o(i.SysCtlLDOConfigSet), (12 bytes).
+    Removing sysctl.o(i.SysCtlLDOGet), (12 bytes).
+    Removing sysctl.o(i.SysCtlLDOSet), (12 bytes).
+    Removing sysctl.o(i.SysCtlMOSCConfigSet), (12 bytes).
+    Removing sysctl.o(i.SysCtlMOSCVerificationSet), (24 bytes).
+    Removing sysctl.o(i.SysCtlPIOSCCalibrate), (76 bytes).
+    Removing sysctl.o(i.SysCtlPLLVerificationSet), (24 bytes).
+    Removing sysctl.o(i.SysCtlPWMClockGet), (24 bytes).
+    Removing sysctl.o(i.SysCtlPWMClockSet), (20 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralClockGating), (24 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralDeepSleepDisable), (80 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralDeepSleepEnable), (80 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralDisable), (80 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralEnable), (80 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralPowerOff), (72 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralPowerOn), (72 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralPresent), (112 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralReady), (72 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralReset), (120 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralSleepDisable), (80 bytes).
+    Removing sysctl.o(i.SysCtlPeripheralSleepEnable), (80 bytes).
+    Removing sysctl.o(i.SysCtlPinPresent), (16 bytes).
+    Removing sysctl.o(i.SysCtlReset), (16 bytes).
+    Removing sysctl.o(i.SysCtlResetCauseClear), (16 bytes).
+    Removing sysctl.o(i.SysCtlResetCauseGet), (12 bytes).
+    Removing sysctl.o(i.SysCtlSRAMSizeGet), (20 bytes).
+    Removing sysctl.o(i.SysCtlSleep), (4 bytes).
+    Removing sysctl.o(i.SysCtlUSBPLLDisable), (16 bytes).
+    Removing sysctl.o(i.SysCtlUSBPLLEnable), (16 bytes).
+    Removing cpu.o(.emb_text), (38 bytes).
+    Removing interrupt.o(i.IntDefaultHandler), (2 bytes).
+    Removing interrupt.o(i.IntDisable), (100 bytes).
+    Removing interrupt.o(i.IntEnable), (100 bytes).
+    Removing interrupt.o(i.IntIsEnabled), (96 bytes).
+    Removing interrupt.o(i.IntMasterDisable), (10 bytes).
+    Removing interrupt.o(i.IntMasterEnable), (10 bytes).
+    Removing interrupt.o(i.IntPendClear), (68 bytes).
+    Removing interrupt.o(i.IntPendSet), (84 bytes).
+    Removing interrupt.o(i.IntPriorityGet), (28 bytes).
+    Removing interrupt.o(i.IntPriorityGroupingGet), (40 bytes).
+    Removing interrupt.o(i.IntPriorityGroupingSet), (28 bytes).
+    Removing interrupt.o(i.IntPriorityMaskGet), (4 bytes).
+    Removing interrupt.o(i.IntPriorityMaskSet), (4 bytes).
+    Removing interrupt.o(i.IntPrioritySet), (40 bytes).
+    Removing interrupt.o(i.IntRegister), (52 bytes).
+    Removing interrupt.o(i.IntUnregister), (20 bytes).
+    Removing interrupt.o(.constdata), (268 bytes).
+    Removing interrupt.o(vtable), (620 bytes).
+
+166 unused section(s) (total 30775 bytes) removed from the image.
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    RESET                                    0x00000000   Section      296  startup_rvmdk.o(RESET)
+    ../../microlib/init/entry.s              0x00000000   Number         0  entry.o ABSOLUTE
+    ../../microlib/init/entry.s              0x00000000   Number         0  entry8.o ABSOLUTE
+    ../../microlib/init/entry.s              0x00000000   Number         0  entry7b.o ABSOLUTE
+    ../../microlib/init/entry.s              0x00000000   Number         0  entry7a.o ABSOLUTE
+    ../../microlib/init/entry.s              0x00000000   Number         0  entry5.o ABSOLUTE
+    ../../microlib/init/entry.s              0x00000000   Number         0  entry2.o ABSOLUTE
+    ../../microlib/string/strlen.c           0x00000000   Number         0  strlen.o ABSOLUTE
+    ..\..\..\utils\ustdlib.c                 0x00000000   Number         0  ustdlib.o ABSOLUTE
+    ..\drivers\dac.c                         0x00000000   Number         0  dac.o ABSOLUTE
+    ..\drivers\display96x16x1.c              0x00000000   Number         0  display96x16x1.o ABSOLUTE
+    ..\drivers\io.c                          0x00000000   Number         0  io.o ABSOLUTE
+    ..\drivers\sensors.c                     0x00000000   Number         0  sensors.o ABSOLUTE
+    ..\drivers\sound.c                       0x00000000   Number         0  sound.o ABSOLUTE
+    ..\drivers\wav.c                         0x00000000   Number         0  wav.o ABSOLUTE
+    cpu.c                                    0x00000000   Number         0  cpu.o ABSOLUTE
+    cpu.c                                    0x00000000   Number         0  cpu.o ABSOLUTE
+    dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
+    gpio.c                                   0x00000000   Number         0  gpio.o ABSOLUTE
+    handlers.s                               0x00000000   Number         0  handlers.o ABSOLUTE
+    i2s.c                                    0x00000000   Number         0  i2s.o ABSOLUTE
+    init.s                                   0x00000000   Number         0  init.o ABSOLUTE
+    interrupt.c                              0x00000000   Number         0  interrupt.o ABSOLUTE
+    sound_demo.c                             0x00000000   Number         0  sound_demo.o ABSOLUTE
+    sounds.c                                 0x00000000   Number         0  sounds.o ABSOLUTE
+    startup_rvmdk.S                          0x00000000   Number         0  startup_rvmdk.o ABSOLUTE
+    sysctl.c                                 0x00000000   Number         0  sysctl.o ABSOLUTE
+    sysctl.c                                 0x00000000   Number         0  sysctl.o ABSOLUTE
+    NmiSR                                    0x00000121   Thumb Code     0  startup_rvmdk.o(RESET)
+    FaultISR                                 0x00000123   Thumb Code     0  startup_rvmdk.o(RESET)
+    IntDefaultHandler                        0x00000125   Thumb Code     0  startup_rvmdk.o(RESET)
+    .ARM.Collect$$$$00000000                 0x00000128   Section        0  entry.o(.ARM.Collect$$$$00000000)
+    .ARM.Collect$$$$00000001                 0x00000128   Section        4  entry2.o(.ARM.Collect$$$$00000001)
+    .ARM.Collect$$$$00000004                 0x0000012c   Section        4  entry5.o(.ARM.Collect$$$$00000004)
+    .ARM.Collect$$$$00000008                 0x00000130   Section        0  entry7b.o(.ARM.Collect$$$$00000008)
+    .ARM.Collect$$$$00000009                 0x00000130   Section        8  entry8.o(.ARM.Collect$$$$00000009)
+    .ARM.Collect$$$$00002712                 0x00000138   Section        4  entry2.o(.ARM.Collect$$$$00002712)
+    __lit__00000000                          0x00000138   Data           4  entry2.o(.ARM.Collect$$$$00002712)
+    .emb_text                                0x0000013c   Section        6  sysctl.o(.emb_text)
+    .text                                    0x00000142   Section        0  strlen.o(.text)
+    .text                                    0x00000154   Section       36  init.o(.text)
+    i.BufferCallback                         0x00000178   Section        0  wav.o(i.BufferCallback)
+    BufferCallback                           0x00000179   Thumb Code    36  wav.o(i.BufferCallback)
+    i.BumpSensorDebouncer                    0x000001a4   Section        0  sensors.o(i.BumpSensorDebouncer)
+    i.BumpSensorGetDebounced                 0x000001e4   Section        0  sensors.o(i.BumpSensorGetDebounced)
+    i.BumpSensorsInit                        0x00000204   Section        0  sensors.o(i.BumpSensorsInit)
+    i.DACClassDDis                           0x0000023c   Section        0  dac.o(i.DACClassDDis)
+    i.DACClassDEn                            0x00000244   Section        0  dac.o(i.DACClassDEn)
+    i.DACInit                                0x0000024c   Section        0  dac.o(i.DACInit)
+    i.DACReadRegister                        0x00000398   Section        0  dac.o(i.DACReadRegister)
+    DACReadRegister                          0x00000399   Thumb Code   186  dac.o(i.DACReadRegister)
+    i.DACWriteRegister                       0x00000458   Section        0  dac.o(i.DACWriteRegister)
+    DACWriteRegister                         0x00000459   Thumb Code   176  dac.o(i.DACWriteRegister)
+    i.Display96x16x1Clear                    0x0000050c   Section        0  display96x16x1.o(i.Display96x16x1Clear)
+    i.Display96x16x1ClearLine                0x00000520   Section        0  display96x16x1.o(i.Display96x16x1ClearLine)
+    i.Display96x16x1DisplayOn                0x00000558   Section        0  display96x16x1.o(i.Display96x16x1DisplayOn)
+    i.Display96x16x1Init                     0x00000588   Section        0  display96x16x1.o(i.Display96x16x1Init)
+    i.Display96x16x1StringDraw               0x00000694   Section        0  display96x16x1.o(i.Display96x16x1StringDraw)
+    i.Display96x16x1StringDrawCentered       0x0000069e   Section        0  display96x16x1.o(i.Display96x16x1StringDrawCentered)
+    i.Display96x16x1StringDrawLen            0x000006e0   Section        0  display96x16x1.o(i.Display96x16x1StringDrawLen)
+    i.Display96x16x1WriteArray               0x00000790   Section        0  display96x16x1.o(i.Display96x16x1WriteArray)
+    Display96x16x1WriteArray                 0x00000791   Thumb Code    70  display96x16x1.o(i.Display96x16x1WriteArray)
+    i.Display96x16x1WriteByte                0x000007dc   Section        0  display96x16x1.o(i.Display96x16x1WriteByte)
+    Display96x16x1WriteByte                  0x000007dd   Thumb Code    56  display96x16x1.o(i.Display96x16x1WriteByte)
+    i.Display96x16x1WriteFinal               0x00000818   Section        0  display96x16x1.o(i.Display96x16x1WriteFinal)
+    Display96x16x1WriteFinal                 0x00000819   Thumb Code    78  display96x16x1.o(i.Display96x16x1WriteFinal)
+    i.Display96x16x1WriteFirst               0x0000086c   Section        0  display96x16x1.o(i.Display96x16x1WriteFirst)
+    Display96x16x1WriteFirst                 0x0000086d   Thumb Code    46  display96x16x1.o(i.Display96x16x1WriteFirst)
+    i.GPIODirModeSet                         0x000008a0   Section        0  gpio.o(i.GPIODirModeSet)
+    i.GPIOPadConfigSet                       0x000008c8   Section        0  gpio.o(i.GPIOPadConfigSet)
+    i.GPIOPinConfigure                       0x00000978   Section        0  gpio.o(i.GPIOPinConfigure)
+    i.GPIOPinTypeI2S                         0x000009c0   Section        0  gpio.o(i.GPIOPinTypeI2S)
+    i.I2SIntClear                            0x000009dc   Section        0  i2s.o(i.I2SIntClear)
+    i.I2SIntStatus                           0x000009e2   Section        0  i2s.o(i.I2SIntStatus)
+    i.I2SMasterClockSelect                   0x000009f0   Section        0  i2s.o(i.I2SMasterClockSelect)
+    i.I2STxConfigSet                         0x00000a02   Section        0  i2s.o(i.I2STxConfigSet)
+    i.I2STxEnable                            0x00000a18   Section        0  i2s.o(i.I2STxEnable)
+    i.I2STxFIFOLimitSet                      0x00000a2c   Section        0  i2s.o(i.I2STxFIFOLimitSet)
+    i.LED_Off                                0x00000a30   Section        0  io.o(i.LED_Off)
+    i.LED_On                                 0x00000a70   Section        0  io.o(i.LED_On)
+    i.LED_Toggle                             0x00000ab0   Section        0  io.o(i.LED_Toggle)
+    i.LEDsInit                               0x00000b10   Section        0  io.o(i.LEDsInit)
+    i.PushButtonDebouncer                    0x00000b3c   Section        0  io.o(i.PushButtonDebouncer)
+    i.PushButtonGetDebounced                 0x00000b7c   Section        0  io.o(i.PushButtonGetDebounced)
+    i.PushButtonsInit                        0x00000b98   Section        0  io.o(i.PushButtonsInit)
+    i.SoundBufferPlay                        0x00000bd0   Section        0  sound.o(i.SoundBufferPlay)
+    i.SoundClassDDis                         0x00000c80   Section        0  sound.o(i.SoundClassDDis)
+    i.SoundClassDEn                          0x00000c84   Section        0  sound.o(i.SoundClassDEn)
+    i.SoundInit                              0x00000c88   Section        0  sound.o(i.SoundInit)
+    i.SoundIntHandler                        0x00000d8c   Section        0  sound.o(i.SoundIntHandler)
+    i.SoundSetFormat                         0x00000e18   Section        0  sound.o(i.SoundSetFormat)
+    i.SysCtlClockGet                         0x00000f68   Section        0  sysctl.o(i.SysCtlClockGet)
+    i.SysCtlI2SMClkSet                       0x00001198   Section        0  sysctl.o(i.SysCtlI2SMClkSet)
+    i.SysTickHandler                         0x00001270   Section        0  sound_demo.o(i.SysTickHandler)
+    i.WaveGetTime                            0x000012a0   Section        0  wav.o(i.WaveGetTime)
+    i.WaveOpen                               0x000012ec   Section        0  wav.o(i.WaveOpen)
+    i.WavePlayContinue                       0x000013bc   Section        0  wav.o(i.WavePlayContinue)
+    i.WavePlayStart                          0x00001458   Section        0  wav.o(i.WavePlayStart)
+    i.WaveRead                               0x00001470   Section        0  wav.o(i.WaveRead)
+    WaveRead                                 0x00001471   Thumb Code    68  wav.o(i.WaveRead)
+    i.WaveStop                               0x000014b8   Section        0  wav.o(i.WaveStop)
+    i.__scatterload_copy                     0x000014c8   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x000014d6   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x000014d8   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i.main                                   0x000014e8   Section        0  sound_demo.o(i.main)
+    i.usnprintf                              0x000016d4   Section        0  ustdlib.o(i.usnprintf)
+    i.ustrncpy                               0x000016e6   Section        0  ustdlib.o(i.ustrncpy)
+    i.uvsnprintf                             0x00001708   Section        0  ustdlib.o(i.uvsnprintf)
+    .constdata                               0x00001958   Section      534  display96x16x1.o(.constdata)
+    g_pucRITRow1                             0x00001958   Data           6  display96x16x1.o(.constdata)
+    g_pucRITRow2                             0x0000195e   Data           6  display96x16x1.o(.constdata)
+    g_pucFont                                0x00001964   Data         475  display96x16x1.o(.constdata)
+    g_pucRITInit                             0x00001b3f   Data          47  display96x16x1.o(.constdata)
+    .constdata                               0x00001b70   Section       40  sound_demo.o(.constdata)
+    sWaveClips                               0x00001b70   Data          40  sound_demo.o(.constdata)
+    .constdata                               0x00001b98   Section    52194  sounds.o(.constdata)
+    .constdata                               0x0000e77a   Section    20846  sounds.o(.constdata)
+    .constdata                               0x000138e8   Section    20094  sounds.o(.constdata)
+    .constdata                               0x00018766   Section    17534  sounds.o(.constdata)
+    .constdata                               0x0001cbe4   Section    23934  sounds.o(.constdata)
+    .constdata                               0x00022964   Section       28  ustdlib.o(.constdata)
+    g_pcHex                                  0x00022964   Data           4  ustdlib.o(.constdata)
+    g_psDaysToMonth                          0x00022968   Data          24  ustdlib.o(.constdata)
+    .constdata                               0x00022980   Section      120  gpio.o(.constdata)
+    g_pulGPIOBaseAddrs                       0x00022980   Data         120  gpio.o(.constdata)
+    .constdata                               0x000229f8   Section      460  sysctl.o(.constdata)
+    g_pulDCRegs                              0x000229f8   Data          16  sysctl.o(.constdata)
+    g_pulSRCRRegs                            0x00022a08   Data          12  sysctl.o(.constdata)
+    g_pulRCGCRegs                            0x00022a14   Data          12  sysctl.o(.constdata)
+    g_pulSCGCRegs                            0x00022a20   Data          12  sysctl.o(.constdata)
+    g_pulDCGCRegs                            0x00022a2c   Data          12  sysctl.o(.constdata)
+    g_pulXtals                               0x00022a38   Data         108  sysctl.o(.constdata)
+    g_ppulPeripheralMap                      0x00022aa4   Data         288  sysctl.o(.constdata)
+    .conststring                             0x00022bc4   Section       28  sound_demo.o(.conststring)
+    .conststring                             0x00022be0   Section       17  ustdlib.o(.conststring)
+    .data                                    0x20000000   Section        3  io.o(.data)
+    g_ucDebouncedButtons                     0x20000000   Data           1  io.o(.data)
+    ucButtonsClockA                          0x20000001   Data           1  io.o(.data)
+    ucButtonsClockB                          0x20000002   Data           1  io.o(.data)
+    .data                                    0x20000004   Section        8  sensors.o(.data)
+    g_ucDebouncedBumpers                     0x20000004   Data           1  sensors.o(.data)
+    ucBumperClockA                           0x20000005   Data           1  sensors.o(.data)
+    ucBumperClockB                           0x20000006   Data           1  sensors.o(.data)
+    g_pfnWheelCallback                       0x20000008   Data           4  sensors.o(.data)
+    .data                                    0x2000000c   Section       20  sound.o(.data)
+    g_ucVolume                               0x2000000c   Data           1  sound.o(.data)
+    g_usChannels                             0x2000000e   Data           2  sound.o(.data)
+    g_ulDMAFlags                             0x20000010   Data           4  sound.o(.data)
+    g_ulPlaying                              0x20000014   Data           4  sound.o(.data)
+    g_ulSampleRate                           0x20000018   Data           4  sound.o(.data)
+    g_usBitsPerSample                        0x2000001c   Data           4  sound.o(.data)
+    .data                                    0x20000020   Section        4  sound_demo.o(.data)
+    g_ulTickCount                            0x20000020   Data           4  sound_demo.o(.data)
+    .data                                    0x20000024   Section       24  wav.o(.data)
+    g_usMinutes                              0x20000024   Data           2  wav.o(.data)
+    g_usSeconds                              0x20000026   Data           2  wav.o(.data)
+    g_pucDataPtr                             0x20000028   Data           4  wav.o(.data)
+    g_ulMaxBufferSize                        0x2000002c   Data           4  wav.o(.data)
+    g_ulFlags                                0x20000030   Data           4  wav.o(.data)
+    g_ulBytesPlayed                          0x20000034   Data           4  wav.o(.data)
+    g_ulBytesRemaining                       0x20000038   Data           4  wav.o(.data)
+    .bss                                     0x2000003c   Section       24  sound.o(.bss)
+    g_sOutBuffers                            0x2000003c   Data          24  sound.o(.bss)
+    .bss                                     0x20000400   Section     1024  sound_demo.o(.bss)
+    .bss                                     0x20000800   Section     4096  wav.o(.bss)
+    g_pucBuffer                              0x20000800   Data        4096  wav.o(.bss)
+    STACK                                    0x20001800   Section     1024  startup_rvmdk.o(STACK)
+    StackMem                                 0x20001800   Data           0  startup_rvmdk.o(STACK)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv4$P$D$K$B$S$PE$A:L22UL41UL21$X:L11$S22US41US21$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OTIME$EBA8$MICROLIB$REQ8$PRES8$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+    __ARM_use_no_argv                        0x00000000   Number         0  sound_demo.o ABSOLUTE
+    __Vectors                                0x00000000   Data           0  startup_rvmdk.o(RESET)
+    __decompress                              - Undefined Weak Reference
+    _clock_init                               - Undefined Weak Reference
+    Reset_Handler                            0x0000011d   Thumb Code     0  startup_rvmdk.o(RESET)
+    __main                                   0x00000129   Thumb Code     0  entry.o(.ARM.Collect$$$$00000000)
+    _main_stk                                0x00000129   Thumb Code     0  entry2.o(.ARM.Collect$$$$00000001)
+    _main_scatterload                        0x0000012d   Thumb Code     0  entry5.o(.ARM.Collect$$$$00000004)
+    __main_after_scatterload                 0x00000131   Thumb Code     0  entry5.o(.ARM.Collect$$$$00000004)
+    _main_clock                              0x00000131   Thumb Code     0  entry7b.o(.ARM.Collect$$$$00000008)
+    _main_init                               0x00000131   Thumb Code     0  entry8.o(.ARM.Collect$$$$00000009)
+    SysCtlDelay                              0x0000013d   Thumb Code     6  sysctl.o(.emb_text)
+    strlen                                   0x00000143   Thumb Code    16  strlen.o(.text)
+    __scatterload                            0x00000155   Thumb Code    28  init.o(.text)
+    __scatterload_rt2                        0x00000155   Thumb Code     0  init.o(.text)
+    BumpSensorDebouncer                      0x000001a5   Thumb Code    54  sensors.o(i.BumpSensorDebouncer)
+    BumpSensorGetDebounced                   0x000001e5   Thumb Code    26  sensors.o(i.BumpSensorGetDebounced)
+    BumpSensorsInit                          0x00000205   Thumb Code    46  sensors.o(i.BumpSensorsInit)
+    DACClassDDis                             0x0000023d   Thumb Code     8  dac.o(i.DACClassDDis)
+    DACClassDEn                              0x00000245   Thumb Code     8  dac.o(i.DACClassDEn)
+    DACInit                                  0x0000024d   Thumb Code   310  dac.o(i.DACInit)
+    Display96x16x1Clear                      0x0000050d   Thumb Code    18  display96x16x1.o(i.Display96x16x1Clear)
+    Display96x16x1ClearLine                  0x00000521   Thumb Code    50  display96x16x1.o(i.Display96x16x1ClearLine)
+    Display96x16x1DisplayOn                  0x00000559   Thumb Code    44  display96x16x1.o(i.Display96x16x1DisplayOn)
+    Display96x16x1Init                       0x00000589   Thumb Code   232  display96x16x1.o(i.Display96x16x1Init)
+    Display96x16x1StringDraw                 0x00000695   Thumb Code    10  display96x16x1.o(i.Display96x16x1StringDraw)
+    Display96x16x1StringDrawCentered         0x0000069f   Thumb Code    64  display96x16x1.o(i.Display96x16x1StringDrawCentered)
+    Display96x16x1StringDrawLen              0x000006e1   Thumb Code   172  display96x16x1.o(i.Display96x16x1StringDrawLen)
+    GPIODirModeSet                           0x000008a1   Thumb Code    40  gpio.o(i.GPIODirModeSet)
+    GPIOPadConfigSet                         0x000008c9   Thumb Code   176  gpio.o(i.GPIOPadConfigSet)
+    GPIOPinConfigure                         0x00000979   Thumb Code    64  gpio.o(i.GPIOPinConfigure)
+    GPIOPinTypeI2S                           0x000009c1   Thumb Code    28  gpio.o(i.GPIOPinTypeI2S)
+    I2SIntClear                              0x000009dd   Thumb Code     6  i2s.o(i.I2SIntClear)
+    I2SIntStatus                             0x000009e3   Thumb Code    14  i2s.o(i.I2SIntStatus)
+    I2SMasterClockSelect                     0x000009f1   Thumb Code    18  i2s.o(i.I2SMasterClockSelect)
+    I2STxConfigSet                           0x00000a03   Thumb Code    22  i2s.o(i.I2STxConfigSet)
+    I2STxEnable                              0x00000a19   Thumb Code    20  i2s.o(i.I2STxEnable)
+    I2STxFIFOLimitSet                        0x00000a2d   Thumb Code     4  i2s.o(i.I2STxFIFOLimitSet)
+    LED_Off                                  0x00000a31   Thumb Code    58  io.o(i.LED_Off)
+    LED_On                                   0x00000a71   Thumb Code    58  io.o(i.LED_On)
+    LED_Toggle                               0x00000ab1   Thumb Code    92  io.o(i.LED_Toggle)
+    LEDsInit                                 0x00000b11   Thumb Code    34  io.o(i.LEDsInit)
+    PushButtonDebouncer                      0x00000b3d   Thumb Code    54  io.o(i.PushButtonDebouncer)
+    PushButtonGetDebounced                   0x00000b7d   Thumb Code    24  io.o(i.PushButtonGetDebounced)
+    PushButtonsInit                          0x00000b99   Thumb Code    46  io.o(i.PushButtonsInit)
+    SoundBufferPlay                          0x00000bd1   Thumb Code   160  sound.o(i.SoundBufferPlay)
+    SoundClassDDis                           0x00000c81   Thumb Code     4  sound.o(i.SoundClassDDis)
+    SoundClassDEn                            0x00000c85   Thumb Code     4  sound.o(i.SoundClassDEn)
+    SoundInit                                0x00000c89   Thumb Code   212  sound.o(i.SoundInit)
+    SoundIntHandler                          0x00000d8d   Thumb Code   122  sound.o(i.SoundIntHandler)
+    SoundSetFormat                           0x00000e19   Thumb Code   254  sound.o(i.SoundSetFormat)
+    SysCtlClockGet                           0x00000f69   Thumb Code   514  sysctl.o(i.SysCtlClockGet)
+    SysCtlI2SMClkSet                         0x00001199   Thumb Code   204  sysctl.o(i.SysCtlI2SMClkSet)
+    SysTickHandler                           0x00001271   Thumb Code    42  sound_demo.o(i.SysTickHandler)
+    WaveGetTime                              0x000012a1   Thumb Code    56  wav.o(i.WaveGetTime)
+    WaveOpen                                 0x000012ed   Thumb Code   188  wav.o(i.WaveOpen)
+    WavePlayContinue                         0x000013bd   Thumb Code   138  wav.o(i.WavePlayContinue)
+    WavePlayStart                            0x00001459   Thumb Code    18  wav.o(i.WavePlayStart)
+    WaveStop                                 0x000014b9   Thumb Code    12  wav.o(i.WaveStop)
+    __scatterload_copy                       0x000014c9   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x000014d7   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x000014d9   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    main                                     0x000014e9   Thumb Code   438  sound_demo.o(i.main)
+    usnprintf                                0x000016d5   Thumb Code    18  ustdlib.o(i.usnprintf)
+    ustrncpy                                 0x000016e7   Thumb Code    34  ustdlib.o(i.ustrncpy)
+    uvsnprintf                               0x00001709   Thumb Code   578  ustdlib.o(i.uvsnprintf)
+    g_ucSoundWav1                            0x00001b98   Data       52194  sounds.o(.constdata)
+    g_ucSoundWav2                            0x0000e77a   Data       20846  sounds.o(.constdata)
+    g_ucSoundWav3                            0x000138e8   Data       20094  sounds.o(.constdata)
+    g_ucSoundWav4                            0x00018766   Data       17534  sounds.o(.constdata)
+    g_ucSoundWav5                            0x0001cbe4   Data       23934  sounds.o(.constdata)
+    Region$$Table$$Base                      0x00022bf4   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00022c14   Number         0  anon$$obj.o(Region$$Table)
+    sDMAControlTable                         0x20000400   Data        1024  sound_demo.o(.bss)
+    __initial_sp                             0x20001c00   Data           0  startup_rvmdk.o(STACK)
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x0000011d
+
+  Load Region LR_IROM (Base: 0x00000000, Size: 0x00022c50, Max: 0x00040000, ABSOLUTE)
+
+    Execution Region ER_IROM (Base: 0x00000000, Size: 0x00022c14, Max: 0x00040000, ABSOLUTE)
+
+    Base Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x00000000   0x00000128   Code   RO          474  * RESET               startup_rvmdk.o
+    0x00000128   0x00000000   Code   RO         1533  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x00000128   0x00000004   Code   RO         1538    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x0000012c   0x00000004   Code   RO         1541    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x00000130   0x00000000   Code   RO         1543    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x00000130   0x00000008   Code   RO         1544    .ARM.Collect$$$$00000009  mc_w.l(entry8.o)
+    0x00000138   0x00000004   Code   RO         1539    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x0000013c   0x00000006   Code   RO         1110    .emb_text           driverlib-cm3.lib(sysctl.o)
+    0x00000142   0x00000010   Code   RO         1536    .text               mc_w.l(strlen.o)
+    0x00000152   0x00000002   PAD
+    0x00000154   0x00000024   Code   RO         1545    .text               mc_w.l(init.o)
+    0x00000178   0x0000002c   Code   RO          589    i.BufferCallback    wav.o
+    0x000001a4   0x00000040   Code   RO          234    i.BumpSensorDebouncer  sensors.o
+    0x000001e4   0x00000020   Code   RO          235    i.BumpSensorGetDebounced  sensors.o
+    0x00000204   0x00000038   Code   RO          237    i.BumpSensorsInit   sensors.o
+    0x0000023c   0x00000008   Code   RO            1    i.DACClassDDis      dac.o
+    0x00000244   0x00000008   Code   RO            2    i.DACClassDEn       dac.o
+    0x0000024c   0x0000014c   Code   RO            3    i.DACInit           dac.o
+    0x00000398   0x000000c0   Code   RO            4    i.DACReadRegister   dac.o
+    0x00000458   0x000000b4   Code   RO            7    i.DACWriteRegister  dac.o
+    0x0000050c   0x00000012   Code   RO           78    i.Display96x16x1Clear  display96x16x1.o
+    0x0000051e   0x00000002   PAD
+    0x00000520   0x00000038   Code   RO           79    i.Display96x16x1ClearLine  display96x16x1.o
+    0x00000558   0x00000030   Code   RO           81    i.Display96x16x1DisplayOn  display96x16x1.o
+    0x00000588   0x0000010c   Code   RO           83    i.Display96x16x1Init  display96x16x1.o
+    0x00000694   0x0000000a   Code   RO           84    i.Display96x16x1StringDraw  display96x16x1.o
+    0x0000069e   0x00000040   Code   RO           85    i.Display96x16x1StringDrawCentered  display96x16x1.o
+    0x000006de   0x00000002   PAD
+    0x000006e0   0x000000b0   Code   RO           86    i.Display96x16x1StringDrawLen  display96x16x1.o
+    0x00000790   0x0000004c   Code   RO           87    i.Display96x16x1WriteArray  display96x16x1.o
+    0x000007dc   0x0000003c   Code   RO           88    i.Display96x16x1WriteByte  display96x16x1.o
+    0x00000818   0x00000054   Code   RO           89    i.Display96x16x1WriteFinal  display96x16x1.o
+    0x0000086c   0x00000034   Code   RO           90    i.Display96x16x1WriteFirst  display96x16x1.o
+    0x000008a0   0x00000028   Code   RO          652    i.GPIODirModeSet    driverlib-cm3.lib(gpio.o)
+    0x000008c8   0x000000b0   Code   RO          657    i.GPIOPadConfigSet  driverlib-cm3.lib(gpio.o)
+    0x00000978   0x00000048   Code   RO          658    i.GPIOPinConfigure  driverlib-cm3.lib(gpio.o)
+    0x000009c0   0x0000001c   Code   RO          676    i.GPIOPinTypeI2S    driverlib-cm3.lib(gpio.o)
+    0x000009dc   0x00000006   Code   RO          939    i.I2SIntClear       driverlib-cm3.lib(i2s.o)
+    0x000009e2   0x0000000e   Code   RO          943    i.I2SIntStatus      driverlib-cm3.lib(i2s.o)
+    0x000009f0   0x00000012   Code   RO          945    i.I2SMasterClockSelect  driverlib-cm3.lib(i2s.o)
+    0x00000a02   0x00000016   Code   RO          954    i.I2STxConfigSet    driverlib-cm3.lib(i2s.o)
+    0x00000a18   0x00000014   Code   RO          958    i.I2STxEnable       driverlib-cm3.lib(i2s.o)
+    0x00000a2c   0x00000004   Code   RO          961    i.I2STxFIFOLimitSet  driverlib-cm3.lib(i2s.o)
+    0x00000a30   0x00000040   Code   RO          175    i.LED_Off           io.o
+    0x00000a70   0x00000040   Code   RO          176    i.LED_On            io.o
+    0x00000ab0   0x00000060   Code   RO          177    i.LED_Toggle        io.o
+    0x00000b10   0x0000002c   Code   RO          178    i.LEDsInit          io.o
+    0x00000b3c   0x00000040   Code   RO          179    i.PushButtonDebouncer  io.o
+    0x00000b7c   0x0000001c   Code   RO          180    i.PushButtonGetDebounced  io.o
+    0x00000b98   0x00000038   Code   RO          182    i.PushButtonsInit   io.o
+    0x00000bd0   0x000000b0   Code   RO          317    i.SoundBufferPlay   sound.o
+    0x00000c80   0x00000004   Code   RO          318    i.SoundClassDDis    sound.o
+    0x00000c84   0x00000004   Code   RO          319    i.SoundClassDEn     sound.o
+    0x00000c88   0x00000104   Code   RO          320    i.SoundInit         sound.o
+    0x00000d8c   0x0000008c   Code   RO          321    i.SoundIntHandler   sound.o
+    0x00000e18   0x00000150   Code   RO          323    i.SoundSetFormat    sound.o
+    0x00000f68   0x00000230   Code   RO         1115    i.SysCtlClockGet    driverlib-cm3.lib(sysctl.o)
+    0x00001198   0x000000d8   Code   RO         1122    i.SysCtlI2SMClkSet  driverlib-cm3.lib(sysctl.o)
+    0x00001270   0x00000030   Code   RO          404    i.SysTickHandler    sound_demo.o
+    0x000012a0   0x0000004c   Code   RO          590    i.WaveGetTime       wav.o
+    0x000012ec   0x000000d0   Code   RO          591    i.WaveOpen          wav.o
+    0x000013bc   0x0000009c   Code   RO          592    i.WavePlayContinue  wav.o
+    0x00001458   0x00000018   Code   RO          593    i.WavePlayStart     wav.o
+    0x00001470   0x00000048   Code   RO          595    i.WaveRead          wav.o
+    0x000014b8   0x00000010   Code   RO          596    i.WaveStop          wav.o
+    0x000014c8   0x0000000e   Code   RO         1549    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x000014d6   0x00000002   Code   RO         1550    i.__scatterload_null  mc_w.l(handlers.o)
+    0x000014d8   0x0000000e   Code   RO         1551    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x000014e6   0x00000002   PAD
+    0x000014e8   0x000001ec   Code   RO          405    i.main              sound_demo.o
+    0x000016d4   0x00000012   Code   RO          483    i.usnprintf         ustdlib.o
+    0x000016e6   0x00000022   Code   RO          490    i.ustrncpy          ustdlib.o
+    0x00001708   0x00000250   Code   RO          494    i.uvsnprintf        ustdlib.o
+    0x00001958   0x00000216   Data   RO           91    .constdata          display96x16x1.o
+    0x00001b6e   0x00000002   PAD
+    0x00001b70   0x00000028   Data   RO          407    .constdata          sound_demo.o
+    0x00001b98   0x0000cbe2   Data   RO          454    .constdata          sounds.o
+    0x0000e77a   0x0000516e   Data   RO          456    .constdata          sounds.o
+    0x000138e8   0x00004e7e   Data   RO          458    .constdata          sounds.o
+    0x00018766   0x0000447e   Data   RO          460    .constdata          sounds.o
+    0x0001cbe4   0x00005d7e   Data   RO          462    .constdata          sounds.o
+    0x00022962   0x00000002   PAD
+    0x00022964   0x0000001c   Data   RO          495    .constdata          ustdlib.o
+    0x00022980   0x00000078   Data   RO          690    .constdata          driverlib-cm3.lib(gpio.o)
+    0x000229f8   0x000001cc   Data   RO         1159    .constdata          driverlib-cm3.lib(sysctl.o)
+    0x00022bc4   0x0000001c   Data   RO          408    .conststring        sound_demo.o
+    0x00022be0   0x00000011   Data   RO          496    .conststring        ustdlib.o
+    0x00022bf1   0x00000003   PAD
+    0x00022bf4   0x00000020   Data   RO         1547    Region$$Table       anon$$obj.o
+
+
+    Execution Region RW_IRAM (Base: 0x20000000, Size: 0x00001c00, Max: 0x00018000, ABSOLUTE)
+
+    Base Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x20000000   0x00000003   Data   RW          183    .data               io.o
+    0x20000003   0x00000001   PAD
+    0x20000004   0x00000008   Data   RW          244    .data               sensors.o
+    0x2000000c   0x00000014   Data   RW          329    .data               sound.o
+    0x20000020   0x00000004   Data   RW          409    .data               sound_demo.o
+    0x20000024   0x00000018   Data   RW          598    .data               wav.o
+    0x2000003c   0x00000018   Zero   RW          328    .bss                sound.o
+    0x20000054   0x000003ac   PAD
+    0x20000400   0x00000400   Zero   RW          406    .bss                sound_demo.o
+    0x20000800   0x00001000   Zero   RW          597    .bss                wav.o
+    0x20001800   0x00000400   Zero   RW          472    STACK               startup_rvmdk.o
+

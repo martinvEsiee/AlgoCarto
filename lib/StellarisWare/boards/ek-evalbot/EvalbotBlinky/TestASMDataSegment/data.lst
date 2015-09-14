@@ -1,0 +1,42 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             IRAM1, READWRITE
+    2 00000000                 ENTRY
+    3 00000000 01      tab     DCB              0x1
+    4 00000001         
+    5 00000001         
+    6 00000001                 EXPORT           tab
+    7 00000001         
+    8 00000001                 END
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=data.d -
+odata.o -IC:\Keil\ARM\RV31\Inc -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\Inc\Lu
+minary --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --list=data.
+lst data.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+IRAM1 00000000
+
+Symbol: IRAM1
+   Definitions
+      At line 1 in file data.s
+   Uses
+      None
+Comment: IRAM1 unused
+tab 00000000
+
+Symbol: tab
+   Definitions
+      At line 3 in file data.s
+   Uses
+      At line 6 in file data.s
+Comment: tab used once
+2 symbols
+334 symbols in table

@@ -1,0 +1,10 @@
+.\rvmdk\drive_task.o: drive_task.c
+.\rvmdk\drive_task.o: ..\..\..\inc/hw_types.h
+.\rvmdk\drive_task.o: ..\..\..\inc/hw_memmap.h
+.\rvmdk\drive_task.o: ..\..\..\driverlib/sysctl.h
+.\rvmdk\drive_task.o: ..\..\..\driverlib/timer.h
+.\rvmdk\drive_task.o: ..\..\..\driverlib/rom.h
+.\rvmdk\drive_task.o: ..\drivers/motor.h
+.\rvmdk\drive_task.o: ..\drivers/sensors.h
+.\rvmdk\drive_task.o: drive_task.h
+.\rvmdk\drive_task.o: pid.h

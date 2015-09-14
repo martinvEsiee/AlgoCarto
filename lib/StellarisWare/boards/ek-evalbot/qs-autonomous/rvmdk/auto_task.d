@@ -1,0 +1,11 @@
+.\rvmdk\auto_task.o: auto_task.c
+.\rvmdk\auto_task.o: ..\..\..\inc/hw_types.h
+.\rvmdk\auto_task.o: ..\..\..\utils/scheduler.h
+.\rvmdk\auto_task.o: ..\drivers/motor.h
+.\rvmdk\auto_task.o: ..\drivers/sensors.h
+.\rvmdk\auto_task.o: ..\drivers/io.h
+.\rvmdk\auto_task.o: ..\..\..\utils/uartstdio.h
+.\rvmdk\auto_task.o: drive_task.h
+.\rvmdk\auto_task.o: random.h
+.\rvmdk\auto_task.o: sound_task.h
+.\rvmdk\auto_task.o: sounds.h

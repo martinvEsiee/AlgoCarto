@@ -1,0 +1,25 @@
+*** Creating Trace Output File '.\rvmdk\motor_demo.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\rvmdk\display96x16x1.o"'
+### List of Objects: adding '".\rvmdk\io.o"'
+### List of Objects: adding '".\rvmdk\motor.o"'
+### List of Objects: adding '".\rvmdk\motor_demo.o"'
+### List of Objects: adding '".\rvmdk\sensors.o"'
+### List of Objects: adding '".\rvmdk\startup_rvmdk.o"'
+### List of Objects: adding '"..\..\..\driverlib\rvmdk-cm3\driverlib-cm3.lib"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 ".\rvmdk\display96x16x1.o" ".\rvmdk\io.o" ".\rvmdk\motor.o" ".\rvmdk\motor_demo.o" ".\rvmdk\sensors.o" ".\rvmdk\startup_rvmdk.o" C:\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib --library_type=microlib --strict --scatter "motor_demo.sct" 
+--entry Reset_Handler --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\rvmdk\listings\motor_demo.map" -o .\rvmdk\motor_demo.axf### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\rvmdk\motor_demo.axf'
+### ADS-LD Command File: '.\rvmdk\motor_demo.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\rvmdk\motor_demo.lnp', Handle=0x00000310
+### Writing '.lnp' file
+### ADS-LD Command file '.\rvmdk\motor_demo.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

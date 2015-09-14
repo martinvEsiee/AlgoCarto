@@ -1,0 +1,22 @@
+*** Creating Trace Output File '.\rvmdk\simple_display.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\rvmdk\display96x16x1.o"'
+### List of Objects: adding '".\rvmdk\simple_display.o"'
+### List of Objects: adding '".\rvmdk\startup_rvmdk.o"'
+### List of Objects: adding '"..\..\..\driverlib\rvmdk-cm3\driverlib-cm3.lib"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 ".\rvmdk\display96x16x1.o" ".\rvmdk\simple_display.o" ".\rvmdk\startup_rvmdk.o" C:\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib --library_type=microlib --strict --scatter "simple_display.sct" 
+--entry Reset_Handler --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\rvmdk\simple_display.map" -o .\rvmdk\simple_display.axf### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\rvmdk\simple_display.axf'
+### ADS-LD Command File: '.\rvmdk\simple_display.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\rvmdk\simple_display.lnp', Handle=0x000002DC
+### Writing '.lnp' file
+### ADS-LD Command file '.\rvmdk\simple_display.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

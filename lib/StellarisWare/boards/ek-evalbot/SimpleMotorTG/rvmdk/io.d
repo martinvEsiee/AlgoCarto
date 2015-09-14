@@ -1,0 +1,9 @@
+.\rvmdk\io.o: ..\drivers\io.c
+.\rvmdk\io.o: ..\..\..\inc/hw_memmap.h
+.\rvmdk\io.o: ..\..\..\inc/hw_types.h
+.\rvmdk\io.o: ..\..\..\driverlib/debug.h
+.\rvmdk\io.o: ..\..\..\driverlib/gpio.h
+.\rvmdk\io.o: ..\..\..\driverlib/pin_map.h
+.\rvmdk\io.o: ..\..\..\driverlib/sysctl.h
+.\rvmdk\io.o: ..\..\..\driverlib/rom.h
+.\rvmdk\io.o: ..\drivers\io.h

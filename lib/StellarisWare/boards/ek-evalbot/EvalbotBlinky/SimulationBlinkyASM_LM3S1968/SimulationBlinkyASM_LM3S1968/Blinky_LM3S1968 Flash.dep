@@ -1,0 +1,4 @@
+Dependencies for Project 'Blinky', Target 'LM3S1968 Flash': (DO NOT MODIFY !)
+F (.\Startup.s)(0x4F911378)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I C:\KeilEvalBot\ARM\RV31\Inc -I C:\KeilEvalBot\ARM\CMSIS\Include -I C:\KeilEvalBot\ARM\Inc\Luminary --list ".\Flash\Startup.lst" --xref -o ".\Flash\Startup.o" --depend ".\Flash\Startup.d")
+F (.\main.s)(0x4F9D6BB0)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I C:\KeilEvalBot\ARM\RV31\Inc -I C:\KeilEvalBot\ARM\CMSIS\Include -I C:\KeilEvalBot\ARM\Inc\Luminary --list ".\Flash\main.lst" --xref -o ".\Flash\main.o" --depend ".\Flash\main.d")
+F (.\Abstract.txt)(0x4F9D67DA)()

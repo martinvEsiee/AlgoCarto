@@ -1,0 +1,3 @@
+Dependencies for Project 'EvalbotASMLedsTG', Target 'Target 1': (DO NOT MODIFY !)
+F (.\Startup.s)(0x4F589834)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I C:\Keil\ARM\RV31\Inc -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\Luminary --list "Startup.lst" --xref -o "Startup.o" --depend "Startup.d")
+F (.\leds.s)(0x506831A7)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I C:\Keil\ARM\RV31\Inc -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\Luminary --list "leds.lst" --xref -o "leds.o" --depend "leds.d")

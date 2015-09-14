@@ -1,0 +1,4 @@
+--cpu Cortex-M3 ".\rvmdk\auto_task.o" ".\rvmdk\dac.o" ".\rvmdk\display96x16x1.o" ".\rvmdk\display_task.o" ".\rvmdk\drive_task.o" ".\rvmdk\io.o" ".\rvmdk\led_task.o" ".\rvmdk\motor.o" ".\rvmdk\pid.o" ".\rvmdk\qs-autonomous.o" ".\rvmdk\random.o" ".\rvmdk\scheduler.o" ".\rvmdk\sensors.o" ".\rvmdk\sound.o" ".\rvmdk\sound_task.o" ".\rvmdk\sounds.o" ".\rvmdk\startup_rvmdk.o" ".\rvmdk\uartstdio.o" ".\rvmdk\ustdlib.o" ".\rvmdk\wav.o" C:\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib --library_type=microlib --strict --scatter "qs-autonomous.sct" 
+--entry Reset_Handler --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\rvmdk\qs-autonomous.map" -o .\rvmdk\qs-autonomous.axf

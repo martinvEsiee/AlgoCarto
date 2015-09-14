@@ -1,0 +1,1 @@
+BlinkyASMTG.o: BlinkyASMTG.s

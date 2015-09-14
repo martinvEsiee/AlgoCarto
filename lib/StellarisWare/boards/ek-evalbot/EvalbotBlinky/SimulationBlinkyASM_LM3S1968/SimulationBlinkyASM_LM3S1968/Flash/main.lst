@@ -1,0 +1,193 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;; TG 04/2012 - Simulation LM3S1968 (Cortex M3 de Texas 
+                       Instrument)
+    2 00000000         ;; fait clignoter les leds connectées au port GPIOG
+    3 00000000         
+    4 00000000                 AREA             |.text|, CODE, READONLY
+    5 00000000         
+    6 00000000 400FE108 
+                       GPIOG   EQU              0x400FE108  ;SYSCTL_RCGC2_R
+    7 00000000 40026400 
+                       GPIO_PORTG_DIR_R
+                               EQU              0x40026400  ;Direction port G  
+                                                             (p299 de lm3s1968.
+                                                            pdf)
+    8 00000000 4002651C 
+                       GPIO_PORTG_DEN_R
+                               EQU              0x4002651C  ;GPIO Digital Enabl
+                                                            e  (p316 )
+    9 00000000 400263FC 
+                       GPIO_PORTG_DATA_R
+                               EQU              0x400263FC  ;Pour changer tous 
+                                                            les bits du port G,
+                                                             (voir p291)
+   10 00000000         ; =0x40026000+Ox3FC comme Ox3FC =1111111100 les bits 9:2
+                       
+   11 00000000         ;sont a 1 on peut donc ecrire tous les bits du port a
+   12 00000000         ;cette adresse (0x3FC est un masque)
+   13 00000000         
+   14 00000000 00013880 
+                       DUREE   EQU              80000
+   15 00000000         
+   16 00000000                 ENTRY
+   17 00000000                 EXPORT           __main
+   18 00000000         __main
+   19 00000000 4E0C            ldr              r6, = GPIOG ;;Enable clock sur 
+                                                            GPIOG où sont branc
+                                                            hés les leds
+   20 00000002 F04F 0040       mov              r0, #0x00000040
+   21 00000006 6030            str              r0, [r6]
+   22 00000008         
+   23 00000008 4E0B            ldr              r6, = GPIO_PORTG_DIR_R ;Pin por
+                                                            tG en sortie
+   24 0000000A F04F 0004       ldr              r0, = 0x04
+   25 0000000E 6030            str              r0, [r6]
+   26 00000010         
+   27 00000010 4E0A            ldr              r6, = GPIO_PORTG_DEN_R ;;Enable
+                                                             Digital Function
+   28 00000012 F04F 0004       ldr              r0, = 0x04
+   29 00000016 6030            str              r0, [r6]
+   30 00000018         
+   31 00000018         
+   32 00000018 F04F 0200       mov              r2, #0x00   ;Etat 1 du portG
+   33 0000001C F04F 0304       mov              r3, #0x04   ;Etat2 du portG 
+   34 00000020 4E07            ldr              r6, = GPIO_PORTG_DATA_R 
+                                                            ; ata Register
+   35 00000022         loop
+   36 00000022 6032            str              r2, [r6]    ;change etat du por
+                                                            t = etat1 dans r2  
+                                                                 
+   37 00000024 4907            ldr              r1, = DUREE ;pour la duree de l
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            a boucle d'attente1
+                                                             (wait1)
+   38 00000026         wait1
+   39 00000026 3901            subs             r1, #1
+   40 00000028 D1FD            bne              wait1
+   41 0000002A         
+   42 0000002A 6033            str              r3, [r6]    ;change etat du por
+                                                            t = etat2 dans r3
+   43 0000002C 4905            ldr              r1, = DUREE ;pour la duree de l
+                                                            a boucle d'attente2
+                                                             (wait2)
+   44 0000002E         wait2
+   45 0000002E 3901            subs             r1, #1
+   46 00000030 D1FD            bne              wait2
+   47 00000032         
+   48 00000032 E7F6            b                loop
+   49 00000034                 END
+              400FE108 
+              40026400 
+              4002651C 
+              400263FC 
+              00013880 
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=.\Flash\
+main.d -o.\Flash\main.o -IC:\KeilEvalBot\ARM\RV31\Inc -IC:\KeilEvalBot\ARM\CMSI
+S\Include -IC:\KeilEvalBot\ARM\Inc\Luminary --predefine="__EVAL SETA 1" --prede
+fine="__MICROLIB SETA 1" --list=.\Flash\main.lst main.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 4 in file main.s
+   Uses
+      None
+Comment: .text unused
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 18 in file main.s
+   Uses
+      At line 17 in file main.s
+Comment: __main used once
+loop 00000022
+
+Symbol: loop
+   Definitions
+      At line 35 in file main.s
+   Uses
+      At line 48 in file main.s
+Comment: loop used once
+wait1 00000026
+
+Symbol: wait1
+   Definitions
+      At line 38 in file main.s
+   Uses
+      At line 40 in file main.s
+Comment: wait1 used once
+wait2 0000002E
+
+Symbol: wait2
+   Definitions
+      At line 44 in file main.s
+   Uses
+      At line 46 in file main.s
+Comment: wait2 used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+DUREE 00013880
+
+Symbol: DUREE
+   Definitions
+      At line 14 in file main.s
+   Uses
+      At line 37 in file main.s
+      At line 43 in file main.s
+
+GPIOG 400FE108
+
+Symbol: GPIOG
+   Definitions
+      At line 6 in file main.s
+   Uses
+      At line 19 in file main.s
+Comment: GPIOG used once
+GPIO_PORTG_DATA_R 400263FC
+
+Symbol: GPIO_PORTG_DATA_R
+   Definitions
+      At line 9 in file main.s
+   Uses
+      At line 34 in file main.s
+Comment: GPIO_PORTG_DATA_R used once
+GPIO_PORTG_DEN_R 4002651C
+
+Symbol: GPIO_PORTG_DEN_R
+   Definitions
+      At line 8 in file main.s
+   Uses
+      At line 27 in file main.s
+Comment: GPIO_PORTG_DEN_R used once
+GPIO_PORTG_DIR_R 40026400
+
+Symbol: GPIO_PORTG_DIR_R
+   Definitions
+      At line 7 in file main.s
+   Uses
+      At line 23 in file main.s
+Comment: GPIO_PORTG_DIR_R used once
+5 symbols
+344 symbols in table

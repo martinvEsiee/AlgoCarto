@@ -1,0 +1,1822 @@
+L 1 "..\..\..\utils\scheduler.c"
+N//****************************************************************************
+N//
+N// scheduler.c - A simple task scheduler
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//****************************************************************************
+N#include "inc/hw_types.h"
+L 1 "..\..\..\inc/hw_types.h" 1
+N//*****************************************************************************
+N//
+N// hw_types.h - Common types and macros.
+N//
+N// Copyright (c) 2005-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __HW_TYPES_H__
+N#define __HW_TYPES_H__
+N
+N//*****************************************************************************
+N//
+N// Define a boolean type, and values for true and false.
+N//
+N//*****************************************************************************
+Ntypedef unsigned char tBoolean;
+N
+N#ifndef true
+N#define true 1
+N#endif
+N
+N#ifndef false
+N#define false 0
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Macros for hardware access, both direct and via the bit-band region.
+N//
+N//*****************************************************************************
+N#define HWREG(x)                                                              \
+N        (*((volatile unsigned long *)(x)))
+X#define HWREG(x)                                                                      (*((volatile unsigned long *)(x)))
+N#define HWREGH(x)                                                             \
+N        (*((volatile unsigned short *)(x)))
+X#define HWREGH(x)                                                                     (*((volatile unsigned short *)(x)))
+N#define HWREGB(x)                                                             \
+N        (*((volatile unsigned char *)(x)))
+X#define HWREGB(x)                                                                     (*((volatile unsigned char *)(x)))
+N#define HWREGBITW(x, b)                                                       \
+N        HWREG(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                \
+N              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITW(x, b)                                                               HWREG(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N#define HWREGBITH(x, b)                                                       \
+N        HWREGH(((unsigned long)(x) & 0xF0000000) | 0x02000000 |               \
+N               (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITH(x, b)                                                               HWREGH(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N#define HWREGBITB(x, b)                                                       \
+N        HWREGB(((unsigned long)(x) & 0xF0000000) | 0x02000000 |               \
+N               (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITB(x, b)                                                               HWREGB(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N
+N//*****************************************************************************
+N//
+N// Helper Macros for determining silicon revisions, etc.
+N//
+N// These macros will be used by Driverlib at "run-time" to create necessary
+N// conditional code blocks that will allow a single version of the Driverlib
+N// "binary" code to support multiple(all) Stellaris silicon revisions.
+N//
+N// It is expected that these macros will be used inside of a standard 'C'
+N// conditional block of code, e.g.
+N//
+N//     if(CLASS_IS_SANDSTORM)
+N//     {
+N//         do some Sandstorm-class specific code here.
+N//     }
+N//
+N// By default, these macros will be defined as run-time checks of the
+N// appropriate register(s) to allow creation of run-time conditional code
+N// blocks for a common DriverLib across the entire Stellaris family.
+N//
+N// However, if code-space optimization is required, these macros can be "hard-
+N// coded" for a specific version of Stellaris silicon.  Many compilers will
+N// then detect the "hard-coded" conditionals, and appropriately optimize the
+N// code blocks, eliminating any "unreachable" code.  This would result in
+N// a smaller Driverlib, thus producing a smaller final application size, but
+N// at the cost of limiting the Driverlib binary to a specific Stellaris
+N// silicon revision.
+N//
+N//*****************************************************************************
+N#ifndef CLASS_IS_SANDSTORM
+N#define CLASS_IS_SANDSTORM                                                    \
+N        (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_M) == SYSCTL_DID0_VER_0) ||   \
+N         ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SANDSTORM)))
+X#define CLASS_IS_SANDSTORM                                                            (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_M) == SYSCTL_DID0_VER_0) ||            ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==           (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SANDSTORM)))
+N#endif
+N
+N#ifndef CLASS_IS_FURY
+N#define CLASS_IS_FURY                                                        \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FURY))
+X#define CLASS_IS_FURY                                                                ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FURY))
+N#endif
+N
+N#ifndef CLASS_IS_DUSTDEVIL
+N#define CLASS_IS_DUSTDEVIL                                                   \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_DUSTDEVIL))
+X#define CLASS_IS_DUSTDEVIL                                                           ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_DUSTDEVIL))
+N#endif
+N
+N#ifndef CLASS_IS_TEMPEST
+N#define CLASS_IS_TEMPEST                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TEMPEST))
+X#define CLASS_IS_TEMPEST                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TEMPEST))
+N#endif
+N
+N#ifndef CLASS_IS_FIRESTORM
+N#define CLASS_IS_FIRESTORM                                                   \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FIRESTORM))
+X#define CLASS_IS_FIRESTORM                                                           ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FIRESTORM))
+N#endif
+N
+N#ifndef CLASS_IS_BLIZZARD
+N#define CLASS_IS_BLIZZARD                                                    \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_BLIZZARD))
+X#define CLASS_IS_BLIZZARD                                                            ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_BLIZZARD))
+N#endif
+N
+N#ifndef REVISION_IS_A0
+N#define REVISION_IS_A0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_A0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_A1
+N#define REVISION_IS_A1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_A1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_A2
+N#define REVISION_IS_A2                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_2))
+X#define REVISION_IS_A2                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_2))
+N#endif
+N
+N#ifndef REVISION_IS_B0
+N#define REVISION_IS_B0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_B0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_B1
+N#define REVISION_IS_B1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_1))
+X#define REVISION_IS_B1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_1))
+N#endif
+N
+N#ifndef REVISION_IS_C0
+N#define REVISION_IS_C0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_C0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_C1
+N#define REVISION_IS_C1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_1))
+X#define REVISION_IS_C1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_1))
+N#endif
+N
+N#ifndef REVISION_IS_C2
+N#define REVISION_IS_C2                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_2))
+X#define REVISION_IS_C2                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_2))
+N#endif
+N
+N#ifndef REVISION_IS_C3
+N#define REVISION_IS_C3                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_3))
+X#define REVISION_IS_C3                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_3))
+N#endif
+N
+N#ifndef REVISION_IS_C5
+N#define REVISION_IS_C5                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_5))
+X#define REVISION_IS_C5                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_5))
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Deprecated silicon class and revision detection macros.
+N//
+N//*****************************************************************************
+N#ifndef DEPRECATED
+N#define DEVICE_IS_SANDSTORM     CLASS_IS_SANDSTORM
+N#define DEVICE_IS_FURY          CLASS_IS_FURY
+N#define DEVICE_IS_REVA2         REVISION_IS_A2
+N#define DEVICE_IS_REVC1         REVISION_IS_C1
+N#define DEVICE_IS_REVC2         REVISION_IS_C2
+N#endif
+N
+N#endif // __HW_TYPES_H__
+L 25 "..\..\..\utils\scheduler.c" 2
+N#include "inc/hw_ints.h"
+L 1 "..\..\..\inc/hw_ints.h" 1
+N//*****************************************************************************
+N//
+N// hw_ints.h - Macros that define the interrupt assignment on Stellaris.
+N//
+N// Copyright (c) 2005-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __HW_INTS_H__
+N#define __HW_INTS_H__
+N
+N//*****************************************************************************
+N//
+N// The following are defines for the fault assignments.
+N//
+N//*****************************************************************************
+N#define FAULT_NMI               2           // NMI fault
+N#define FAULT_HARD              3           // Hard fault
+N#define FAULT_MPU               4           // MPU fault
+N#define FAULT_BUS               5           // Bus fault
+N#define FAULT_USAGE             6           // Usage fault
+N#define FAULT_SVCALL            11          // SVCall
+N#define FAULT_DEBUG             12          // Debug monitor
+N#define FAULT_PENDSV            14          // PendSV
+N#define FAULT_SYSTICK           15          // System Tick
+N
+N//*****************************************************************************
+N//
+N// The following are defines for the interrupt assignments.
+N//
+N//*****************************************************************************
+N#define INT_GPIOA               16          // GPIO Port A
+N#define INT_GPIOB               17          // GPIO Port B
+N#define INT_GPIOC               18          // GPIO Port C
+N#define INT_GPIOD               19          // GPIO Port D
+N#define INT_GPIOE               20          // GPIO Port E
+N#define INT_UART0               21          // UART0 Rx and Tx
+N#define INT_UART1               22          // UART1 Rx and Tx
+N#define INT_SSI0                23          // SSI0 Rx and Tx
+N#define INT_I2C0                24          // I2C0 Master and Slave
+N#define INT_PWM0_FAULT          25          // PWM0 Fault
+N#define INT_PWM0_0              26          // PWM0 Generator 0
+N#define INT_PWM0_1              27          // PWM0 Generator 1
+N#define INT_PWM0_2              28          // PWM0 Generator 2
+N#define INT_QEI0                29          // Quadrature Encoder 0
+N#define INT_ADC0SS0             30          // ADC0 Sequence 0
+N#define INT_ADC0SS1             31          // ADC0 Sequence 1
+N#define INT_ADC0SS2             32          // ADC0 Sequence 2
+N#define INT_ADC0SS3             33          // ADC0 Sequence 3
+N#define INT_WATCHDOG            34          // Watchdog timer
+N#define INT_TIMER0A             35          // Timer 0 subtimer A
+N#define INT_TIMER0B             36          // Timer 0 subtimer B
+N#define INT_TIMER1A             37          // Timer 1 subtimer A
+N#define INT_TIMER1B             38          // Timer 1 subtimer B
+N#define INT_TIMER2A             39          // Timer 2 subtimer A
+N#define INT_TIMER2B             40          // Timer 2 subtimer B
+N#define INT_COMP0               41          // Analog Comparator 0
+N#define INT_COMP1               42          // Analog Comparator 1
+N#define INT_COMP2               43          // Analog Comparator 2
+N#define INT_SYSCTL              44          // System Control (PLL, OSC, BO)
+N#define INT_FLASH               45          // FLASH Control
+N#define INT_GPIOF               46          // GPIO Port F
+N#define INT_GPIOG               47          // GPIO Port G
+N#define INT_GPIOH               48          // GPIO Port H
+N#define INT_UART2               49          // UART2 Rx and Tx
+N#define INT_SSI1                50          // SSI1 Rx and Tx
+N#define INT_TIMER3A             51          // Timer 3 subtimer A
+N#define INT_TIMER3B             52          // Timer 3 subtimer B
+N#define INT_I2C1                53          // I2C1 Master and Slave
+N#define INT_QEI1                54          // Quadrature Encoder 1
+N#define INT_CAN0                55          // CAN0
+N#define INT_CAN1                56          // CAN1
+N#define INT_CAN2                57          // CAN2
+N#define INT_ETH                 58          // Ethernet
+N#define INT_HIBERNATE           59          // Hibernation module
+N#define INT_USB0                60          // USB 0 Controller
+N#define INT_PWM0_3              61          // PWM0 Generator 3
+N#define INT_UDMA                62          // uDMA controller
+N#define INT_UDMAERR             63          // uDMA Error
+N#define INT_ADC1SS0             64          // ADC1 Sequence 0
+N#define INT_ADC1SS1             65          // ADC1 Sequence 1
+N#define INT_ADC1SS2             66          // ADC1 Sequence 2
+N#define INT_ADC1SS3             67          // ADC1 Sequence 3
+N#define INT_I2S0                68          // I2S0
+N#define INT_EPI0                69          // EPI0
+N#define INT_GPIOJ               70          // GPIO Port J
+N#define INT_GPIOK               71          // GPIO Port K
+N#define INT_GPIOL               72          // GPIO Port L
+N#define INT_SSI2                73          // SSI2
+N#define INT_SSI3                74          // SSI3
+N#define INT_UART3               75          // UART3
+N#define INT_UART4               76          // UART4
+N#define INT_UART5               77          // UART5
+N#define INT_UART6               78          // UART6
+N#define INT_UART7               79          // UART7
+N#define INT_I2C2                84          // I2C2
+N#define INT_I2C3                85          // I2C3
+N#define INT_TIMER4A             86          // Timer 4A
+N#define INT_TIMER4B             87          // Timer 4B
+N#define INT_TIMER5A             108         // Timer 5A
+N#define INT_TIMER5B             109         // Timer 5B
+N#define INT_WTIMER0A            110         // Wide Timer 0A
+N#define INT_WTIMER0B            111         // Wide Timer 0B
+N#define INT_WTIMER1A            112         // Wide Timer 1A
+N#define INT_WTIMER1B            113         // Wide Timer 1B
+N#define INT_WTIMER2A            114         // Wide Timer 2A
+N#define INT_WTIMER2B            115         // Wide Timer 2B
+N#define INT_WTIMER3A            116         // Wide Timer 3A
+N#define INT_WTIMER3B            117         // Wide Timer 3B
+N#define INT_WTIMER4A            118         // Wide Timer 4A
+N#define INT_WTIMER4B            119         // Wide Timer 4B
+N#define INT_WTIMER5A            120         // Wide Timer 5A
+N#define INT_WTIMER5B            121         // Wide Timer 5B
+N#define INT_SYSEXC              122         // System Exception (imprecise)
+N#define INT_PECI0               123         // PECI 0
+N#define INT_LPC0                124         // LPC 0
+N#define INT_I2C4                125         // I2C4
+N#define INT_I2C5                126         // I2C5
+N#define INT_GPIOM               127         // GPIO Port M
+N#define INT_GPION               128         // GPIO Port N
+N#define INT_FAN0                130         // FAN 0
+N#define INT_GPIOP0              132         // GPIO Port P (Summary or P0)
+N#define INT_GPIOP1              133         // GPIO Port P1
+N#define INT_GPIOP2              134         // GPIO Port P2
+N#define INT_GPIOP3              135         // GPIO Port P3
+N#define INT_GPIOP4              136         // GPIO Port P4
+N#define INT_GPIOP5              137         // GPIO Port P5
+N#define INT_GPIOP6              138         // GPIO Port P6
+N#define INT_GPIOP7              139         // GPIO Port P7
+N#define INT_GPIOQ0              140         // GPIO Port Q (Summary or Q0)
+N#define INT_GPIOQ1              141         // GPIO Port Q1
+N#define INT_GPIOQ2              142         // GPIO Port Q2
+N#define INT_GPIOQ3              143         // GPIO Port Q3
+N#define INT_GPIOQ4              144         // GPIO Port Q4
+N#define INT_GPIOQ5              145         // GPIO Port Q5
+N#define INT_GPIOQ6              146         // GPIO Port Q6
+N#define INT_GPIOQ7              147         // GPIO Port Q7
+N#define INT_PWM1_0              150         // PWM1 Generator 0
+N#define INT_PWM1_1              151         // PWM1 Generator 1
+N#define INT_PWM1_2              152         // PWM1 Generator 2
+N#define INT_PWM1_3              153         // PWM1 Generator 3
+N#define INT_PWM1_FAULT          154         // PWM1 Fault
+N
+N//*****************************************************************************
+N//
+N// The following are defines for the total number of interrupts.
+N//
+N//*****************************************************************************
+N#define NUM_INTERRUPTS          155
+N
+N//*****************************************************************************
+N//
+N// The following are defines for the total number of priority levels.
+N//
+N//*****************************************************************************
+N#define NUM_PRIORITY            8
+N#define NUM_PRIORITY_BITS       3
+N
+N//*****************************************************************************
+N//
+N// The following definitions are deprecated.
+N//
+N//*****************************************************************************
+N#ifndef DEPRECATED
+N
+N//*****************************************************************************
+N//
+N// The following are deprecated defines for the interrupt assignments.
+N//
+N//*****************************************************************************
+N#define INT_SSI                 23          // SSI Rx and Tx
+N#define INT_I2C                 24          // I2C Master and Slave
+N#define INT_PWM_FAULT           25          // PWM Fault
+N#define INT_PWM0                26          // PWM Generator 0
+N#define INT_PWM1                27          // PWM Generator 1
+N#define INT_PWM2                28          // PWM Generator 2
+N#define INT_QEI                 29          // Quadrature Encoder
+N#define INT_ADC0                30          // ADC Sequence 0
+N#define INT_ADC1                31          // ADC Sequence 1
+N#define INT_ADC2                32          // ADC Sequence 2
+N#define INT_ADC3                33          // ADC Sequence 3
+N#define INT_PWM3                61          // PWM Generator 3
+N
+N#endif
+N
+N#endif // __HW_INTS_H__
+L 26 "..\..\..\utils\scheduler.c" 2
+N#include "driverlib/systick.h"
+L 1 "..\..\..\driverlib/systick.h" 1
+N//*****************************************************************************
+N//
+N// systick.h - Prototypes for the SysTick driver.
+N//
+N// Copyright (c) 2005-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Peripheral Driver Library.
+N//
+N//*****************************************************************************
+N
+N#ifndef __SYSTICK_H__
+N#define __SYSTICK_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern void SysTickEnable(void);
+Nextern void SysTickDisable(void);
+Nextern void SysTickIntRegister(void (*pfnHandler)(void));
+Nextern void SysTickIntUnregister(void);
+Nextern void SysTickIntEnable(void);
+Nextern void SysTickIntDisable(void);
+Nextern void SysTickPeriodSet(unsigned long ulPeriod);
+Nextern unsigned long SysTickPeriodGet(void);
+Nextern unsigned long SysTickValueGet(void);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __SYSTICK_H__
+L 27 "..\..\..\utils\scheduler.c" 2
+N#include "driverlib/sysctl.h"
+L 1 "..\..\..\driverlib/sysctl.h" 1
+N//*****************************************************************************
+N//
+N// sysctl.h - Prototypes for the system control driver.
+N//
+N// Copyright (c) 2005-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Peripheral Driver Library.
+N//
+N//*****************************************************************************
+N
+N#ifndef __SYSCTL_H__
+N#define __SYSCTL_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the
+N// SysCtlPeripheralPresent(), SysCtlPeripheralEnable(),
+N// SysCtlPeripheralDisable(), and SysCtlPeripheralReset() APIs as the
+N// ulPeripheral parameter.  The peripherals in the fourth group (upper nibble
+N// is 3) can only be used with the SysCtlPeripheralPresent() API.
+N//
+N//*****************************************************************************
+N#ifndef DEPRECATED
+N#define SYSCTL_PERIPH_WDOG      0x00000008  // Watchdog
+N#endif
+N#define SYSCTL_PERIPH_WDOG0     0x00000008  // Watchdog 0
+N#define SYSCTL_PERIPH_HIBERNATE 0x00000040  // Hibernation module
+N#ifndef DEPRECATED
+N#define SYSCTL_PERIPH_ADC       0x00100001  // ADC
+N#endif
+N#define SYSCTL_PERIPH_ADC0      0x00100001  // ADC0
+N#define SYSCTL_PERIPH_ADC1      0x00100002  // ADC1
+N#ifndef DEPRECATED
+N#define SYSCTL_PERIPH_PWM       0x00100010  // PWM
+N#endif
+N#define SYSCTL_PERIPH_PWM0      0x00100010  // PWM
+N#define SYSCTL_PERIPH_CAN0      0x00100100  // CAN 0
+N#define SYSCTL_PERIPH_CAN1      0x00100200  // CAN 1
+N#define SYSCTL_PERIPH_CAN2      0x00100400  // CAN 2
+N#define SYSCTL_PERIPH_WDOG1     0x00101000  // Watchdog 1
+N#define SYSCTL_PERIPH_UART0     0x10000001  // UART 0
+N#define SYSCTL_PERIPH_UART1     0x10000002  // UART 1
+N#define SYSCTL_PERIPH_UART2     0x10000004  // UART 2
+N#ifndef DEPRECATED
+N#define SYSCTL_PERIPH_SSI       0x10000010  // SSI
+N#endif
+N#define SYSCTL_PERIPH_SSI0      0x10000010  // SSI 0
+N#define SYSCTL_PERIPH_SSI1      0x10000020  // SSI 1
+N#ifndef DEPRECATED
+N#define SYSCTL_PERIPH_QEI       0x10000100  // QEI
+N#endif
+N#define SYSCTL_PERIPH_QEI0      0x10000100  // QEI 0
+N#define SYSCTL_PERIPH_QEI1      0x10000200  // QEI 1
+N#ifndef DEPRECATED
+N#define SYSCTL_PERIPH_I2C       0x10001000  // I2C
+N#endif
+N#define SYSCTL_PERIPH_I2C0      0x10001000  // I2C 0
+N#define SYSCTL_PERIPH_I2C1      0x10004000  // I2C 1
+N#define SYSCTL_PERIPH_TIMER0    0x10100001  // Timer 0
+N#define SYSCTL_PERIPH_TIMER1    0x10100002  // Timer 1
+N#define SYSCTL_PERIPH_TIMER2    0x10100004  // Timer 2
+N#define SYSCTL_PERIPH_TIMER3    0x10100008  // Timer 3
+N#define SYSCTL_PERIPH_COMP0     0x10100100  // Analog comparator 0
+N#define SYSCTL_PERIPH_COMP1     0x10100200  // Analog comparator 1
+N#define SYSCTL_PERIPH_COMP2     0x10100400  // Analog comparator 2
+N#define SYSCTL_PERIPH_I2S0      0x10101000  // I2S0
+N#define SYSCTL_PERIPH_EPI0      0x10104000  // EPI0
+N#define SYSCTL_PERIPH_GPIOA     0x20000001  // GPIO A
+N#define SYSCTL_PERIPH_GPIOB     0x20000002  // GPIO B
+N#define SYSCTL_PERIPH_GPIOC     0x20000004  // GPIO C
+N#define SYSCTL_PERIPH_GPIOD     0x20000008  // GPIO D
+N#define SYSCTL_PERIPH_GPIOE     0x20000010  // GPIO E
+N#define SYSCTL_PERIPH_GPIOF     0x20000020  // GPIO F
+N#define SYSCTL_PERIPH_GPIOG     0x20000040  // GPIO G
+N#define SYSCTL_PERIPH_GPIOH     0x20000080  // GPIO H
+N#define SYSCTL_PERIPH_GPIOJ     0x20000100  // GPIO J
+N#define SYSCTL_PERIPH_UDMA      0x20002000  // uDMA
+N#define SYSCTL_PERIPH_USB0      0x20100001  // USB0
+N#define SYSCTL_PERIPH_ETH       0x20105000  // ETH
+N#define SYSCTL_PERIPH_IEEE1588  0x20100100  // IEEE1588
+N#define SYSCTL_PERIPH_PLL       0x30000010  // PLL
+N#define SYSCTL_PERIPH_TEMP      0x30000020  // Temperature sensor
+N#define SYSCTL_PERIPH_MPU       0x30000080  // Cortex M3 MPU
+N#define SYSCTL_PERIPH2_ADC0     0xf0003800  // ADC 0
+N#define SYSCTL_PERIPH2_ADC1     0xf0003801  // ADC 1
+N#define SYSCTL_PERIPH2_CAN0     0xf0003400  // CAN 0
+N#define SYSCTL_PERIPH2_CAN1     0xf0003401  // CAN 1
+N#define SYSCTL_PERIPH2_CAN2     0xf0003402  // CAN 2
+N#define SYSCTL_PERIPH2_COMP0    0xf0003c00  // Analog comparator 0
+N#define SYSCTL_PERIPH_EEPROM0   0xf0005800  // EEPROM 0
+N#define SYSCTL_PERIPH2_EPI0     0xf0001000  // EPI0
+N#define SYSCTL_PERIPH2_ETH      0xf0002c00  // ETH
+N#define SYSCTL_PERIPH_FAN0      0xf0005400  // FAN 0
+N#define SYSCTL_PERIPH2_GPIOA    0xf0000800  // GPIO A
+N#define SYSCTL_PERIPH2_GPIOB    0xf0000801  // GPIO B
+N#define SYSCTL_PERIPH2_GPIOC    0xf0000802  // GPIO C
+N#define SYSCTL_PERIPH2_GPIOD    0xf0000803  // GPIO D
+N#define SYSCTL_PERIPH2_GPIOE    0xf0000804  // GPIO E
+N#define SYSCTL_PERIPH2_GPIOF    0xf0000805  // GPIO F
+N#define SYSCTL_PERIPH2_GPIOG    0xf0000806  // GPIO G
+N#define SYSCTL_PERIPH2_GPIOH    0xf0000807  // GPIO H
+N#define SYSCTL_PERIPH2_GPIOJ    0xf0000808  // GPIO J
+N#define SYSCTL_PERIPH_GPIOK     0xf0000809  // GPIO K
+N#define SYSCTL_PERIPH_GPIOL     0xf000080a  // GPIO L
+N#define SYSCTL_PERIPH_GPIOM     0xf000080b  // GPIO M
+N#define SYSCTL_PERIPH_GPION     0xf000080c  // GPIO N
+N#define SYSCTL_PERIPH_GPIOP     0xf000080d  // GPIO P
+N#define SYSCTL_PERIPH_GPIOQ     0xf000080e  // GPIO Q
+N#define SYSCTL_PERIPH_GPIOR     0xf000080f  // GPIO R
+N#define SYSCTL_PERIPH_GPIOS     0xf0000810  // GPIO S
+N#define SYSCTL_PERIPH2_HIB      0xf0001400  // Hibernation module
+N#define SYSCTL_PERIPH2_I2C0     0xf0002000  // I2C 0
+N#define SYSCTL_PERIPH2_I2C1     0xf0002001  // I2C 1
+N#define SYSCTL_PERIPH_I2C2      0xf0002002  // I2C 2
+N#define SYSCTL_PERIPH_I2C3      0xf0002003  // I2C 3
+N#define SYSCTL_PERIPH_I2C4      0xf0002004  // I2C 4
+N#define SYSCTL_PERIPH_I2C5      0xf0002005  // I2C 5
+N#define SYSCTL_PERIPH2_I2S0     0xf0002400  // I2S0
+N#define SYSCTL_PERIPH_LPC0      0xf0004800  // LPC 0
+N#define SYSCTL_PERIPH_PECI0     0xf0005000  // PECI 0
+N#define SYSCTL_PERIPH2_PWM0     0xf0004000  // PWM 0
+N#define SYSCTL_PERIPH_PWM1      0xf0004001  // PWM 1
+N#define SYSCTL_PERIPH2_QEI0     0xf0004400  // QEI 0
+N#define SYSCTL_PERIPH2_QEI1     0xf0004401  // QEI 1
+N#define SYSCTL_PERIPH2_SSI0     0xf0001c00  // SSI 0
+N#define SYSCTL_PERIPH2_SSI1     0xf0001c01  // SSI 1
+N#define SYSCTL_PERIPH_SSI2      0xf0001c02  // SSI 2
+N#define SYSCTL_PERIPH_SSI3      0xf0001c03  // SSI 3
+N#define SYSCTL_PERIPH2_TIMER0   0xf0000400  // Timer 0
+N#define SYSCTL_PERIPH2_TIMER1   0xf0000401  // Timer 1
+N#define SYSCTL_PERIPH2_TIMER2   0xf0000402  // Timer 2
+N#define SYSCTL_PERIPH2_TIMER3   0xf0000403  // Timer 3
+N#define SYSCTL_PERIPH_TIMER4    0xf0000404  // Timer 4
+N#define SYSCTL_PERIPH_TIMER5    0xf0000405  // Timer 5
+N#define SYSCTL_PERIPH_WTIMER0   0xf0005c00  // Wide Timer 0
+N#define SYSCTL_PERIPH_WTIMER1   0xf0005c01  // Wide Timer 1
+N#define SYSCTL_PERIPH_WTIMER2   0xf0005c02  // Wide Timer 2
+N#define SYSCTL_PERIPH_WTIMER3   0xf0005c03  // Wide Timer 3
+N#define SYSCTL_PERIPH_WTIMER4   0xf0005c04  // Wide Timer 4
+N#define SYSCTL_PERIPH_WTIMER5   0xf0005c05  // Wide Timer 5
+N#define SYSCTL_PERIPH2_UART0    0xf0001800  // UART 0
+N#define SYSCTL_PERIPH2_UART1    0xf0001801  // UART 1
+N#define SYSCTL_PERIPH2_UART2    0xf0001802  // UART 2
+N#define SYSCTL_PERIPH_UART3     0xf0001803  // UART 3
+N#define SYSCTL_PERIPH_UART4     0xf0001804  // UART 4
+N#define SYSCTL_PERIPH_UART5     0xf0001805  // UART 5
+N#define SYSCTL_PERIPH_UART6     0xf0001806  // UART 6
+N#define SYSCTL_PERIPH_UART7     0xf0001807  // UART 7
+N#define SYSCTL_PERIPH2_UDMA     0xf0000c00  // uDMA
+N#define SYSCTL_PERIPH2_USB0     0xf0002800  // USB 0
+N#define SYSCTL_PERIPH2_WDOG0    0xf0000000  // Watchdog 0
+N#define SYSCTL_PERIPH2_WDOG1    0xf0000001  // Watchdog 1
+N#define SYSCTL_PERIPH2_HIBERNATE \
+N                                0xf0001400  // Hibernate
+X#define SYSCTL_PERIPH2_HIBERNATE                                 0xf0001400  
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlPinPresent() API
+N// as the ulPin parameter.
+N//
+N//*****************************************************************************
+N#define SYSCTL_PIN_PWM0         0x00000001  // PWM0 pin
+N#define SYSCTL_PIN_PWM1         0x00000002  // PWM1 pin
+N#define SYSCTL_PIN_PWM2         0x00000004  // PWM2 pin
+N#define SYSCTL_PIN_PWM3         0x00000008  // PWM3 pin
+N#define SYSCTL_PIN_PWM4         0x00000010  // PWM4 pin
+N#define SYSCTL_PIN_PWM5         0x00000020  // PWM5 pin
+N#define SYSCTL_PIN_PWM6         0x00000040  // PWM6 pin
+N#define SYSCTL_PIN_PWM7         0x00000080  // PWM7 pin
+N#define SYSCTL_PIN_C0MINUS      0x00000040  // C0- pin
+N#define SYSCTL_PIN_C0PLUS       0x00000080  // C0+ pin
+N#define SYSCTL_PIN_C0O          0x00000100  // C0o pin
+N#define SYSCTL_PIN_C1MINUS      0x00000200  // C1- pin
+N#define SYSCTL_PIN_C1PLUS       0x00000400  // C1+ pin
+N#define SYSCTL_PIN_C1O          0x00000800  // C1o pin
+N#define SYSCTL_PIN_C2MINUS      0x00001000  // C2- pin
+N#define SYSCTL_PIN_C2PLUS       0x00002000  // C2+ pin
+N#define SYSCTL_PIN_C2O          0x00004000  // C2o pin
+N#define SYSCTL_PIN_MC_FAULT0    0x00008000  // MC0 Fault pin
+N#define SYSCTL_PIN_ADC0         0x00010000  // ADC0 pin
+N#define SYSCTL_PIN_ADC1         0x00020000  // ADC1 pin
+N#define SYSCTL_PIN_ADC2         0x00040000  // ADC2 pin
+N#define SYSCTL_PIN_ADC3         0x00080000  // ADC3 pin
+N#define SYSCTL_PIN_ADC4         0x00100000  // ADC4 pin
+N#define SYSCTL_PIN_ADC5         0x00200000  // ADC5 pin
+N#define SYSCTL_PIN_ADC6         0x00400000  // ADC6 pin
+N#define SYSCTL_PIN_ADC7         0x00800000  // ADC7 pin
+N#define SYSCTL_PIN_CCP0         0x01000000  // CCP0 pin
+N#define SYSCTL_PIN_CCP1         0x02000000  // CCP1 pin
+N#define SYSCTL_PIN_CCP2         0x04000000  // CCP2 pin
+N#define SYSCTL_PIN_CCP3         0x08000000  // CCP3 pin
+N#define SYSCTL_PIN_CCP4         0x10000000  // CCP4 pin
+N#define SYSCTL_PIN_CCP5         0x20000000  // CCP5 pin
+N#define SYSCTL_PIN_32KHZ        0x80000000  // 32kHz pin
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlLDOSet() API as
+N// the ulVoltage value, or returned by the SysCtlLDOGet() API.
+N//
+N//*****************************************************************************
+N#define SYSCTL_LDO_2_25V        0x00000005  // LDO output of 2.25V
+N#define SYSCTL_LDO_2_30V        0x00000004  // LDO output of 2.30V
+N#define SYSCTL_LDO_2_35V        0x00000003  // LDO output of 2.35V
+N#define SYSCTL_LDO_2_40V        0x00000002  // LDO output of 2.40V
+N#define SYSCTL_LDO_2_45V        0x00000001  // LDO output of 2.45V
+N#define SYSCTL_LDO_2_50V        0x00000000  // LDO output of 2.50V
+N#define SYSCTL_LDO_2_55V        0x0000001f  // LDO output of 2.55V
+N#define SYSCTL_LDO_2_60V        0x0000001e  // LDO output of 2.60V
+N#define SYSCTL_LDO_2_65V        0x0000001d  // LDO output of 2.65V
+N#define SYSCTL_LDO_2_70V        0x0000001c  // LDO output of 2.70V
+N#define SYSCTL_LDO_2_75V        0x0000001b  // LDO output of 2.75V
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlLDOConfigSet() API.
+N//
+N//*****************************************************************************
+N#define SYSCTL_LDOCFG_ARST      0x00000001  // Allow LDO failure to reset
+N#define SYSCTL_LDOCFG_NORST     0x00000000  // Do not reset on LDO failure
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlIntEnable(),
+N// SysCtlIntDisable(), and SysCtlIntClear() APIs, or returned in the bit mask
+N// by the SysCtlIntStatus() API.
+N//
+N//*****************************************************************************
+N#define SYSCTL_INT_MOSC_PUP     0x00000100  // MOSC power-up interrupt
+N#define SYSCTL_INT_USBPLL_LOCK  0x00000080  // USB PLL lock interrupt
+N#define SYSCTL_INT_PLL_LOCK     0x00000040  // PLL lock interrupt
+N#define SYSCTL_INT_CUR_LIMIT    0x00000020  // Current limit interrupt
+N#define SYSCTL_INT_IOSC_FAIL    0x00000010  // Internal oscillator failure int
+N#define SYSCTL_INT_MOSC_FAIL    0x00000008  // Main oscillator failure int
+N#define SYSCTL_INT_POR          0x00000004  // Power on reset interrupt
+N#define SYSCTL_INT_BOR          0x00000002  // Brown out interrupt
+N#define SYSCTL_INT_PLL_FAIL     0x00000001  // PLL failure interrupt
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlResetCauseClear()
+N// API or returned by the SysCtlResetCauseGet() API.
+N//
+N//*****************************************************************************
+N#define SYSCTL_CAUSE_LDO        0x00000020  // LDO power not OK reset
+N#define SYSCTL_CAUSE_WDOG1      0x00000020  // Watchdog1 reset
+N#define SYSCTL_CAUSE_SW         0x00000010  // Software reset
+N#define SYSCTL_CAUSE_WDOG       0x00000008  // Watchdog reset
+N#define SYSCTL_CAUSE_BOR        0x00000004  // Brown-out reset
+N#define SYSCTL_CAUSE_POR        0x00000002  // Power on reset
+N#define SYSCTL_CAUSE_EXT        0x00000001  // External reset
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlBrownOutConfigSet()
+N// API as the ulConfig parameter.
+N//
+N//*****************************************************************************
+N#define SYSCTL_BOR_RESET        0x00000002  // Reset instead of interrupting
+N#define SYSCTL_BOR_RESAMPLE     0x00000001  // Resample BOR before asserting
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlPWMClockSet() API
+N// as the ulConfig parameter, and can be returned by the SysCtlPWMClockGet()
+N// API.
+N//
+N//*****************************************************************************
+N#define SYSCTL_PWMDIV_1         0x00000000  // PWM clock is processor clock /1
+N#define SYSCTL_PWMDIV_2         0x00100000  // PWM clock is processor clock /2
+N#define SYSCTL_PWMDIV_4         0x00120000  // PWM clock is processor clock /4
+N#define SYSCTL_PWMDIV_8         0x00140000  // PWM clock is processor clock /8
+N#define SYSCTL_PWMDIV_16        0x00160000  // PWM clock is processor clock /16
+N#define SYSCTL_PWMDIV_32        0x00180000  // PWM clock is processor clock /32
+N#define SYSCTL_PWMDIV_64        0x001A0000  // PWM clock is processor clock /64
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlADCSpeedSet() API
+N// as the ulSpeed parameter, and can be returned by the SyCtlADCSpeedGet()
+N// API.
+N//
+N//*****************************************************************************
+N#define SYSCTL_ADCSPEED_1MSPS   0x00000F00  // 1,000,000 samples per second
+N#define SYSCTL_ADCSPEED_500KSPS 0x00000A00  // 500,000 samples per second
+N#define SYSCTL_ADCSPEED_250KSPS 0x00000500  // 250,000 samples per second
+N#define SYSCTL_ADCSPEED_125KSPS 0x00000000  // 125,000 samples per second
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlClockSet() API as
+N// the ulConfig parameter.
+N//
+N//*****************************************************************************
+N#define SYSCTL_SYSDIV_1         0x07800000  // Processor clock is osc/pll /1
+N#define SYSCTL_SYSDIV_2         0x00C00000  // Processor clock is osc/pll /2
+N#define SYSCTL_SYSDIV_3         0x01400000  // Processor clock is osc/pll /3
+N#define SYSCTL_SYSDIV_4         0x01C00000  // Processor clock is osc/pll /4
+N#define SYSCTL_SYSDIV_5         0x02400000  // Processor clock is osc/pll /5
+N#define SYSCTL_SYSDIV_6         0x02C00000  // Processor clock is osc/pll /6
+N#define SYSCTL_SYSDIV_7         0x03400000  // Processor clock is osc/pll /7
+N#define SYSCTL_SYSDIV_8         0x03C00000  // Processor clock is osc/pll /8
+N#define SYSCTL_SYSDIV_9         0x04400000  // Processor clock is osc/pll /9
+N#define SYSCTL_SYSDIV_10        0x04C00000  // Processor clock is osc/pll /10
+N#define SYSCTL_SYSDIV_11        0x05400000  // Processor clock is osc/pll /11
+N#define SYSCTL_SYSDIV_12        0x05C00000  // Processor clock is osc/pll /12
+N#define SYSCTL_SYSDIV_13        0x06400000  // Processor clock is osc/pll /13
+N#define SYSCTL_SYSDIV_14        0x06C00000  // Processor clock is osc/pll /14
+N#define SYSCTL_SYSDIV_15        0x07400000  // Processor clock is osc/pll /15
+N#define SYSCTL_SYSDIV_16        0x07C00000  // Processor clock is osc/pll /16
+N#define SYSCTL_SYSDIV_17        0x88400000  // Processor clock is osc/pll /17
+N#define SYSCTL_SYSDIV_18        0x88C00000  // Processor clock is osc/pll /18
+N#define SYSCTL_SYSDIV_19        0x89400000  // Processor clock is osc/pll /19
+N#define SYSCTL_SYSDIV_20        0x89C00000  // Processor clock is osc/pll /20
+N#define SYSCTL_SYSDIV_21        0x8A400000  // Processor clock is osc/pll /21
+N#define SYSCTL_SYSDIV_22        0x8AC00000  // Processor clock is osc/pll /22
+N#define SYSCTL_SYSDIV_23        0x8B400000  // Processor clock is osc/pll /23
+N#define SYSCTL_SYSDIV_24        0x8BC00000  // Processor clock is osc/pll /24
+N#define SYSCTL_SYSDIV_25        0x8C400000  // Processor clock is osc/pll /25
+N#define SYSCTL_SYSDIV_26        0x8CC00000  // Processor clock is osc/pll /26
+N#define SYSCTL_SYSDIV_27        0x8D400000  // Processor clock is osc/pll /27
+N#define SYSCTL_SYSDIV_28        0x8DC00000  // Processor clock is osc/pll /28
+N#define SYSCTL_SYSDIV_29        0x8E400000  // Processor clock is osc/pll /29
+N#define SYSCTL_SYSDIV_30        0x8EC00000  // Processor clock is osc/pll /30
+N#define SYSCTL_SYSDIV_31        0x8F400000  // Processor clock is osc/pll /31
+N#define SYSCTL_SYSDIV_32        0x8FC00000  // Processor clock is osc/pll /32
+N#define SYSCTL_SYSDIV_33        0x90400000  // Processor clock is osc/pll /33
+N#define SYSCTL_SYSDIV_34        0x90C00000  // Processor clock is osc/pll /34
+N#define SYSCTL_SYSDIV_35        0x91400000  // Processor clock is osc/pll /35
+N#define SYSCTL_SYSDIV_36        0x91C00000  // Processor clock is osc/pll /36
+N#define SYSCTL_SYSDIV_37        0x92400000  // Processor clock is osc/pll /37
+N#define SYSCTL_SYSDIV_38        0x92C00000  // Processor clock is osc/pll /38
+N#define SYSCTL_SYSDIV_39        0x93400000  // Processor clock is osc/pll /39
+N#define SYSCTL_SYSDIV_40        0x93C00000  // Processor clock is osc/pll /40
+N#define SYSCTL_SYSDIV_41        0x94400000  // Processor clock is osc/pll /41
+N#define SYSCTL_SYSDIV_42        0x94C00000  // Processor clock is osc/pll /42
+N#define SYSCTL_SYSDIV_43        0x95400000  // Processor clock is osc/pll /43
+N#define SYSCTL_SYSDIV_44        0x95C00000  // Processor clock is osc/pll /44
+N#define SYSCTL_SYSDIV_45        0x96400000  // Processor clock is osc/pll /45
+N#define SYSCTL_SYSDIV_46        0x96C00000  // Processor clock is osc/pll /46
+N#define SYSCTL_SYSDIV_47        0x97400000  // Processor clock is osc/pll /47
+N#define SYSCTL_SYSDIV_48        0x97C00000  // Processor clock is osc/pll /48
+N#define SYSCTL_SYSDIV_49        0x98400000  // Processor clock is osc/pll /49
+N#define SYSCTL_SYSDIV_50        0x98C00000  // Processor clock is osc/pll /50
+N#define SYSCTL_SYSDIV_51        0x99400000  // Processor clock is osc/pll /51
+N#define SYSCTL_SYSDIV_52        0x99C00000  // Processor clock is osc/pll /52
+N#define SYSCTL_SYSDIV_53        0x9A400000  // Processor clock is osc/pll /53
+N#define SYSCTL_SYSDIV_54        0x9AC00000  // Processor clock is osc/pll /54
+N#define SYSCTL_SYSDIV_55        0x9B400000  // Processor clock is osc/pll /55
+N#define SYSCTL_SYSDIV_56        0x9BC00000  // Processor clock is osc/pll /56
+N#define SYSCTL_SYSDIV_57        0x9C400000  // Processor clock is osc/pll /57
+N#define SYSCTL_SYSDIV_58        0x9CC00000  // Processor clock is osc/pll /58
+N#define SYSCTL_SYSDIV_59        0x9D400000  // Processor clock is osc/pll /59
+N#define SYSCTL_SYSDIV_60        0x9DC00000  // Processor clock is osc/pll /60
+N#define SYSCTL_SYSDIV_61        0x9E400000  // Processor clock is osc/pll /61
+N#define SYSCTL_SYSDIV_62        0x9EC00000  // Processor clock is osc/pll /62
+N#define SYSCTL_SYSDIV_63        0x9F400000  // Processor clock is osc/pll /63
+N#define SYSCTL_SYSDIV_64        0x9FC00000  // Processor clock is osc/pll /64
+N#define SYSCTL_SYSDIV_2_5       0xC1000000  // Processor clock is pll / 2.5
+N#define SYSCTL_SYSDIV_3_5       0xC1800000  // Processor clock is pll / 3.5
+N#define SYSCTL_SYSDIV_4_5       0xC2000000  // Processor clock is pll / 4.5
+N#define SYSCTL_SYSDIV_5_5       0xC2800000  // Processor clock is pll / 5.5
+N#define SYSCTL_SYSDIV_6_5       0xC3000000  // Processor clock is pll / 6.5
+N#define SYSCTL_SYSDIV_7_5       0xC3800000  // Processor clock is pll / 7.5
+N#define SYSCTL_SYSDIV_8_5       0xC4000000  // Processor clock is pll / 8.5
+N#define SYSCTL_SYSDIV_9_5       0xC4800000  // Processor clock is pll / 9.5
+N#define SYSCTL_SYSDIV_10_5      0xC5000000  // Processor clock is pll / 10.5
+N#define SYSCTL_SYSDIV_11_5      0xC5800000  // Processor clock is pll / 11.5
+N#define SYSCTL_SYSDIV_12_5      0xC6000000  // Processor clock is pll / 12.5
+N#define SYSCTL_SYSDIV_13_5      0xC6800000  // Processor clock is pll / 13.5
+N#define SYSCTL_SYSDIV_14_5      0xC7000000  // Processor clock is pll / 14.5
+N#define SYSCTL_SYSDIV_15_5      0xC7800000  // Processor clock is pll / 15.5
+N#define SYSCTL_SYSDIV_16_5      0xC8000000  // Processor clock is pll / 16.5
+N#define SYSCTL_SYSDIV_17_5      0xC8800000  // Processor clock is pll / 17.5
+N#define SYSCTL_SYSDIV_18_5      0xC9000000  // Processor clock is pll / 18.5
+N#define SYSCTL_SYSDIV_19_5      0xC9800000  // Processor clock is pll / 19.5
+N#define SYSCTL_SYSDIV_20_5      0xCA000000  // Processor clock is pll / 20.5
+N#define SYSCTL_SYSDIV_21_5      0xCA800000  // Processor clock is pll / 21.5
+N#define SYSCTL_SYSDIV_22_5      0xCB000000  // Processor clock is pll / 22.5
+N#define SYSCTL_SYSDIV_23_5      0xCB800000  // Processor clock is pll / 23.5
+N#define SYSCTL_SYSDIV_24_5      0xCC000000  // Processor clock is pll / 24.5
+N#define SYSCTL_SYSDIV_25_5      0xCC800000  // Processor clock is pll / 25.5
+N#define SYSCTL_SYSDIV_26_5      0xCD000000  // Processor clock is pll / 26.5
+N#define SYSCTL_SYSDIV_27_5      0xCD800000  // Processor clock is pll / 27.5
+N#define SYSCTL_SYSDIV_28_5      0xCE000000  // Processor clock is pll / 28.5
+N#define SYSCTL_SYSDIV_29_5      0xCE800000  // Processor clock is pll / 29.5
+N#define SYSCTL_SYSDIV_30_5      0xCF000000  // Processor clock is pll / 30.5
+N#define SYSCTL_SYSDIV_31_5      0xCF800000  // Processor clock is pll / 31.5
+N#define SYSCTL_SYSDIV_32_5      0xD0000000  // Processor clock is pll / 32.5
+N#define SYSCTL_SYSDIV_33_5      0xD0800000  // Processor clock is pll / 33.5
+N#define SYSCTL_SYSDIV_34_5      0xD1000000  // Processor clock is pll / 34.5
+N#define SYSCTL_SYSDIV_35_5      0xD1800000  // Processor clock is pll / 35.5
+N#define SYSCTL_SYSDIV_36_5      0xD2000000  // Processor clock is pll / 36.5
+N#define SYSCTL_SYSDIV_37_5      0xD2800000  // Processor clock is pll / 37.5
+N#define SYSCTL_SYSDIV_38_5      0xD3000000  // Processor clock is pll / 38.5
+N#define SYSCTL_SYSDIV_39_5      0xD3800000  // Processor clock is pll / 39.5
+N#define SYSCTL_SYSDIV_40_5      0xD4000000  // Processor clock is pll / 40.5
+N#define SYSCTL_SYSDIV_41_5      0xD4800000  // Processor clock is pll / 41.5
+N#define SYSCTL_SYSDIV_42_5      0xD5000000  // Processor clock is pll / 42.5
+N#define SYSCTL_SYSDIV_43_5      0xD5800000  // Processor clock is pll / 43.5
+N#define SYSCTL_SYSDIV_44_5      0xD6000000  // Processor clock is pll / 44.5
+N#define SYSCTL_SYSDIV_45_5      0xD6800000  // Processor clock is pll / 45.5
+N#define SYSCTL_SYSDIV_46_5      0xD7000000  // Processor clock is pll / 46.5
+N#define SYSCTL_SYSDIV_47_5      0xD7800000  // Processor clock is pll / 47.5
+N#define SYSCTL_SYSDIV_48_5      0xD8000000  // Processor clock is pll / 48.5
+N#define SYSCTL_SYSDIV_49_5      0xD8800000  // Processor clock is pll / 49.5
+N#define SYSCTL_SYSDIV_50_5      0xD9000000  // Processor clock is pll / 50.5
+N#define SYSCTL_SYSDIV_51_5      0xD9800000  // Processor clock is pll / 51.5
+N#define SYSCTL_SYSDIV_52_5      0xDA000000  // Processor clock is pll / 52.5
+N#define SYSCTL_SYSDIV_53_5      0xDA800000  // Processor clock is pll / 53.5
+N#define SYSCTL_SYSDIV_54_5      0xDB000000  // Processor clock is pll / 54.5
+N#define SYSCTL_SYSDIV_55_5      0xDB800000  // Processor clock is pll / 55.5
+N#define SYSCTL_SYSDIV_56_5      0xDC000000  // Processor clock is pll / 56.5
+N#define SYSCTL_SYSDIV_57_5      0xDC800000  // Processor clock is pll / 57.5
+N#define SYSCTL_SYSDIV_58_5      0xDD000000  // Processor clock is pll / 58.5
+N#define SYSCTL_SYSDIV_59_5      0xDD800000  // Processor clock is pll / 59.5
+N#define SYSCTL_SYSDIV_60_5      0xDE000000  // Processor clock is pll / 60.5
+N#define SYSCTL_SYSDIV_61_5      0xDE800000  // Processor clock is pll / 61.5
+N#define SYSCTL_SYSDIV_62_5      0xDF000000  // Processor clock is pll / 62.5
+N#define SYSCTL_SYSDIV_63_5      0xDF800000  // Processor clock is pll / 63.5
+N#define SYSCTL_USE_PLL          0x00000000  // System clock is the PLL clock
+N#define SYSCTL_USE_OSC          0x00003800  // System clock is the osc clock
+N#define SYSCTL_XTAL_1MHZ        0x00000000  // External crystal is 1MHz
+N#define SYSCTL_XTAL_1_84MHZ     0x00000040  // External crystal is 1.8432MHz
+N#define SYSCTL_XTAL_2MHZ        0x00000080  // External crystal is 2MHz
+N#define SYSCTL_XTAL_2_45MHZ     0x000000C0  // External crystal is 2.4576MHz
+N#define SYSCTL_XTAL_3_57MHZ     0x00000100  // External crystal is 3.579545MHz
+N#define SYSCTL_XTAL_3_68MHZ     0x00000140  // External crystal is 3.6864MHz
+N#define SYSCTL_XTAL_4MHZ        0x00000180  // External crystal is 4MHz
+N#define SYSCTL_XTAL_4_09MHZ     0x000001C0  // External crystal is 4.096MHz
+N#define SYSCTL_XTAL_4_91MHZ     0x00000200  // External crystal is 4.9152MHz
+N#define SYSCTL_XTAL_5MHZ        0x00000240  // External crystal is 5MHz
+N#define SYSCTL_XTAL_5_12MHZ     0x00000280  // External crystal is 5.12MHz
+N#define SYSCTL_XTAL_6MHZ        0x000002C0  // External crystal is 6MHz
+N#define SYSCTL_XTAL_6_14MHZ     0x00000300  // External crystal is 6.144MHz
+N#define SYSCTL_XTAL_7_37MHZ     0x00000340  // External crystal is 7.3728MHz
+N#define SYSCTL_XTAL_8MHZ        0x00000380  // External crystal is 8MHz
+N#define SYSCTL_XTAL_8_19MHZ     0x000003C0  // External crystal is 8.192MHz
+N#define SYSCTL_XTAL_10MHZ       0x00000400  // External crystal is 10 MHz
+N#define SYSCTL_XTAL_12MHZ       0x00000440  // External crystal is 12 MHz
+N#define SYSCTL_XTAL_12_2MHZ     0x00000480  // External crystal is 12.288 MHz
+N#define SYSCTL_XTAL_13_5MHZ     0x000004C0  // External crystal is 13.56 MHz
+N#define SYSCTL_XTAL_14_3MHZ     0x00000500  // External crystal is 14.31818 MHz
+N#define SYSCTL_XTAL_16MHZ       0x00000540  // External crystal is 16 MHz
+N#define SYSCTL_XTAL_16_3MHZ     0x00000580  // External crystal is 16.384 MHz
+N#define SYSCTL_XTAL_18MHZ       0x000005C0  // External crystal is 18.0 MHz
+N#define SYSCTL_XTAL_20MHZ       0x00000600  // External crystal is 20.0 MHz
+N#define SYSCTL_XTAL_24MHZ       0x00000640  // External crystal is 24.0 MHz
+N#define SYSCTL_XTAL_25MHZ       0x00000680  // External crystal is 25.0 MHz
+N#define SYSCTL_OSC_MAIN         0x00000000  // Osc source is main osc
+N#define SYSCTL_OSC_INT          0x00000010  // Osc source is int. osc
+N#define SYSCTL_OSC_INT4         0x00000020  // Osc source is int. osc /4
+N#define SYSCTL_OSC_INT30        0x00000030  // Osc source is int. 30 KHz
+N#define SYSCTL_OSC_EXT4_19      0x80000028  // Osc source is ext. 4.19 MHz
+N#define SYSCTL_OSC_EXT32        0x80000038  // Osc source is ext. 32 KHz
+N#define SYSCTL_INT_OSC_DIS      0x00000002  // Disable internal oscillator
+N#define SYSCTL_MAIN_OSC_DIS     0x00000001  // Disable main oscillator
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlDeepSleepClockSet()
+N// API as the ulConfig parameter.
+N//
+N//*****************************************************************************
+N#define SYSCTL_DSLP_DIV_1       0x00000000  // Deep-sleep clock is osc /1
+N#define SYSCTL_DSLP_DIV_2       0x00800000  // Deep-sleep clock is osc /2
+N#define SYSCTL_DSLP_DIV_3       0x01000000  // Deep-sleep clock is osc /3
+N#define SYSCTL_DSLP_DIV_4       0x01800000  // Deep-sleep clock is osc /4
+N#define SYSCTL_DSLP_DIV_5       0x02000000  // Deep-sleep clock is osc /5
+N#define SYSCTL_DSLP_DIV_6       0x02800000  // Deep-sleep clock is osc /6
+N#define SYSCTL_DSLP_DIV_7       0x03000000  // Deep-sleep clock is osc /7
+N#define SYSCTL_DSLP_DIV_8       0x03800000  // Deep-sleep clock is osc /8
+N#define SYSCTL_DSLP_DIV_9       0x04000000  // Deep-sleep clock is osc /9
+N#define SYSCTL_DSLP_DIV_10      0x04800000  // Deep-sleep clock is osc /10
+N#define SYSCTL_DSLP_DIV_11      0x05000000  // Deep-sleep clock is osc /11
+N#define SYSCTL_DSLP_DIV_12      0x05800000  // Deep-sleep clock is osc /12
+N#define SYSCTL_DSLP_DIV_13      0x06000000  // Deep-sleep clock is osc /13
+N#define SYSCTL_DSLP_DIV_14      0x06800000  // Deep-sleep clock is osc /14
+N#define SYSCTL_DSLP_DIV_15      0x07000000  // Deep-sleep clock is osc /15
+N#define SYSCTL_DSLP_DIV_16      0x07800000  // Deep-sleep clock is osc /16
+N#define SYSCTL_DSLP_DIV_17      0x08000000  // Deep-sleep clock is osc /17
+N#define SYSCTL_DSLP_DIV_18      0x08800000  // Deep-sleep clock is osc /18
+N#define SYSCTL_DSLP_DIV_19      0x09000000  // Deep-sleep clock is osc /19
+N#define SYSCTL_DSLP_DIV_20      0x09800000  // Deep-sleep clock is osc /20
+N#define SYSCTL_DSLP_DIV_21      0x0A000000  // Deep-sleep clock is osc /21
+N#define SYSCTL_DSLP_DIV_22      0x0A800000  // Deep-sleep clock is osc /22
+N#define SYSCTL_DSLP_DIV_23      0x0B000000  // Deep-sleep clock is osc /23
+N#define SYSCTL_DSLP_DIV_24      0x0B800000  // Deep-sleep clock is osc /24
+N#define SYSCTL_DSLP_DIV_25      0x0C000000  // Deep-sleep clock is osc /25
+N#define SYSCTL_DSLP_DIV_26      0x0C800000  // Deep-sleep clock is osc /26
+N#define SYSCTL_DSLP_DIV_27      0x0D000000  // Deep-sleep clock is osc /27
+N#define SYSCTL_DSLP_DIV_28      0x0D800000  // Deep-sleep clock is osc /28
+N#define SYSCTL_DSLP_DIV_29      0x0E000000  // Deep-sleep clock is osc /29
+N#define SYSCTL_DSLP_DIV_30      0x0E800000  // Deep-sleep clock is osc /30
+N#define SYSCTL_DSLP_DIV_31      0x0F000000  // Deep-sleep clock is osc /31
+N#define SYSCTL_DSLP_DIV_32      0x0F800000  // Deep-sleep clock is osc /32
+N#define SYSCTL_DSLP_DIV_33      0x10000000  // Deep-sleep clock is osc /33
+N#define SYSCTL_DSLP_DIV_34      0x10800000  // Deep-sleep clock is osc /34
+N#define SYSCTL_DSLP_DIV_35      0x11000000  // Deep-sleep clock is osc /35
+N#define SYSCTL_DSLP_DIV_36      0x11800000  // Deep-sleep clock is osc /36
+N#define SYSCTL_DSLP_DIV_37      0x12000000  // Deep-sleep clock is osc /37
+N#define SYSCTL_DSLP_DIV_38      0x12800000  // Deep-sleep clock is osc /38
+N#define SYSCTL_DSLP_DIV_39      0x13000000  // Deep-sleep clock is osc /39
+N#define SYSCTL_DSLP_DIV_40      0x13800000  // Deep-sleep clock is osc /40
+N#define SYSCTL_DSLP_DIV_41      0x14000000  // Deep-sleep clock is osc /41
+N#define SYSCTL_DSLP_DIV_42      0x14800000  // Deep-sleep clock is osc /42
+N#define SYSCTL_DSLP_DIV_43      0x15000000  // Deep-sleep clock is osc /43
+N#define SYSCTL_DSLP_DIV_44      0x15800000  // Deep-sleep clock is osc /44
+N#define SYSCTL_DSLP_DIV_45      0x16000000  // Deep-sleep clock is osc /45
+N#define SYSCTL_DSLP_DIV_46      0x16800000  // Deep-sleep clock is osc /46
+N#define SYSCTL_DSLP_DIV_47      0x17000000  // Deep-sleep clock is osc /47
+N#define SYSCTL_DSLP_DIV_48      0x17800000  // Deep-sleep clock is osc /48
+N#define SYSCTL_DSLP_DIV_49      0x18000000  // Deep-sleep clock is osc /49
+N#define SYSCTL_DSLP_DIV_50      0x18800000  // Deep-sleep clock is osc /50
+N#define SYSCTL_DSLP_DIV_51      0x19000000  // Deep-sleep clock is osc /51
+N#define SYSCTL_DSLP_DIV_52      0x19800000  // Deep-sleep clock is osc /52
+N#define SYSCTL_DSLP_DIV_53      0x1A000000  // Deep-sleep clock is osc /53
+N#define SYSCTL_DSLP_DIV_54      0x1A800000  // Deep-sleep clock is osc /54
+N#define SYSCTL_DSLP_DIV_55      0x1B000000  // Deep-sleep clock is osc /55
+N#define SYSCTL_DSLP_DIV_56      0x1B800000  // Deep-sleep clock is osc /56
+N#define SYSCTL_DSLP_DIV_57      0x1C000000  // Deep-sleep clock is osc /57
+N#define SYSCTL_DSLP_DIV_58      0x1C800000  // Deep-sleep clock is osc /58
+N#define SYSCTL_DSLP_DIV_59      0x1D000000  // Deep-sleep clock is osc /59
+N#define SYSCTL_DSLP_DIV_60      0x1D800000  // Deep-sleep clock is osc /60
+N#define SYSCTL_DSLP_DIV_61      0x1E000000  // Deep-sleep clock is osc /61
+N#define SYSCTL_DSLP_DIV_62      0x1E800000  // Deep-sleep clock is osc /62
+N#define SYSCTL_DSLP_DIV_63      0x1F000000  // Deep-sleep clock is osc /63
+N#define SYSCTL_DSLP_DIV_64      0x1F800000  // Deep-sleep clock is osc /64
+N#define SYSCTL_DSLP_OSC_MAIN    0x00000000  // Osc source is main osc
+N#define SYSCTL_DSLP_OSC_INT     0x00000010  // Osc source is int. osc
+N#define SYSCTL_DSLP_OSC_INT30   0x00000030  // Osc source is int. 30 KHz
+N#define SYSCTL_DSLP_OSC_EXT32   0x00000070  // Osc source is ext. 32 KHz
+N#define SYSCTL_DSLP_PIOSC_PD    0x00000002  // Power down PIOSC in deep-sleep
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlPIOSCCalibrate()
+N// API as the ulType parameter.
+N//
+N//*****************************************************************************
+N#define SYSCTL_PIOSC_CAL_AUTO   0x00000200  // Automatic calibration
+N#define SYSCTL_PIOSC_CAL_FACT   0x00000100  // Factory calibration
+N#define SYSCTL_PIOSC_CAL_USER   0x80000100  // User-supplied calibration
+N
+N//*****************************************************************************
+N//
+N// The following are values that can be passed to the SysCtlMOSCConfigSet() API
+N// as the ulConfig parameter.
+N//
+N//*****************************************************************************
+N#define SYSCTL_MOSC_VALIDATE    0x00000001  // Enable MOSC validation
+N#define SYSCTL_MOSC_INTERRUPT   0x00000002  // Generate interrupt on MOSC fail
+N#define SYSCTL_MOSC_NO_XTAL     0x00000004  // No crystal is attached to MOSC
+N
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern unsigned long SysCtlSRAMSizeGet(void);
+Nextern unsigned long SysCtlFlashSizeGet(void);
+Nextern tBoolean SysCtlPinPresent(unsigned long ulPin);
+Nextern tBoolean SysCtlPeripheralPresent(unsigned long ulPeripheral);
+Nextern tBoolean SysCtlPeripheralReady(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralPowerOn(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralPowerOff(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralReset(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralEnable(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralDisable(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralSleepEnable(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralSleepDisable(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralDeepSleepEnable(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralDeepSleepDisable(unsigned long ulPeripheral);
+Nextern void SysCtlPeripheralClockGating(tBoolean bEnable);
+Nextern void SysCtlIntRegister(void (*pfnHandler)(void));
+Nextern void SysCtlIntUnregister(void);
+Nextern void SysCtlIntEnable(unsigned long ulInts);
+Nextern void SysCtlIntDisable(unsigned long ulInts);
+Nextern void SysCtlIntClear(unsigned long ulInts);
+Nextern unsigned long SysCtlIntStatus(tBoolean bMasked);
+Nextern void SysCtlLDOSet(unsigned long ulVoltage);
+Nextern unsigned long SysCtlLDOGet(void);
+Nextern void SysCtlLDOConfigSet(unsigned long ulConfig);
+Nextern void SysCtlReset(void);
+Nextern void SysCtlSleep(void);
+Nextern void SysCtlDeepSleep(void);
+Nextern unsigned long SysCtlResetCauseGet(void);
+Nextern void SysCtlResetCauseClear(unsigned long ulCauses);
+Nextern void SysCtlBrownOutConfigSet(unsigned long ulConfig,
+N                                    unsigned long ulDelay);
+Nextern void SysCtlDelay(unsigned long ulCount);
+Nextern void SysCtlMOSCConfigSet(unsigned long ulConfig);
+Nextern unsigned long SysCtlPIOSCCalibrate(unsigned long ulType);
+Nextern void SysCtlClockSet(unsigned long ulConfig);
+Nextern unsigned long SysCtlClockGet(void);
+Nextern void SysCtlDeepSleepClockSet(unsigned long ulConfig);
+Nextern void SysCtlPWMClockSet(unsigned long ulConfig);
+Nextern unsigned long SysCtlPWMClockGet(void);
+Nextern void SysCtlADCSpeedSet(unsigned long ulSpeed);
+Nextern unsigned long SysCtlADCSpeedGet(void);
+Nextern void SysCtlIOSCVerificationSet(tBoolean bEnable);
+Nextern void SysCtlMOSCVerificationSet(tBoolean bEnable);
+Nextern void SysCtlPLLVerificationSet(tBoolean bEnable);
+Nextern void SysCtlClkVerificationClear(void);
+Nextern void SysCtlGPIOAHBEnable(unsigned long ulGPIOPeripheral);
+Nextern void SysCtlGPIOAHBDisable(unsigned long ulGPIOPeripheral);
+Nextern void SysCtlUSBPLLEnable(void);
+Nextern void SysCtlUSBPLLDisable(void);
+Nextern unsigned long SysCtlI2SMClkSet(unsigned long ulInputClock,
+N                                      unsigned long ulMClk);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __SYSCTL_H__
+L 28 "..\..\..\utils\scheduler.c" 2
+N#include "driverlib/interrupt.h"
+L 1 "..\..\..\driverlib/interrupt.h" 1
+N//*****************************************************************************
+N//
+N// interrupt.h - Prototypes for the NVIC Interrupt Controller Driver.
+N//
+N// Copyright (c) 2005-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Peripheral Driver Library.
+N//
+N//*****************************************************************************
+N
+N#ifndef __INTERRUPT_H__
+N#define __INTERRUPT_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Macro to generate an interrupt priority mask based on the number of bits
+N// of priority supported by the hardware.
+N//
+N//*****************************************************************************
+N#define INT_PRIORITY_MASK       ((0xFF << (8 - NUM_PRIORITY_BITS)) & 0xFF)
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern tBoolean IntMasterEnable(void);
+Nextern tBoolean IntMasterDisable(void);
+Nextern void IntRegister(unsigned long ulInterrupt, void (*pfnHandler)(void));
+Nextern void IntUnregister(unsigned long ulInterrupt);
+Nextern void IntPriorityGroupingSet(unsigned long ulBits);
+Nextern unsigned long IntPriorityGroupingGet(void);
+Nextern void IntPrioritySet(unsigned long ulInterrupt,
+N                           unsigned char ucPriority);
+Nextern long IntPriorityGet(unsigned long ulInterrupt);
+Nextern void IntEnable(unsigned long ulInterrupt);
+Nextern void IntDisable(unsigned long ulInterrupt);
+Nextern unsigned long IntIsEnabled(unsigned long ulInterrupt);
+Nextern void IntPendSet(unsigned long ulInterrupt);
+Nextern void IntPendClear(unsigned long ulInterrupt);
+Nextern void IntPriorityMaskSet(unsigned long ulPriorityMask);
+Nextern unsigned long IntPriorityMaskGet(void);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __INTERRUPT_H__
+L 29 "..\..\..\utils\scheduler.c" 2
+N#include "driverlib/debug.h"
+L 1 "..\..\..\driverlib/debug.h" 1
+N//*****************************************************************************
+N//
+N// debug.h - Macros for assisting debug of the driver library.
+N//
+N// Copyright (c) 2006-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Peripheral Driver Library.
+N//
+N//*****************************************************************************
+N
+N#ifndef __DEBUG_H__
+N#define __DEBUG_H__
+N
+N//*****************************************************************************
+N//
+N// Prototype for the function that is called when an invalid argument is passed
+N// to an API.  This is only used when doing a DEBUG build.
+N//
+N//*****************************************************************************
+Nextern void __error__(char *pcFilename, unsigned long ulLine);
+N
+N//*****************************************************************************
+N//
+N// The ASSERT macro, which does the actual assertion checking.  Typically, this
+N// will be for procedure arguments.
+N//
+N//*****************************************************************************
+N#ifdef DEBUG
+S#define ASSERT(expr) {                                      \
+S                         if(!(expr))                        \
+S                         {                                  \
+S                             __error__(__FILE__, __LINE__); \
+S                         }                                  \
+S                     }
+X#define ASSERT(expr) {                                                               if(!(expr))                                                 {                                                               __error__(__FILE__, __LINE__);                          }                                                       }
+N#else
+N#define ASSERT(expr)
+N#endif
+N
+N#endif // __DEBUG_H__
+L 30 "..\..\..\utils\scheduler.c" 2
+N#include "utils/scheduler.h"
+L 1 "..\..\..\utils/scheduler.h" 1
+N//****************************************************************************
+N//
+N// scheduler.h - Public header for the simple timed function scheduler module.
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//****************************************************************************
+N#ifndef __SCHEDULER_H__
+N#define __SCHEDULER_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup scheduler_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototype of a function that the scheduler can call periodically.
+N//
+N//*****************************************************************************
+Ntypedef void (*tSchedulerFunction)(void *pvParam);
+N
+N//*****************************************************************************
+N//
+N//! The structure defining a function which the scheduler will call
+N//! periodically.
+N//
+N//*****************************************************************************
+Ntypedef struct
+N{
+N    //
+N    //! A pointer to the function which is to be called periodically by the
+N    //! scheduler.
+N    //
+N    void (*pfnFunction)(void *);
+N
+N    //
+N    //! The parameter which is to be passed to this function when it is called.
+N    //
+N    void *pvParam;
+N
+N    //
+N    //! The frequency the function is to be called expressed in terms of system
+N    //! ticks.  If this value is 0, the function will be called on every call
+N    //! to SchedulerRun.
+N    //
+N    unsigned long ulFrequencyTicks;
+N
+N    //
+N    //! Tick count when this function was last called.  This field is updated
+N    //! by the scheduler.
+N    //
+N    unsigned long ulLastCall;
+N
+N    //
+N    //! A flag indicating whether or not this task is active.  If true, the
+N    //! function will be called periodically.  If false, the function is
+N    //! disabled and will not be called.
+N    //
+N    tBoolean bActive;
+N}
+NtSchedulerTask;
+N
+N//*****************************************************************************
+N//
+N//! This global table must be populated by the client and contains information
+N//! on each function that the scheduler is to call.
+N//
+N//*****************************************************************************
+Nextern tSchedulerTask g_psSchedulerTable[];
+N
+N//*****************************************************************************
+N//
+N//! This global variable must be exported by the client.  It must contain the
+N//! number of entries in the g_psSchedulerTable array.
+N//
+N//*****************************************************************************
+Nextern unsigned long g_ulSchedulerNumTasks;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Public function prototypes
+N//
+N//*****************************************************************************
+Nextern void SchedulerSysTickIntHandler(void);
+Nextern void SchedulerInit(unsigned long ulTicksPerSecond);
+Nextern void SchedulerRun(void);
+Nextern void SchedulerTaskEnable(unsigned long ulIndex, tBoolean bRunNow);
+Nextern void SchedulerTaskDisable(unsigned long ulIndex);
+Nextern unsigned long SchedulerTickCountGet(void);
+Nextern unsigned long SchedulerElapsedTicksGet(unsigned long ulTickCount);
+Nextern unsigned long SchedulerElapsedTicksCalc(unsigned long ulTickStart,
+N                                               unsigned long ulTickEnd);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __ SCHEDULER_H_
+L 31 "..\..\..\utils\scheduler.c" 2
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup scheduler_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+Nstatic volatile unsigned long g_ulSchedulerTickCount;
+N
+N//****************************************************************************
+N//
+N//! Handles the SysTick interrupt on behalf of the scheduler module.
+N//!
+N//! Applications using the scheduler module must ensure that this function is
+N//! hooked to the SysTick interrupt vector.
+N//!
+N//! \return None.
+N//
+N//****************************************************************************
+Nvoid
+NSchedulerSysTickIntHandler(void)
+N{
+N    g_ulSchedulerTickCount++;
+N}
+N
+N//****************************************************************************
+N//
+N//! Initializes the task scheduler.
+N//!
+N//! \param ulTicksPerSecond sets the basic frequency of the SysTick interrupt
+N//!   used by the scheduler to determine when to run the various task functions.
+N//!
+N//! This function must be called during application startup to configure the
+N//! SysTick timer.  This is used by the scheduler module to determine when each
+N//! of the functions provided in the g_psSchedulerTable array is called.
+N//!
+N//! The caller is responsible for ensuring that SchedulerSysTickIntHandler()
+N//! has previously been installed in the SYSTICK vector in the vector table
+N//! and must also ensure that interrupts are enabled at the CPU level.
+N//!
+N//! Note that this call does not start the scheduler calling the configured
+N//! functions.  All function calls are made in the context of later calls to
+N//! SchedulerRun().  This call merely configures the SysTick interrupt that is
+N//! used by the scheduler to determine what the current system time is.
+N//!
+N//! \return None.
+N//
+N//****************************************************************************
+Nvoid
+NSchedulerInit(unsigned long ulTicksPerSecond)
+N{
+N    ASSERT(ulTicksPerSecond);
+X    ;
+N
+N    //
+N    // Configure SysTick for a periodic interrupt.
+N    //
+N    SysTickPeriodSet(SysCtlClockGet() / ulTicksPerSecond);
+N    SysTickEnable();
+N    SysTickIntEnable();
+N}
+N
+N//****************************************************************************
+N//
+N//! Instructs the scheduler to update its task table and make calls to
+N//! functions needing called.
+N//!
+N//! This function must be called periodically by the client to allow the
+N//! scheduler to make calls to any configured task functions if it is their
+N//! time to be called.  The call must be made at least as frequently as the
+N//! most frequent task configured in the g_psSchedulerTable array.
+N//!
+N//! Although the scheduler makes use of the SysTick interrupt, all calls to
+N//! functions configured in \e g_psSchedulerTable are made in the context of
+N//! SchedulerRun().
+N//!
+N//! \return None.
+N//
+N//****************************************************************************
+Nvoid
+NSchedulerRun(void)
+N{
+N    unsigned long ulLoop;
+N    tSchedulerTask *psTask;
+N
+N    //
+N    // Loop through each task in the task table.
+N    //
+N    for(ulLoop = 0; ulLoop < g_ulSchedulerNumTasks; ulLoop++)
+N    {
+N        //
+N        // Get a pointer to the task information.
+N        //
+N        psTask = &g_psSchedulerTable[ulLoop];
+N
+N        //
+N        // Is this task active and, if so, is it time to call it's function?
+N        //
+N        if(psTask->bActive && (SchedulerElapsedTicksGet(psTask->ulLastCall) >=
+N           psTask->ulFrequencyTicks))
+N        {
+N            //
+N            // Remember the timestamp at which we make the function call.
+N            //
+N            psTask->ulLastCall = g_ulSchedulerTickCount;
+N
+N            //
+N            // Call the task function, passing the provided parameter.
+N            //
+N            psTask->pfnFunction(psTask->pvParam);
+N        }
+N    }
+N}
+N
+N//****************************************************************************
+N//
+N//! Enables a task and allows the scheduler to call it periodically.
+N//!
+N//! \param ulIndex is the index of the task which is to be enabled in the
+N//!        global \e g_psSchedulerTable array.
+N//! \param bRunNow is \b true if the task is to be run on the next call to
+N//!        SchedulerRun() or \b false if one whole period is to elapse before
+N//!        the task is run.
+N//!
+N//! This function marks one of the configured tasks as enabled and causes
+N//! SchedulerRun() to call that task periodically.  The caller may choose to
+N//! have the enabled task run for the first time on the next call to
+N//! SchedulerRun() or to wait one full task period before making the first
+N//! call.
+N//!
+N//! \return None.
+N//
+N//****************************************************************************
+Nvoid
+NSchedulerTaskEnable(unsigned long ulIndex, tBoolean bRunNow)
+N{
+N    //
+N    // Is the task index passed valid?
+N    //
+N    if(ulIndex < g_ulSchedulerNumTasks)
+N    {
+N        //
+N        // Yes - mark the task as active.
+N        //
+N        g_psSchedulerTable[ulIndex].bActive = true;
+X        g_psSchedulerTable[ulIndex].bActive = 1;
+N
+N        //
+N        // Set the last call time to ensure that the function is called either
+N        // next time the scheduler is run or after the desired number of ticks
+N        // depending upon the value of the bRunNow parameter.
+N        //
+N        if(bRunNow)
+N        {
+N            //
+N            // Cause the task to run on the next call to SchedulerRun().
+N            //
+N            g_psSchedulerTable[ulIndex].ulLastCall = (g_ulSchedulerTickCount -
+N                            g_psSchedulerTable[ulIndex].ulFrequencyTicks);
+N        }
+N        else
+N        {
+N            //
+N            // Cause the task to run after one full time period.
+N            //
+N            g_psSchedulerTable[ulIndex].ulLastCall = g_ulSchedulerTickCount;
+N        }
+N    }
+N}
+N
+N//****************************************************************************
+N//
+N//! Disables a task and prevents the scheduler from calling it.
+N//!
+N//! \param ulIndex is the index of the task which is to be disabled in the
+N//!        global \e g_psSchedulerTable array.
+N//!
+N//! This function marks one of the configured tasks as inactive and prevents
+N//! SchedulerRun() from calling it.  The task may be reenabled by calling
+N//! SchedulerTaskEnable().
+N//!
+N//! \return None.
+N//
+N//****************************************************************************
+Nvoid
+NSchedulerTaskDisable(unsigned long ulIndex)
+N{
+N    //
+N    // Is the task index passed valid?
+N    //
+N    if(ulIndex < g_ulSchedulerNumTasks)
+N    {
+N        //
+N        // Yes - mark the task as inactive.
+N        //
+N        g_psSchedulerTable[ulIndex].bActive = false;
+X        g_psSchedulerTable[ulIndex].bActive = 0;
+N    }
+N}
+N
+N//****************************************************************************
+N//
+N//! Returns the current system time in ticks since power on.
+N//!
+N//! This function may be called by a client to retrieve the current system
+N//! time.  The value returned is a count of ticks elapsed since the system
+N//! last booted.
+N//!
+N//! \return Tick count since last boot.
+N//
+N//****************************************************************************
+Nunsigned long
+NSchedulerTickCountGet(void)
+N{
+N    return(g_ulSchedulerTickCount);
+N}
+N
+N//****************************************************************************
+N//
+N//! Returns the number of ticks elapsed since the provided tick count.
+N//!
+N//! \param ulTickCount is the tick count from which to determine the elapsed
+N//! time.
+N//!
+N//! This function may be called by a client to determine how much time has
+N//! passed since a particular tick count provided in the \e ulTickCount
+N//! parameter.  This function takes into account wrapping of the global tick
+N//! counter and assumes that the provided tick count always represents a time
+N//! in the past.  The returned value will, of course, be wrong if the tick
+N//! counter has wrapped more than once since the passed \e ulTickCount.  As a
+N//! result, please do not use this function if you are dealing with timeouts
+N//! of 497 days or longer (assuming you use a 10mS tick period).
+N//!
+N//! \return The number of ticks elapsed since the provided tick count.
+N//
+N//****************************************************************************
+Nunsigned long
+NSchedulerElapsedTicksGet(unsigned long ulTickCount)
+N{
+N    //
+N    // Determine the calculation based upon whether the global tick count has
+N    // wrapped since the passed ulTickCount.
+N    //
+N    return(SchedulerElapsedTicksCalc(ulTickCount, g_ulSchedulerTickCount));
+N}
+N
+N//****************************************************************************
+N//
+N//! Returns the number of ticks elapsed between two times.
+N//!
+N//! \param ulTickStart is the system tick count for the start of the period.
+N//! \param ulTickEnd is the system tick count for the end of the period.
+N//!
+N//! This function may be called by a client to determine the number of ticks
+N//! which have elapsed between provided starting and ending tick counts.  The
+N//! function takes into account wrapping cases where the end tick count is
+N//! lower than the starting count assuming that the ending tick count always
+N//! represents a later time than the starting count.
+N//!
+N//! \return The number of ticks elapsed between the provided start and end
+N//! counts.
+N//
+N//****************************************************************************
+Nunsigned long
+NSchedulerElapsedTicksCalc(unsigned long ulTickStart, unsigned long ulTickEnd)
+N{
+N    return((ulTickEnd > ulTickStart) ? (ulTickEnd - ulTickStart) :
+N           ((0xFFFFFFFF - ulTickStart) + ulTickEnd + 1));
+N}
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************

@@ -1,0 +1,13 @@
+.\sensors.o: ..\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.c
+.\sensors.o: ..\lib\StellarisWare\inc/hw_types.h
+.\sensors.o: ..\lib\StellarisWare\inc/hw_memmap.h
+.\sensors.o: ..\lib\StellarisWare\inc/hw_i2c.h
+.\sensors.o: ..\lib\StellarisWare\inc/hw_ints.h
+.\sensors.o: ..\lib\StellarisWare\driverlib/sysctl.h
+.\sensors.o: ..\lib\StellarisWare\driverlib/gpio.h
+.\sensors.o: ..\lib\StellarisWare\driverlib/pin_map.h
+.\sensors.o: ..\lib\StellarisWare\driverlib/i2c.h
+.\sensors.o: ..\lib\StellarisWare\driverlib/interrupt.h
+.\sensors.o: ..\lib\StellarisWare\driverlib/debug.h
+.\sensors.o: ..\lib\StellarisWare\driverlib/rom.h
+.\sensors.o: ..\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.h

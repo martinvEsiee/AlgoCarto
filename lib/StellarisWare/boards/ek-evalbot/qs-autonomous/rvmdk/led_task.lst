@@ -1,0 +1,567 @@
+L 1 "led_task.c"
+N//****************************************************************************
+N//
+N// led_task.c - Control of LEDs on EVALBOT
+N//
+N// Copyright (c) 2011-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//****************************************************************************
+N
+N#include "inc/hw_types.h"
+L 1 "..\..\..\inc/hw_types.h" 1
+N//*****************************************************************************
+N//
+N// hw_types.h - Common types and macros.
+N//
+N// Copyright (c) 2005-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N//   Redistribution and use in source and binary forms, with or without
+N//   modification, are permitted provided that the following conditions
+N//   are met:
+N// 
+N//   Redistributions of source code must retain the above copyright
+N//   notice, this list of conditions and the following disclaimer.
+N// 
+N//   Redistributions in binary form must reproduce the above copyright
+N//   notice, this list of conditions and the following disclaimer in the
+N//   documentation and/or other materials provided with the  
+N//   distribution.
+N// 
+N//   Neither the name of Texas Instruments Incorporated nor the names of
+N//   its contributors may be used to endorse or promote products derived
+N//   from this software without specific prior written permission.
+N// 
+N// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+N// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+N// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+N// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+N// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+N// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+N// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+N// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+N// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+N// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N
+N#ifndef __HW_TYPES_H__
+N#define __HW_TYPES_H__
+N
+N//*****************************************************************************
+N//
+N// Define a boolean type, and values for true and false.
+N//
+N//*****************************************************************************
+Ntypedef unsigned char tBoolean;
+N
+N#ifndef true
+N#define true 1
+N#endif
+N
+N#ifndef false
+N#define false 0
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Macros for hardware access, both direct and via the bit-band region.
+N//
+N//*****************************************************************************
+N#define HWREG(x)                                                              \
+N        (*((volatile unsigned long *)(x)))
+X#define HWREG(x)                                                                      (*((volatile unsigned long *)(x)))
+N#define HWREGH(x)                                                             \
+N        (*((volatile unsigned short *)(x)))
+X#define HWREGH(x)                                                                     (*((volatile unsigned short *)(x)))
+N#define HWREGB(x)                                                             \
+N        (*((volatile unsigned char *)(x)))
+X#define HWREGB(x)                                                                     (*((volatile unsigned char *)(x)))
+N#define HWREGBITW(x, b)                                                       \
+N        HWREG(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                \
+N              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITW(x, b)                                                               HWREG(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N#define HWREGBITH(x, b)                                                       \
+N        HWREGH(((unsigned long)(x) & 0xF0000000) | 0x02000000 |               \
+N               (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITH(x, b)                                                               HWREGH(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N#define HWREGBITB(x, b)                                                       \
+N        HWREGB(((unsigned long)(x) & 0xF0000000) | 0x02000000 |               \
+N               (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+X#define HWREGBITB(x, b)                                                               HWREGB(((unsigned long)(x) & 0xF0000000) | 0x02000000 |                              (((unsigned long)(x) & 0x000FFFFF) << 5) | ((b) << 2))
+N
+N//*****************************************************************************
+N//
+N// Helper Macros for determining silicon revisions, etc.
+N//
+N// These macros will be used by Driverlib at "run-time" to create necessary
+N// conditional code blocks that will allow a single version of the Driverlib
+N// "binary" code to support multiple(all) Stellaris silicon revisions.
+N//
+N// It is expected that these macros will be used inside of a standard 'C'
+N// conditional block of code, e.g.
+N//
+N//     if(CLASS_IS_SANDSTORM)
+N//     {
+N//         do some Sandstorm-class specific code here.
+N//     }
+N//
+N// By default, these macros will be defined as run-time checks of the
+N// appropriate register(s) to allow creation of run-time conditional code
+N// blocks for a common DriverLib across the entire Stellaris family.
+N//
+N// However, if code-space optimization is required, these macros can be "hard-
+N// coded" for a specific version of Stellaris silicon.  Many compilers will
+N// then detect the "hard-coded" conditionals, and appropriately optimize the
+N// code blocks, eliminating any "unreachable" code.  This would result in
+N// a smaller Driverlib, thus producing a smaller final application size, but
+N// at the cost of limiting the Driverlib binary to a specific Stellaris
+N// silicon revision.
+N//
+N//*****************************************************************************
+N#ifndef CLASS_IS_SANDSTORM
+N#define CLASS_IS_SANDSTORM                                                    \
+N        (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_M) == SYSCTL_DID0_VER_0) ||   \
+N         ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SANDSTORM)))
+X#define CLASS_IS_SANDSTORM                                                            (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_M) == SYSCTL_DID0_VER_0) ||            ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==           (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SANDSTORM)))
+N#endif
+N
+N#ifndef CLASS_IS_FURY
+N#define CLASS_IS_FURY                                                        \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FURY))
+X#define CLASS_IS_FURY                                                                ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FURY))
+N#endif
+N
+N#ifndef CLASS_IS_DUSTDEVIL
+N#define CLASS_IS_DUSTDEVIL                                                   \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_DUSTDEVIL))
+X#define CLASS_IS_DUSTDEVIL                                                           ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_DUSTDEVIL))
+N#endif
+N
+N#ifndef CLASS_IS_TEMPEST
+N#define CLASS_IS_TEMPEST                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TEMPEST))
+X#define CLASS_IS_TEMPEST                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_TEMPEST))
+N#endif
+N
+N#ifndef CLASS_IS_FIRESTORM
+N#define CLASS_IS_FIRESTORM                                                   \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FIRESTORM))
+X#define CLASS_IS_FIRESTORM                                                           ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FIRESTORM))
+N#endif
+N
+N#ifndef CLASS_IS_BLIZZARD
+N#define CLASS_IS_BLIZZARD                                                    \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+N         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_BLIZZARD))
+X#define CLASS_IS_BLIZZARD                                                            ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) ==          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_BLIZZARD))
+N#endif
+N
+N#ifndef REVISION_IS_A0
+N#define REVISION_IS_A0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_A0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_A1
+N#define REVISION_IS_A1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_A1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_A2
+N#define REVISION_IS_A2                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_2))
+X#define REVISION_IS_A2                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_2))
+N#endif
+N
+N#ifndef REVISION_IS_B0
+N#define REVISION_IS_B0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_B0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_B1
+N#define REVISION_IS_B1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_1))
+X#define REVISION_IS_B1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVB | SYSCTL_DID0_MIN_1))
+N#endif
+N
+N#ifndef REVISION_IS_C0
+N#define REVISION_IS_C0                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_0))
+X#define REVISION_IS_C0                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_0))
+N#endif
+N
+N#ifndef REVISION_IS_C1
+N#define REVISION_IS_C1                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_1))
+X#define REVISION_IS_C1                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_1))
+N#endif
+N
+N#ifndef REVISION_IS_C2
+N#define REVISION_IS_C2                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_2))
+X#define REVISION_IS_C2                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_2))
+N#endif
+N
+N#ifndef REVISION_IS_C3
+N#define REVISION_IS_C3                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_3))
+X#define REVISION_IS_C3                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_3))
+N#endif
+N
+N#ifndef REVISION_IS_C5
+N#define REVISION_IS_C5                                                     \
+N        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+N         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_5))
+X#define REVISION_IS_C5                                                             ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) ==          (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_5))
+N#endif
+N
+N//*****************************************************************************
+N//
+N// Deprecated silicon class and revision detection macros.
+N//
+N//*****************************************************************************
+N#ifndef DEPRECATED
+N#define DEVICE_IS_SANDSTORM     CLASS_IS_SANDSTORM
+N#define DEVICE_IS_FURY          CLASS_IS_FURY
+N#define DEVICE_IS_REVA2         REVISION_IS_A2
+N#define DEVICE_IS_REVC1         REVISION_IS_C1
+N#define DEVICE_IS_REVC2         REVISION_IS_C2
+N#endif
+N
+N#endif // __HW_TYPES_H__
+L 26 "led_task.c" 2
+N#include "drivers/io.h"
+L 1 "..\drivers/io.h" 1
+N//*****************************************************************************
+N//
+N// io.h - Public type definitions and prototypes related to pushbuttons and
+N//        LEDs on EVALBOT.
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//*****************************************************************************
+N#ifndef __IO_H__
+N#define __IO_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup io_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N//! This enumerated type defines either one or both EVALBOT LEDs.  It is used
+N//! by functions which change the state of the LEDs.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Both LEDs will be affected.
+N    //
+N    BOTH_LEDS = 0,
+N
+N    //
+N    //! LED 1 on the right side of the EVALBOT will be affected.
+N    //
+N    LED_1,
+N
+N    //
+N    //! LED 2 on the left side of the EVALBOT will be affected.
+N    //
+N    LED_2
+N}
+NtLED;
+N
+N//*****************************************************************************
+N//
+N//! This enumerated type defines the two user switches on EVALBOT.
+N//
+N//*****************************************************************************
+Ntypedef enum
+N{
+N    //
+N    //! Switch 1 nearest the front on the right side of EVALBOT.
+N    //
+N    BUTTON_1 = 0,
+N
+N    //
+N    //! Switch 2 nearest the back on the right side of EVALBOT.
+N    //
+N    BUTTON_2
+N}
+NtButton;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototypes for the APIs.
+N//
+N//*****************************************************************************
+Nextern void LEDsInit(void);
+Nextern void LED_Off(tLED eLED);
+Nextern void LED_On(tLED eLED);
+Nextern void LED_Toggle(tLED eLED);
+Nextern void PushButtonsInit(void);
+Nextern tBoolean PushButtonGetStatus(tButton eButton);
+Nextern void PushButtonDebouncer(void);
+Nextern tBoolean PushButtonGetDebounced(tButton eButton);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __IO_H__
+L 27 "led_task.c" 2
+N#include "utils/scheduler.h"
+L 1 "..\..\..\utils/scheduler.h" 1
+N//****************************************************************************
+N//
+N// scheduler.h - Public header for the simple timed function scheduler module.
+N//
+N// Copyright (c) 2010-2012 Texas Instruments Incorporated.  All rights reserved.
+N// Software License Agreement
+N// 
+N// Texas Instruments (TI) is supplying this software for use solely and
+N// exclusively on TI's microcontroller products. The software is owned by
+N// TI and/or its suppliers, and is protected under applicable copyright
+N// laws. You may not combine this software with "viral" open-source
+N// software in order to form a larger program.
+N// 
+N// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+N// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
+N// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+N// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
+N// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+N// DAMAGES, FOR ANY REASON WHATSOEVER.
+N// 
+N// This is part of revision 9107 of the Stellaris Firmware Development Package.
+N//
+N//****************************************************************************
+N#ifndef __SCHEDULER_H__
+N#define __SCHEDULER_H__
+N
+N//*****************************************************************************
+N//
+N// If building with a C++ compiler, make all of the definitions in this header
+N// have a C binding.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N//*****************************************************************************
+N//
+N//! \addtogroup scheduler_api
+N//! @{
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Prototype of a function that the scheduler can call periodically.
+N//
+N//*****************************************************************************
+Ntypedef void (*tSchedulerFunction)(void *pvParam);
+N
+N//*****************************************************************************
+N//
+N//! The structure defining a function which the scheduler will call
+N//! periodically.
+N//
+N//*****************************************************************************
+Ntypedef struct
+N{
+N    //
+N    //! A pointer to the function which is to be called periodically by the
+N    //! scheduler.
+N    //
+N    void (*pfnFunction)(void *);
+N
+N    //
+N    //! The parameter which is to be passed to this function when it is called.
+N    //
+N    void *pvParam;
+N
+N    //
+N    //! The frequency the function is to be called expressed in terms of system
+N    //! ticks.  If this value is 0, the function will be called on every call
+N    //! to SchedulerRun.
+N    //
+N    unsigned long ulFrequencyTicks;
+N
+N    //
+N    //! Tick count when this function was last called.  This field is updated
+N    //! by the scheduler.
+N    //
+N    unsigned long ulLastCall;
+N
+N    //
+N    //! A flag indicating whether or not this task is active.  If true, the
+N    //! function will be called periodically.  If false, the function is
+N    //! disabled and will not be called.
+N    //
+N    tBoolean bActive;
+N}
+NtSchedulerTask;
+N
+N//*****************************************************************************
+N//
+N//! This global table must be populated by the client and contains information
+N//! on each function that the scheduler is to call.
+N//
+N//*****************************************************************************
+Nextern tSchedulerTask g_psSchedulerTable[];
+N
+N//*****************************************************************************
+N//
+N//! This global variable must be exported by the client.  It must contain the
+N//! number of entries in the g_psSchedulerTable array.
+N//
+N//*****************************************************************************
+Nextern unsigned long g_ulSchedulerNumTasks;
+N
+N//*****************************************************************************
+N//
+N// Close the Doxygen group.
+N//! @}
+N//
+N//*****************************************************************************
+N
+N//*****************************************************************************
+N//
+N// Public function prototypes
+N//
+N//*****************************************************************************
+Nextern void SchedulerSysTickIntHandler(void);
+Nextern void SchedulerInit(unsigned long ulTicksPerSecond);
+Nextern void SchedulerRun(void);
+Nextern void SchedulerTaskEnable(unsigned long ulIndex, tBoolean bRunNow);
+Nextern void SchedulerTaskDisable(unsigned long ulIndex);
+Nextern unsigned long SchedulerTickCountGet(void);
+Nextern unsigned long SchedulerElapsedTicksGet(unsigned long ulTickCount);
+Nextern unsigned long SchedulerElapsedTicksCalc(unsigned long ulTickStart,
+N                                               unsigned long ulTickEnd);
+N
+N//*****************************************************************************
+N//
+N// Mark the end of the C bindings section for C++ compilers.
+N//
+N//*****************************************************************************
+N#ifdef __cplusplus
+S}
+N#endif
+N
+N#endif // __ SCHEDULER_H_
+L 28 "led_task.c" 2
+N
+N//****************************************************************************
+N//
+N// This function is the LED "task".  It is called periodically from the
+N// scheduler in the main application loop.  It toggles the state of both
+N// LEDs.
+N//
+N//****************************************************************************
+Nvoid
+NLEDTask(void *pvParam)
+N{
+N    //
+N    // Change the state of both LEDs.
+N    //
+N    LED_Toggle(BOTH_LEDS);
+N}
+N
+N//****************************************************************************
+N//
+N// This function initializes the LED task. It should be called from the
+N// application initialization code.
+N//
+N//****************************************************************************
+Nvoid
+NLEDTaskInit(void *pvParam)
+N{
+N    //
+N    // Initialize the board LED driver and turn on one LED.  This will have
+N    // the effect of the LEDs blinking back and forth, with one on at a time.
+N    //
+N    LEDsInit();
+N    LED_On(LED_1);
+N}

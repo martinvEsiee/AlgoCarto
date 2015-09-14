@@ -1,0 +1,13 @@
+.\rvmdk\sensors.o: ..\drivers\sensors.c
+.\rvmdk\sensors.o: ..\..\..\inc/hw_types.h
+.\rvmdk\sensors.o: ..\..\..\inc/hw_memmap.h
+.\rvmdk\sensors.o: ..\..\..\inc/hw_i2c.h
+.\rvmdk\sensors.o: ..\..\..\inc/hw_ints.h
+.\rvmdk\sensors.o: ..\..\..\driverlib/sysctl.h
+.\rvmdk\sensors.o: ..\..\..\driverlib/gpio.h
+.\rvmdk\sensors.o: ..\..\..\driverlib/pin_map.h
+.\rvmdk\sensors.o: ..\..\..\driverlib/i2c.h
+.\rvmdk\sensors.o: ..\..\..\driverlib/interrupt.h
+.\rvmdk\sensors.o: ..\..\..\driverlib/debug.h
+.\rvmdk\sensors.o: ..\..\..\driverlib/rom.h
+.\rvmdk\sensors.o: ..\drivers\sensors.h

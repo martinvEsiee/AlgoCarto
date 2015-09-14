@@ -1,0 +1,39 @@
+*** Creating Trace Output File '.\rvmdk\qs-autonomous.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\rvmdk\auto_task.o"'
+### List of Objects: adding '".\rvmdk\dac.o"'
+### List of Objects: adding '".\rvmdk\display96x16x1.o"'
+### List of Objects: adding '".\rvmdk\display_task.o"'
+### List of Objects: adding '".\rvmdk\drive_task.o"'
+### List of Objects: adding '".\rvmdk\io.o"'
+### List of Objects: adding '".\rvmdk\led_task.o"'
+### List of Objects: adding '".\rvmdk\motor.o"'
+### List of Objects: adding '".\rvmdk\pid.o"'
+### List of Objects: adding '".\rvmdk\qs-autonomous.o"'
+### List of Objects: adding '".\rvmdk\random.o"'
+### List of Objects: adding '".\rvmdk\scheduler.o"'
+### List of Objects: adding '".\rvmdk\sensors.o"'
+### List of Objects: adding '".\rvmdk\sound.o"'
+### List of Objects: adding '".\rvmdk\sound_task.o"'
+### List of Objects: adding '".\rvmdk\sounds.o"'
+### List of Objects: adding '".\rvmdk\startup_rvmdk.o"'
+### List of Objects: adding '".\rvmdk\uartstdio.o"'
+### List of Objects: adding '".\rvmdk\ustdlib.o"'
+### List of Objects: adding '".\rvmdk\wav.o"'
+### List of Objects: adding '"..\..\..\driverlib\rvmdk-cm3\driverlib-cm3.lib"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 ".\rvmdk\auto_task.o" ".\rvmdk\dac.o" ".\rvmdk\display96x16x1.o" ".\rvmdk\display_task.o" ".\rvmdk\drive_task.o" ".\rvmdk\io.o" ".\rvmdk\led_task.o" ".\rvmdk\motor.o" ".\rvmdk\pid.o" ".\rvmdk\qs-autonomous.o" ".\rvmdk\random.o" ".\rvmdk\scheduler.o" ".\rvmdk\sensors.o" ".\rvmdk\sound.o" ".\rvmdk\sound_task.o" ".\rvmdk\sounds.o" ".\rvmdk\startup_rvmdk.o" ".\rvmdk\uartstdio.o" ".\rvmdk\ustdlib.o" ".\rvmdk\wav.o" C:\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib --library_type=microlib --strict --scatter "qs-autonomous.sct" 
+--entry Reset_Handler --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\rvmdk\qs-autonomous.map" -o .\rvmdk\qs-autonomous.axf### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\rvmdk\qs-autonomous.axf'
+### ADS-LD Command File: '.\rvmdk\qs-autonomous.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\rvmdk\qs-autonomous.lnp', Handle=0x00000330
+### Writing '.lnp' file
+### ADS-LD Command file '.\rvmdk\qs-autonomous.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

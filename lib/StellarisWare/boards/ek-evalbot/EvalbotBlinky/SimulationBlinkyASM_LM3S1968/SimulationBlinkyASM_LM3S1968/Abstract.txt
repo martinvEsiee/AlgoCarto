@@ -1,0 +1,37 @@
+Projet en assembleur uniquement pour le mode simulateur 
+du processeur LM3S1968
+
+
+Possible car les périphériques de ce processeur sont supportés dans Keil : 
+http://www.keil.com/dd/vtr/4305/11226.htm
+
+
+Objectif : Fait clignoter une broche du portF
+
+(Contrairement aux exemples ASM pour ST, le fichier startup.s n'a pas été modifié)
+
+
+
+Pour le lancer : 
+1)compiler : Project->Build Target
+2)Passer en mode debugger/simulateur : Debug->Start/Stop Debug Session
+3)S'assurer qu'on a bien l'affichage de la fenetre montrant l'etat du port G : Peripherals ->  General Purpose IO ->PortG
+4)Lancer l'execution : Debug ->Run (F5) 
+
+On doit voir la broche 2 passer de allumer à eteinte et vice versa, on doit aussi voir le contenu du registre DATA changer.
+
+6) on peut arreter et passer en mode pas à pas, on peut ainsi mettre des points d'arrets dans le
+code assembleur (fenetre du haut "Disassembly)	en cliquant sur les lignes voulues
+
+
+Structure :
+
+1) Enable la clock sur GPIOG
+2) Configure la broche 2  du GPIOG en sortie et en mode Digital
+3) boucle sans fin qui bascule l'etat du portG avec 2 boucles d'attente entre les 2.
+
+
+
+Bonnes modifs!
+Thierry
+

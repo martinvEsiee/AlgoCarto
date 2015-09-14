@@ -1,0 +1,17 @@
+.\rvmdk\sound_demo.o: sound_demo.c
+.\rvmdk\sound_demo.o: ..\..\..\inc/hw_types.h
+.\rvmdk\sound_demo.o: ..\..\..\inc/hw_memmap.h
+.\rvmdk\sound_demo.o: ..\..\..\inc/hw_ethernet.h
+.\rvmdk\sound_demo.o: ..\..\..\driverlib/ethernet.h
+.\rvmdk\sound_demo.o: ..\..\..\driverlib/sysctl.h
+.\rvmdk\sound_demo.o: ..\..\..\driverlib/gpio.h
+.\rvmdk\sound_demo.o: ..\..\..\driverlib/pin_map.h
+.\rvmdk\sound_demo.o: ..\..\..\driverlib/systick.h
+.\rvmdk\sound_demo.o: ..\..\..\driverlib/rom.h
+.\rvmdk\sound_demo.o: ..\..\..\driverlib/udma.h
+.\rvmdk\sound_demo.o: ..\drivers/display96x16x1.h
+.\rvmdk\sound_demo.o: ..\drivers/io.h
+.\rvmdk\sound_demo.o: ..\drivers/sensors.h
+.\rvmdk\sound_demo.o: ..\drivers/sound.h
+.\rvmdk\sound_demo.o: ..\drivers/wav.h
+.\rvmdk\sound_demo.o: sounds.h

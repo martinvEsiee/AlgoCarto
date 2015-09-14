@@ -1,0 +1,1 @@
+blinkcourt.o: blinkcourt.c

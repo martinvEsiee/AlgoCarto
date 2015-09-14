@@ -1,0 +1,4 @@
+Dependencies for Project 'EvalbotBlinkyFullASM', Target 'Target 1': (DO NOT MODIFY !)
+F (.\Startup.s)(0x5071D411)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I C:\Keil\ARM\RV31\Inc -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\Luminary --list "Startup.lst" --xref -o "Startup.o" --depend "Startup.d")
+F (.\BlinkyASMTG.s)(0x5071D392)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1" -I C:\Keil\ARM\RV31\Inc -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\Luminary --list "BlinkyASMTG.lst" --xref -o "BlinkyASMTG.o" --depend "BlinkyASMTG.d")
+F (.\README.txt)(0x506B2CF9)()
