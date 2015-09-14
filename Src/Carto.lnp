@@ -2,7 +2,6 @@
 ".\startup.o"
 ".\main.o"
 "..\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib"
-".\motorinit.o"
 ".\motor.o"
 ".\sensors.o"
 ".\io.o"

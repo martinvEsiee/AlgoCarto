@@ -1,1 +1,0 @@
-.\motorinit.o: motorInit.c

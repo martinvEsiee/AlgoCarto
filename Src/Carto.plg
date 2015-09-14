@@ -771,3 +771,19 @@ Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
+Load "C:\\Users\\arthur margerit\\AlgoCarto\\Src\\Carto.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Rebuild target 'Target 1'
+assembling Startup.s...
+compiling main.c...
+main.c(41): warning:  #111-D: statement is unreachable
+main.c(50): warning:  #1-D: last line of file ends without a newline
+compiling motor.c...
+compiling sensors.c...
+compiling io.c...
+linking...
+Program Size: Code=3752 RO-data=880 RW-data=12 ZI-data=260  
+".\Carto.axf" - 0 Errors, 2 Warning(s).
