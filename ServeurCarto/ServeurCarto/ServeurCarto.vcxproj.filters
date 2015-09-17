@@ -13,10 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers sources\SRC">
+      <UniqueIdentifier>{07bab412-dc83-4694-b475-ba83148f92b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Headers">
+      <UniqueIdentifier>{61f2ed88-582a-49c1-b713-e2d87ac1f410}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="Core.cpp">
+      <Filter>Fichiers sources\SRC</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Fichiers sources\SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="IHM.cpp">
+      <Filter>Fichiers sources\SRC</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core.h">
+      <Filter>Fichiers sources\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="IHM.h">
+      <Filter>Fichiers sources\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
