@@ -16,9 +16,6 @@
     <Filter Include="Fichiers sources\SRC">
       <UniqueIdentifier>{07bab412-dc83-4694-b475-ba83148f92b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers sources\Headers">
-      <UniqueIdentifier>{61f2ed88-582a-49c1-b713-e2d87ac1f410}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
@@ -30,13 +27,19 @@
     <ClCompile Include="IHM.cpp">
       <Filter>Fichiers sources\SRC</Filter>
     </ClCompile>
+    <ClCompile Include="SerialWrapper.cpp">
+      <Filter>Fichiers sources\SRC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SerialWrapper.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
     <ClInclude Include="Core.h">
-      <Filter>Fichiers sources\Headers</Filter>
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="IHM.h">
-      <Filter>Fichiers sources\Headers</Filter>
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
