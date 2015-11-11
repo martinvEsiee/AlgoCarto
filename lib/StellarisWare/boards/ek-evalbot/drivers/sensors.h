@@ -25,6 +25,8 @@
 #ifndef __SENSORS_H__
 #define __SENSORS_H__
 
+#include <inc/hw_types.h>
+
 //*****************************************************************************
 //
 // If building with a C++ compiler, make all of the definitions in this header
@@ -97,6 +99,9 @@ extern void BumpSensorsInit (void);
 extern tBoolean BumpSensorGetStatus(tBumper eBumper);
 extern void BumpSensorDebouncer(void);
 extern tBoolean BumpSensorGetDebounced(tBumper eBumper);
+extern void BumperEnableSide(tBumper bump);
+void BumpSensorsInterupEnable(void (*pfnCallback)(tBumper bump ));
+
 extern void WheelSensorsInit(void (*pfnCallback)(tWheel eWheel));
 extern void WheelSensorEnable(void);
 extern void WheelSensorDisable(void);

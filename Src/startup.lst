@@ -49,8 +49,8 @@ ARM Macro Assembler    Page 1
    29 00000000         ;
    30 00000000         ;*******************************************************
                        ***********************
-   31 00000000 00000100 
-                       Stack   EQU              0x00000100
+   31 00000000 00001000 
+                       Stack   EQU              0x00001000
    32 00000000         
    33 00000000         ;*******************************************************
                        ***********************
@@ -59,8 +59,8 @@ ARM Macro Assembler    Page 1
    36 00000000         ;
    37 00000000         ;*******************************************************
                        ***********************
-   38 00000000 00000000 
-                       Heap    EQU              0x00000000
+   38 00000000 00010000 
+                       Heap    EQU              0x00010000
    39 00000000         
    40 00000000         ;*******************************************************
 
@@ -79,40 +79,40 @@ ARM Macro Assembler    Page 2
 =3
    46 00000000         StackMem
    47 00000000                 SPACE            Stack
-   48 00000100         __initial_sp
-   49 00000100         
-   50 00000100         ;*******************************************************
+   48 00001000         __initial_sp
+   49 00001000         
+   50 00001000         ;*******************************************************
                        ***********************
-   51 00000100         ;
-   52 00000100         ; Allocate space for the heap.
-   53 00000100         ;
-   54 00000100         ;*******************************************************
+   51 00001000         ;
+   52 00001000         ; Allocate space for the heap.
+   53 00001000         ;
+   54 00001000         ;*******************************************************
                        ***********************
-   55 00000100                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+   55 00001000                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
 3
    56 00000000         __heap_base
    57 00000000         HeapMem
    58 00000000                 SPACE            Heap
-   59 00000000         __heap_limit
-   60 00000000         
-   61 00000000         ;*******************************************************
+   59 00010000         __heap_limit
+   60 00010000         
+   61 00010000         ;*******************************************************
                        ***********************
-   62 00000000         ;
-   63 00000000         ; Indicate that the code in this file preserves 8-byte a
+   62 00010000         ;
+   63 00010000         ; Indicate that the code in this file preserves 8-byte a
                        lignment of the stack.
-   64 00000000         ;
-   65 00000000         ;*******************************************************
+   64 00010000         ;
+   65 00010000         ;*******************************************************
                        ***********************
-   66 00000000                 PRESERVE8
-   67 00000000         
-   68 00000000         ;*******************************************************
+   66 00010000                 PRESERVE8
+   67 00010000         
+   68 00010000         ;*******************************************************
                        ***********************
-   69 00000000         ;
-   70 00000000         ; Place code into the reset code section.
-   71 00000000         ;
-   72 00000000         ;*******************************************************
+   69 00010000         ;
+   70 00010000         ; Place code into the reset code section.
+   71 00010000         ;
+   72 00010000         ;*******************************************************
                        ***********************
-   73 00000000                 AREA             RESET, CODE, READONLY
+   73 00010000                 AREA             RESET, CODE, READONLY
    74 00000000                 THUMB
    75 00000000         
    76 00000000         ;*******************************************************
@@ -124,7 +124,7 @@ ARM Macro Assembler    Page 2
                        ***********************
    81 00000000                 EXPORT           __Vectors
    82 00000000         __Vectors
-   83 00000000 00000100        DCD              StackMem + Stack ; Top of Stack
+   83 00000000 00001000        DCD              StackMem + Stack ; Top of Stack
                                                             
    84 00000004 00000000        DCD              Reset_Handler ; Reset Handler
    85 00000008 00000000        DCD              NmiSR       ; NMI Handler
@@ -588,7 +588,7 @@ Symbol: StackMem
    Uses
       At line 83 in file Startup.s
 Comment: StackMem used once
-__initial_sp 00000100
+__initial_sp 00001000
 
 Symbol: __initial_sp
    Definitions
@@ -627,7 +627,7 @@ Symbol: __heap_base
    Uses
       At line 318 in file Startup.s
 Comment: __heap_base used once
-__heap_limit 00000000
+__heap_limit 00010000
 
 Symbol: __heap_limit
    Definitions
@@ -847,7 +847,7 @@ Comment: .text unused
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Absolute symbols
 
-Heap 00000000
+Heap 00010000
 
 Symbol: Heap
    Definitions
@@ -855,7 +855,7 @@ Symbol: Heap
    Uses
       At line 58 in file Startup.s
 Comment: Heap used once
-Stack 00000100
+Stack 00001000
 
 Symbol: Stack
    Definitions

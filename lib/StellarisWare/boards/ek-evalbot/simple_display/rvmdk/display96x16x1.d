@@ -1,5 +1,5 @@
 .\rvmdk\display96x16x1.o: ..\drivers\display96x16x1.c
-.\rvmdk\display96x16x1.o: C:\Keil\ARM\RV31\Inc\string.h
+.\rvmdk\display96x16x1.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 .\rvmdk\display96x16x1.o: ..\..\..\inc/hw_i2c.h
 .\rvmdk\display96x16x1.o: ..\..\..\inc/hw_memmap.h
 .\rvmdk\display96x16x1.o: ..\..\..\inc/hw_sysctl.h
@@ -10,4 +10,4 @@
 .\rvmdk\display96x16x1.o: ..\..\..\driverlib/i2c.h
 .\rvmdk\display96x16x1.o: ..\..\..\driverlib/sysctl.h
 .\rvmdk\display96x16x1.o: ..\..\..\driverlib/rom.h
-.\rvmdk\display96x16x1.o: ..\drivers/display96x16x1.h
+.\rvmdk\display96x16x1.o: ..\..\..\boards/ek-evalbot/drivers/display96x16x1.h

@@ -73,6 +73,15 @@ static void (*g_pfnWheelCallback)(tWheel);
 
 //*****************************************************************************
 //
+// Pointer to the application function called for each click of the BUMP
+// position/speed sensor.
+//
+//*****************************************************************************
+static void (*g_pfnBumpCallback)(tBumper);
+
+
+//*****************************************************************************
+//
 // Holds the debounced state of the bump sensors.
 //
 //*****************************************************************************
@@ -102,7 +111,31 @@ BumpSensorsInit (void)
     GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1);
     GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1,
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+	
 }
+
+
+
+
+void BumpSensorsInterupEnable(void (*pfnCallback)(tBumper)){
+
+			g_pfnBumpCallback = pfnCallback;
+	
+}
+
+void BumperEnableSide(tBumper bump){
+		
+		if(bump == BUMP_LEFT)
+    {
+        GPIOPinIntEnable(GPIO_PORTE_BASE, GPIO_PIN_0);
+    }
+    else
+    {
+        GPIOPinIntEnable(GPIO_PORTE_BASE, GPIO_PIN_1);
+    }
+
+}
+
 
 //*****************************************************************************
 //
@@ -414,6 +447,7 @@ WheelSensorIntEnable(tWheel eWheel)
         GPIOPinIntClear(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
         GPIOPinIntEnable(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
     }
+		
 }
 
 //*****************************************************************************
@@ -544,6 +578,34 @@ WheelSensorIntHandler(void)
             g_pfnWheelCallback(WHEEL_RIGHT);
         }
     }
+		
+					//interup for the RIGHT side
+		ulStatus = GPIOPinIntStatus(GPIO_PORTE_BASE,true);
+		if(ulStatus & GPIO_PIN_0){
+     //
+        // Clear the interrupt.
+        //
+				g_pfnBumpCallback(BUMP_LEFT);
+			
+        GPIOPinIntClear(GPIO_PORTE_BASE,
+                            GPIO_PIN_0);
+				
+			}
+			
+			
+			//interup for the RIGHT side
+				ulStatus = GPIOPinIntStatus(GPIO_PORTE_BASE,true);
+		if(ulStatus & GPIO_PIN_1){
+			     //
+        // Clear the interrupt.
+        //
+				g_pfnBumpCallback(BUMP_RIGHT);
+        GPIOPinIntClear(GPIO_PORTE_BASE,
+                            GPIO_PIN_1);
+				
+
+			}
+		
 }
 
 //*****************************************************************************

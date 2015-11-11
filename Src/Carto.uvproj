@@ -335,7 +335,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>3</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -346,10 +346,10 @@
             <Rwpi>0</Rwpi>
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
-            <uSurpInc>0</uSurpInc>
+            <uSurpInc>1</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>PART_LM3S9B92 NO_SERVEUR_DEF</Define>
               <Undefine></Undefine>
               <IncludePath>..\lib\StellarisWare</IncludePath>
             </VariousControls>
@@ -408,9 +408,29 @@
               <FilePath>..\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib</FilePath>
             </File>
             <File>
-              <FileName>motorInit.c</FileName>
+              <FileName>io.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\motorInit.c</FilePath>
+              <FilePath>..\lib\StellarisWare\boards\ek-evalbot\drivers\io.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensors.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.c</FilePath>
+            </File>
+            <File>
+              <FileName>carto.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\carto.c</FilePath>
+            </File>
+            <File>
+              <FileName>Xbee_Protoc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Xbee_Protoc.c</FilePath>
             </File>
           </Files>
         </Group>

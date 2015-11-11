@@ -7,4 +7,7 @@
 .\main.o: ..\lib\StellarisWare\driverlib/rom.h
 .\main.o: ..\lib\StellarisWare\boards/ek-evalbot/drivers/motor.h
 .\main.o: ..\lib\StellarisWare\boards/ek-evalbot/drivers/sensors.h
+.\main.o: ..\lib\StellarisWare\boards/ek-evalbot/drivers/display96x16x1.h
 .\main.o: ..\lib\StellarisWare\boards/ek-evalbot/drivers/io.h
+.\main.o: Xbee_Protoc.h
+.\main.o: Carto.h

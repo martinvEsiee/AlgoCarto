@@ -28,14 +28,14 @@
 ; <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ;
 ;******************************************************************************
-Stack   EQU     0x00000100
+Stack   EQU     0x00001000
 
 ;******************************************************************************
 ;
 ; <o> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ;
 ;******************************************************************************
-Heap    EQU     0x00000000
+Heap    EQU     0x00010000
 
 ;******************************************************************************
 ;
@@ -101,7 +101,7 @@ __Vectors
         DCD     IntDefaultHandler           ; GPIO Port C
         DCD     IntDefaultHandler           ; GPIO Port D
 		extern WheelSensorIntHandler
-        DCD     WheelSensorIntHandler           ; GPIO Port E
+        DCD     WheelSensorIntHandler       ; GPIO Port E
         DCD     IntDefaultHandler           ; UART0 Rx and Tx
         DCD     IntDefaultHandler           ; UART1 Rx and Tx
         DCD     IntDefaultHandler           ; SSI0 Rx and Tx
