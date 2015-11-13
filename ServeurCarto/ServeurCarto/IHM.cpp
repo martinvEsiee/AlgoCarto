@@ -1,33 +1,137 @@
 #include "IHM.h"
+#include <string>
 #include <SFML/Graphics.hpp>
 
 
 IHM::IHM()
 {
-	valeur = 42;
+	_valeur = 42;
+
+	
+	if (!font.loadFromFile("Arial.ttf"))
+	{
+		//Nothing goes here...?
+	}
+
+	
+	text.setFont(font);
+	text.setString("Hello World");
+	text.setCharacterSize(140);
+	text.setColor(sf::Color::White);
+	text.setPosition(0.0f, 0.0f);
+
+	
+	status.setFont(font);
+	status.setString("status de l'évalbot : Vide");
+	status.setCharacterSize(20);
+	status.setColor(sf::Color::White);
+	status.setPosition(10.0f, 0.0f);
+
+	
+	zone.setFont(font);
+	zone.setString("zone découverte : " + 0);
+	zone.setCharacterSize(20);
+	zone.setColor(sf::Color::White);
+	zone.setPosition(10.0f, 30.0f);
+
+	
+	nbObstacles.setFont(font);
+	nbObstacles.setString("nbObstacles découvert : " + std::to_string(0));
+	nbObstacles.setCharacterSize(20);
+	nbObstacles.setColor(sf::Color::White);
+	nbObstacles.setPosition(10.0f, 60.0f);
+
+
+
+
+
+//	window = sf::RenderWindow(sf::VideoMode(600, 600), std::to_string(_valeur));
+	//window.draw(status);
+	//window.setView(view2);
+
+	//window2 = sf::RenderWindow(sf::VideoMode(400, 400), "Rendu Evalbot");
+
+
+
+
+
+	//window.clear(sf::Color(211, 211, 211));
 
 }
 
-IHM::IHM(int i)
-{
-	valeur = i;
 
-}
+
+// Getters, Stters
 
 int IHM::getValeur()
 {
-	return valeur;
+	return _valeur;
 }
 
-void IHM::Init()
+void IHM::setValeur(int gvaleur) {
+	_valeur = gvaleur;
+}
+
+void IHM::Render(sf::RenderWindow window, sf::RenderWindow window2)
 {
 
-	sf::RenderWindow window(sf::VideoMode(200, 200), std::to_string(valeur));
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+
+		
+
+			// on gère les évènements
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+					window.close();
+			}
+
+			
+
+			// on dessine le niveau
+			window.clear(sf::Color(200, 200, 200));
+			
+
+			/*
+			for (int i = 0; i < 100;i++)
+				window.draw(grille[i]);*/
+			
+			window.display();
+
+			window2.draw(status);
+			window2.draw(zone);
+			window2.draw(nbObstacles);
+			window2.display();
+
+
+}
+
+
+
+bool IHM::isOpen(sf::RenderWindow window)
+{
+
+	return window.isOpen();
+
+}
+
+int IHM::mainIHM()
+{
+	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(600, 600), std::to_string(_valeur));
+	sf::RenderWindow window2 = sf::RenderWindow(sf::VideoMode(400, 400), "Rendu Evalbot");
+
+	sf::View view2(sf::Vector2f(300, 300), sf::Vector2f(600, 600));
+	view2.setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f)); // prend une zone de 600*400
+	view2.zoom(2);
+
+
+	window.draw(status);
+	window.setView(view2);
+	window.clear(sf::Color(211, 211, 211));
 
 	while (window.isOpen())
 	{
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -35,9 +139,28 @@ void IHM::Init()
 				window.close();
 		}
 
-		window.clear();
-		window.draw(shape);
+
+
+		// on dessine le niveau
+		window.clear(sf::Color(200, 200, 200));
+
+
+		/*
+		for (int i = 0; i < 100;i++)
+		window.draw(grille[i]);*/
+
 		window.display();
+
+		window2.draw(status);
+		window2.draw(zone);
+		window2.draw(nbObstacles);
+		window2.display();
+		std::cout << "Hello " << std::endl;
 	}
 
+
+
+
+
+	return 0;
 }

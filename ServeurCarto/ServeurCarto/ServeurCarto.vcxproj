@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Fenetre.cpp" />
     <ClCompile Include="IHM.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
