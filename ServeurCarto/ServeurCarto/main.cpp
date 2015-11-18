@@ -1,11 +1,11 @@
 #include <String>
-#include "Core.h"
+#include "IHM.h"
 #include <vector>
 
 
 int main()
 {
-	Core* a = new Core();
+	IHM* a = new IHM();
 	
 	
 	std::vector<int> levelMain
@@ -23,7 +23,7 @@ int main()
 	};
 
 
-	std::vector<int> indexMain =  {0,1};
+	std::vector<int> indexMain = { 0, 1 };/*
 	std::vector<int> indexMain2 = {0,2};
 	std::vector<int> indexMain3 = {1,1};
 	std::vector<int> indexMain4 = {1,2};
@@ -34,9 +34,11 @@ int main()
 	a->addTile(levelMain, indexMain2);
 	a->addTile(levelMain, indexMain3);
 	a->addTile(levelMain, indexMain4);
-	a->addTile(levelMain, indexMain5);
+	a->addTile(levelMain, indexMain5);*/
 	
 	
+	
+	a->mainIHM(a->getCore());
 	//a->Init();
 
 

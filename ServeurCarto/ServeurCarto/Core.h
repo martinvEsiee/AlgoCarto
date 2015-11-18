@@ -1,13 +1,12 @@
 #include <iostream>
-#include "IHM.h"
-
-
+#include <SFML/Graphics.hpp>
+#include "Tilemap.cpp"
+#include <list>
 
 class Core
 {
 
-private:
-	IHM* foo = new IHM();
+	public:
 
 	TileMap Map[100];
 	int indexTile = 0;
@@ -16,13 +15,11 @@ private:
 	float _zone;
 
 
-public :
+
+
 	Core();
 	void Init();
 
-
-
-	IHM* getIHM();
 	std::string getStatus();
 	void setStatus(std::string gstatus);
 
@@ -37,9 +34,9 @@ public :
 
 	void addTile(std::vector<int> tile, std::vector<int> newPos);
 	int* toArray(std::vector<int>);
-
+	TileMap getMap(int i);
 
 	void loop();
-
+	void doUpdate();
 };
 

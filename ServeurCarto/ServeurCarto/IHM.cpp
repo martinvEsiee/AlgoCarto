@@ -6,8 +6,7 @@
 IHM::IHM()
 {
 	_valeur = 42;
-
-	
+	c = new Core();
 	if (!font.loadFromFile("Arial.ttf"))
 	{
 		//Nothing goes here...?
@@ -72,6 +71,14 @@ void IHM::setValeur(int gvaleur) {
 	_valeur = gvaleur;
 }
 
+void IHM::addTile(std::vector<int> tile, std::vector<int> newPos)
+{
+	c->addTile(tile,newPos);
+}
+
+
+
+
 void IHM::Render(sf::RenderWindow window, sf::RenderWindow window2)
 {
 
@@ -115,7 +122,13 @@ bool IHM::isOpen(sf::RenderWindow window)
 
 }
 
-int IHM::mainIHM()
+Core* IHM::getCore()
+{
+	return c;
+}
+
+
+int IHM::mainIHM(Core* c)
 {
 	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(600, 600), std::to_string(_valeur));
 	sf::RenderWindow window2 = sf::RenderWindow(sf::VideoMode(400, 400), "Rendu Evalbot");
@@ -129,8 +142,14 @@ int IHM::mainIHM()
 	window.setView(view2);
 	window.clear(sf::Color(211, 211, 211));
 
+
+
 	while (window.isOpen())
 	{
+		// Appel au serveur
+		c->doUpdate();
+		std::cout << "Bonjour" << std::endl;
+		// Appel de la MaJ des données
 
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -145,9 +164,9 @@ int IHM::mainIHM()
 		window.clear(sf::Color(200, 200, 200));
 
 
-		/*
+		
 		for (int i = 0; i < 100;i++)
-		window.draw(grille[i]);*/
+			window.draw(c->getMap(i));
 
 		window.display();
 
@@ -155,7 +174,6 @@ int IHM::mainIHM()
 		window2.draw(zone);
 		window2.draw(nbObstacles);
 		window2.display();
-		std::cout << "Hello " << std::endl;
 	}
 
 

@@ -1,21 +1,18 @@
 #include "Core.h"
-#include <SFML/Graphics.hpp>
+
 
 Core::Core()
 {
-	foo = new IHM();
+
 	_status = "Init";
 	_nbObstacles = 0;
 	_zone = 0.0;
+	
+	
 }
 
 
 
-IHM* Core::getIHM()
-{
-
-	return Core::foo;
-}
 
 
 std::string Core::getStatus()
@@ -59,11 +56,40 @@ void Core::addTile(std::vector<int> tile, std::vector<int> newPos)
 	indexTile++;
 }
 
-int* toArray(std::vector<int> tile)
+int* Core::toArray(std::vector<int> tile)
 {
 	return tile.data();
 
 }
+
+TileMap Core::getMap(int i)
+{
+
+	return Core::Map[i];
+}
+
+void Core::doUpdate()
+{
+	std::vector<int> levelMain
+	{
+		0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+		0, 1, 1, 1, 1, 1, 1, 0, 0, 0,
+		1, 1, 0, 0, 0, 0, 0, 0, 3, 3,
+		0, 1, 0, 0, 2, 0, 3, 3, 3, 0,
+		0, 1, 1, 0, 3, 3, 3, 0, 0, 0,
+		0, 0, 1, 0, 3, 0, 2, 2, 0, 0,
+		2, 0, 1, 0, 3, 0, 2, 2, 2, 0,
+		0, 0, 1, 0, 3, 2, 2, 2, 0, 0,
+		0, 0, 1, 1, 1, 1, 1, 2, 3, 0,
+		0, 0, 1, 1, 1, 1, 1, 2, 3, 0,
+	};
+
+	std::vector<int> indexMain5 = { 4, 4 };
+	addTile(levelMain, indexMain5);
+
+
+}
+
 //
 //void Core::loop()
 //{
