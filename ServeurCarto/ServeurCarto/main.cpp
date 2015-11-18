@@ -5,6 +5,7 @@
 
 int main()
 {
+	std::cout << "hello" << std::endl;
 	IHM* a = new IHM();
 	
 	
@@ -23,7 +24,10 @@ int main()
 	};
 
 
-	std::vector<int> indexMain = { 0, 1 };/*
+	std::vector<int> indexMain = { 0, 1 };
+	std::cout << "hello2" << std::endl;
+	
+	/*
 	std::vector<int> indexMain2 = {0,2};
 	std::vector<int> indexMain3 = {1,1};
 	std::vector<int> indexMain4 = {1,2};
@@ -38,7 +42,7 @@ int main()
 	
 	
 	
-	a->mainIHM(a->getCore());
+	//a->mainIHM(a->getCore());
 	//a->Init();
 
 

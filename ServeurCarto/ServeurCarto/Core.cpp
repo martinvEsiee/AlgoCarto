@@ -90,16 +90,3 @@ void Core::doUpdate()
 
 }
 
-//
-//void Core::loop()
-//{
-//	
-//	while (foo->isOpen())
-//	{
-//
-//		foo->Render(Map);
-//
-//	}
-//
-//
-//}

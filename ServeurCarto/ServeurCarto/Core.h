@@ -35,8 +35,6 @@ class Core
 	void addTile(std::vector<int> tile, std::vector<int> newPos);
 	int* toArray(std::vector<int>);
 	TileMap getMap(int i);
-
-	void loop();
 	void doUpdate();
 };
 
