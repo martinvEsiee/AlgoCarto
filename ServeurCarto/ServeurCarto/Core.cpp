@@ -70,22 +70,29 @@ TileMap Core::getMap(int i)
 
 void Core::doUpdate()
 {
-	std::vector<int> levelMain
-	{
-		0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-		0, 1, 1, 1, 1, 1, 1, 0, 0, 0,
-		1, 1, 0, 0, 0, 0, 0, 0, 3, 3,
-		0, 1, 0, 0, 2, 0, 3, 3, 3, 0,
-		0, 1, 1, 0, 3, 3, 3, 0, 0, 0,
-		0, 0, 1, 0, 3, 0, 2, 2, 0, 0,
-		2, 0, 1, 0, 3, 0, 2, 2, 2, 0,
-		0, 0, 1, 0, 3, 2, 2, 2, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 2, 3, 0,
-		0, 0, 1, 1, 1, 1, 1, 2, 3, 0,
-	};
+	//std::vector<int> levelMain
+	//{
+	//	2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+	//	0, 1, 1, 1, 1, 1, 1, 0, 0, 0,
+	//	1, 1, 0, 0, 0, 0, 0, 0, 3, 3,
+	//	0, 1, 0, 0, 2, 0, 3, 3, 3, 0,
+	//	0, 1, 1, 0, 3, 3, 3, 0, 0, 0,
+	//	0, 0, 1, 0, 3, 0, 2, 2, 0, 0,
+	//	2, 0, 1, 0, 3, 0, 2, 2, 2, 0,
+	//	0, 0, 1, 0, 3, 2, 2, 2, 0, 0,
+	//	0, 0, 1, 1, 1, 1, 1, 2, 3, 0,
+	//	0, 0, 1, 1, 1, 1, 1, 2, 3, 0,
+	//};
 
-	std::vector<int> indexMain5 = { 4, 4 };
-	addTile(levelMain, indexMain5);
+	//std::vector<int> indexMain5 = { 10, 10 };
+	//addTile(levelMain, indexMain5);
+
+
+
+	////TODO
+	//Update le statut,
+	//	Update le nb d'obstacles si nouveaux
+	//	update la map en yn ajoutant une trame.
 
 
 }

@@ -2,7 +2,6 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-
 IHM::IHM()
 {
 	_valeur = 42;
@@ -127,28 +126,66 @@ Core* IHM::getCore()
 	return c;
 }
 
+void IHM::fillIn()
+{
+	std::vector<int> levelMain
+	{
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+		0, 0, 0, 1, 2, 1, 0, 0, 0, 0,
+		0, 0, 1, 2, 3, 2, 1, 0, 0, 0,
+		0, 0, 0, 1, 2, 1, 0, 0, 0, 0,
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	};
+	std::vector<int> indexMain = { 0, 0 };
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			indexMain = { i, j };
+			addTile(levelMain, indexMain);
+			
+		}
+	}
+
+
+
+
+}
+
+
 
 int IHM::mainIHM(Core* c)
 {
-	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(600, 600), std::to_string(_valeur));
+	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(800, 800), std::to_string(_valeur));
 	sf::RenderWindow window2 = sf::RenderWindow(sf::VideoMode(400, 400), "Rendu Evalbot");
 
-	sf::View view2(sf::Vector2f(300, 300), sf::Vector2f(600, 600));
-	view2.setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f)); // prend une zone de 600*400
-	view2.zoom(2);
+	//sf::View view2(sf::Vector2f(300, 300), sf::Vector2f(600, 600));
+	//view2.setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f)); // prend une zone de 600*400
+	//view2.zoom(2);
 
 
 	window.draw(status);
-	window.setView(view2);
+	//window.setView(view2);
 	window.clear(sf::Color(211, 211, 211));
 
-
+	fillIn();
+	bool t = true;
 
 	while (window.isOpen())
 	{
-		// Appel au serveur
-		c->doUpdate();
-		std::cout << "Bonjour" << std::endl;
+		/*// Appel au serveur
+		if (t)
+		{
+			c->doUpdate(); // problem HERE
+			std::cout << "Bonjour" << std::endl;
+			t = false;
+		}*/
+		
 		// Appel de la MaJ des données
 
 		sf::Event event;

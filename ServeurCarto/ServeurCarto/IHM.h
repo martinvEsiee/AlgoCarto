@@ -38,4 +38,7 @@ public:
 	Core* getCore();
 	int mainIHM(Core* c);
 	void addTile(std::vector<int> tile, std::vector<int> newPos);
+
+	void fillIn();
+
 };
