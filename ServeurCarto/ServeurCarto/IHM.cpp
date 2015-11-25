@@ -43,6 +43,8 @@ IHM::IHM()
 
 
 
+
+
 //	window = sf::RenderWindow(sf::VideoMode(600, 600), std::to_string(_valeur));
 	//window.draw(status);
 	//window.setView(view2);
@@ -127,7 +129,7 @@ Core* IHM::getCore()
 }
 
 void IHM::fillIn()
-{
+{/*
 	std::vector<int> levelMain
 	{
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -141,12 +143,12 @@ void IHM::fillIn()
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
-	std::vector<int> indexMain = { 0, 0 };
+	
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			indexMain = { i, j };
+			std::vector<int> indexMain = { i, j };
 			addTile(levelMain, indexMain);
 			
 		}
@@ -154,15 +156,17 @@ void IHM::fillIn()
 
 
 
-
+*/
 }
 
 
 
 int IHM::mainIHM(Core* c)
 {
-	sf::RenderWindow window = sf::RenderWindow(sf::VideoMode(800, 800), std::to_string(_valeur));
-	sf::RenderWindow window2 = sf::RenderWindow(sf::VideoMode(400, 400), "Rendu Evalbot");
+	sf::VideoMode vm(800, 800);
+	std::string str(std::to_string(_valeur));
+	sf::RenderWindow window(vm, str);
+	sf::RenderWindow window2(sf::VideoMode(400, 400), "Rendu Evalbot");
 
 	//sf::View view2(sf::Vector2f(300, 300), sf::Vector2f(600, 600));
 	//view2.setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f)); // prend une zone de 600*400
@@ -188,6 +192,10 @@ int IHM::mainIHM(Core* c)
 		
 		// Appel de la MaJ des données
 
+	
+		c->doUpdate();
+		c->doAction();
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -202,8 +210,11 @@ int IHM::mainIHM(Core* c)
 
 
 		
-		for (int i = 0; i < 100;i++)
-			window.draw(c->getMap(i));
+		//for (int i = 0; i < 100;i++)
+		//	window.draw(c->getMap(i));
+
+		window.draw(c->tabTile);
+
 
 		window.display();
 

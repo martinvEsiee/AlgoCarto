@@ -21,13 +21,11 @@ private:
 	//sf::RenderWindow window2;
 	//added 0311
 
-	
-
-
 
 
 
 public:
+	
 
 	IHM();
 	//IHM(int i, std::string s, int nb, float z);
