@@ -7,5 +7,6 @@
 .\xbee_protoc.o: ..\lib\StellarisWare\driverlib/pin_map.h
 .\xbee_protoc.o: ..\lib\StellarisWare\driverlib/rom.h
 .\xbee_protoc.o: ..\lib\StellarisWare\inc/hw_memmap.h
-.\xbee_protoc.o: C:\Keil\ARM\ARMCC\bin\..\include\stdlib.h
-.\xbee_protoc.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\xbee_protoc.o: D:\pgr\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\xbee_protoc.o: D:\pgr\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\xbee_protoc.o: carto.h

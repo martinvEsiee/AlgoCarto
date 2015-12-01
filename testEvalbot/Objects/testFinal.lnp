@@ -1,0 +1,12 @@
+--cpu Cortex-M3
+".\objects\startup.o"
+".\objects\main.o"
+".\objects\capteur.o"
+".\objects\motor_my.o"
+".\objects\message.o"
+"..\AlgoCarto\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib"
+".\objects\sensors.o"
+".\objects\motor.o"
+--library_type=microlib --ro-base 0x00000000 --entry 0x00000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\testFinal.map" -o .\Objects\testFinal.axf

@@ -1,0 +1,10 @@
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\inc/hw_memmap.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\inc/hw_types.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\driverlib/debug.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\driverlib/gpio.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\driverlib/pin_map.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\driverlib/pwm.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\driverlib/rom.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\driverlib/sysctl.h
+.\objects\motor.o: ..\AlgoCarto\lib\StellarisWare\boards\ek-evalbot\drivers\motor.h

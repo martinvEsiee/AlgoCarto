@@ -15,9 +15,10 @@
 //map => sub map 30
 
 #define A0 		0
-#define	A90		7
-#define A180	14
-#define A270	21
+#define	A90		13
+#define A180	A90*2
+#define A270	A90*3
+#define A360	A90*4
 
 
 
@@ -87,8 +88,9 @@ typedef struct NONAME_CARTO{
 typedef struct{
 	int X;
 	int Y;
-	unsigned char angle;
+	int angle;
 	Carto_order * order;
+		int spiralCounter;
 }Carto_Poss;
 
 typedef struct NONAME2 LIST_FOR_MAP;
@@ -106,19 +108,22 @@ typedef struct{
 
 
 //GLOBAL VAR EXEPTION ONLY//
-static Carto_Map * GLOBAL_VAR_MAP;
+extern Carto_Map * GLOBAL_VAR_MAP;
 //GLOBAL VAR EXEPTION ONLY//
 
 void Carto_map_set(Carto_Map * map ,int x,int y , Carto_data_Type data);
 Carto_Map* Carto_InitCarto(void);
 Carto_order * Carto_order_build(Carto_order_list action,unsigned int time);
-void Carto_order_add(Carto_order * g,Carto_order* next);
+void Carto_order_add(Carto_order* next);
 void Carto_order_interprete(Carto_order * order);
-Carto_Poss* Carto_cons_Poss(int x,int y,unsigned char angle);
+Carto_Poss* Carto_cons_Poss(int x,int y,int angle);
 void Carto_GoTo(Carto_Poss * poss,Carto_Poss* goTo);
 Carto_subMap* Carto_subMap_build(int x,int y,Carto_Map * map);
 void Carto_subMap_set(int x , int y ,Carto_Map  * map);
 void Carto_map_addsubmap(Carto_Map * map, Carto_subMap * submap);
 LIST_FOR_MAP * Carto_map_getSubMap(Carto_Map* map, int x ,int y);
 void Carto_evalbot_update_data(Carto_Map *  map);
+Carto_order*
+carto_evalbot_rotation(int n );
+void getORDER();
 #endif

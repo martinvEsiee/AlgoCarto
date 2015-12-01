@@ -11,3 +11,5 @@
 .\main.o: ..\lib\StellarisWare\boards/ek-evalbot/drivers/io.h
 .\main.o: Xbee_Protoc.h
 .\main.o: Carto.h
+.\main.o: D:\pgr\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\main.o: D:\pgr\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

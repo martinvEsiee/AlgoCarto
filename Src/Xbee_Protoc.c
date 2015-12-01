@@ -8,7 +8,7 @@
 #include "inc/hw_memmap.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include "carto.h"
 typedef enum {
 	START_OCTET = 0xFF,
 	STOP_OCTET  = 0xFE,
@@ -17,15 +17,16 @@ typedef enum {
 
 //env un char
 void uartPutChar(unsigned char ch){
-	if(ch !=START_OCTET && ch != STOP_OCTET)
+	if(ch != START_OCTET && ch != STOP_OCTET)
 		UARTCharPut(UART1_BASE,ch);
 	return;
 }
 
+
+
 void UARTCharPutProtoc(Xbee_Protoc cg){
 	UARTCharPut(UART1_BASE,(unsigned char)cg);
 }
-
 
 
 Xbee_Mess * Xbee_mess_build(
@@ -55,8 +56,6 @@ Xbee * Xbee_protoc_init(void){
 		
      SysCtlClockSet(SYSCTL_SYSDIV_1 | SYSCTL_USE_OSC | SYSCTL_OSC_MAIN |
                    SYSCTL_XTAL_16MHZ);
-	
-
 		SysCtlPeripheralEnable(SYSCTL_PERIPH_UART1);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
     GPIOPinConfigure(GPIO_PB4_U1RX);
@@ -150,11 +149,10 @@ void uartPutString(char* mess,int size){
 
 //recupere un char
 char uartgetChar(){
-	
 			char ret =UARTCharGet(UART1_BASE);
-			#ifdef DEBUG
+			
 			UARTCharPut(UART1_BASE,ret);
-			#endif	
+				
 	return ret;
 }
 
@@ -232,9 +230,35 @@ void Xbee_Send_Message(Xbee_protoc_fifo * sendFIFO){
 	
 	return;
 }
+void getORDER(){
+
+	char a = uartgetChar();
+	
+	switch(a){
+		case 'q':
+				 Carto_order_add(Carto_order_build(GO_UP,10));
+			break;
+		case 'd':
+				Carto_order_add(Carto_order_build(TURN_LEFT,A90));
+			break;
+		case 'z':
+				Carto_order_add(Carto_order_build(TURN_RIGHT,A90));
+			break;
+		case 's':
+				Carto_order_add(Carto_order_build(GO_BACK,10));
+			break;
+		default:
+			Carto_order_add(Carto_order_build(WAIT,1));
+		
+	}
+
+}
+
+
+
 void test(){
 	while(1)
 	{
-	uartPutChar(uartgetChar());
-}
+		uartPutChar(uartgetChar());
+	}
 }

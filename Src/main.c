@@ -14,17 +14,31 @@
 #include "Xbee_Protoc.h"
 #include "Carto.h"
 
-
+#include <stdlib.h>
+#include <stdio.h>
 int main() {
-	
+
 	Xbee * xb = Xbee_protoc_init();
 	GLOBAL_VAR_MAP = Carto_InitCarto();
-	GLOBAL_VAR_MAP->evalbot->order = Carto_order_build(GO_UP,10);
-	GLOBAL_VAR_MAP->evalbot->order->next = Carto_order_build(GO_BACK,10);
+	
+	 Carto_order_add(Carto_order_build(GO_UP,10));
+	 Carto_order_add(Carto_order_build(GO_BACK,5));
+	
+	/*
+	GLOBAL_VAR_MAP->evalbot->order->next = Carto_order_build(GO_BACK,20);
+	GLOBAL_VAR_MAP->evalbot->order->next->next = Carto_order_build(TURN_LEFT,15);
+	GLOBAL_VAR_MAP->evalbot->order->next->next->next = Carto_order_build(GO_UP,10);
+	*/
 	
 	
-	while(1)
+	while(1){
 		Carto_order_interprete(GLOBAL_VAR_MAP->evalbot->order);
-	
-	return 0;
+		//if(GLOBAL_VAR_MAP->evalbot->order->ordre == WAIT ){
+			
+			//getORDER();
+			
+		//}
+	}
+	return 1;
 }
+

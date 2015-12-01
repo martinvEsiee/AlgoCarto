@@ -2,6 +2,12 @@
 #include "stdlib.h"
 #include "boards/ek-evalbot/drivers/motor.h"
 #include "boards/ek-evalbot/drivers/sensors.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+Carto_Map * GLOBAL_VAR_MAP;
+Carto_order* theLast=NULL;
 
 void interuptFunctionWheel(tWheel sens){
 	
@@ -20,6 +26,7 @@ void interuptFunctionWheel(tWheel sens){
 void interuptFunctionBump(tBumper B){
 	if(B == BUMP_LEFT)
 		GLOBAL_VAR_MAP->evalbot->order->event |= OBSTABLE_RIGHT;
+	
 	if(B == BUMP_RIGHT)
 		GLOBAL_VAR_MAP->evalbot->order->event |= OBSTABLE_LEFT;
 	
@@ -55,8 +62,10 @@ void Carto_order_actualise(Carto_Poss * evalbot){
 		Carto_evalbot_update_data(GLOBAL_VAR_MAP);
 		
 		if(evalbot->order->time > 1){
+			
 			evalbot->order->time -= 1;
 			evalbot->order->state = TODO;
+			
 		}else{
 			neworder = evalbot->order->next;	
 			//clean map 
@@ -67,7 +76,7 @@ void Carto_order_actualise(Carto_Poss * evalbot){
 				evalbot->order = neworder;
 			}else{
 				//temporaire
-				evalbot->order = Carto_order_build(WAIT,1);		
+				Carto_order_add(Carto_order_build(WAIT,1));		
 			}
 	}
 		return;
@@ -78,13 +87,15 @@ void Carto_order_actualise(Carto_Poss * evalbot){
 		Carto_evalbot_update_data(GLOBAL_VAR_MAP);
 		
 		//permet de corigé le pb
+		theLast = NULL;
 		switch(evalbot->order->ordre)
 		{
 		//----------------------------------------------------------
 				case GO_UP:
 					Carto_order_free_list(evalbot->order);
-					neworder = Carto_order_build(GO_BACK,1);
-					evalbot->order = neworder;
+					 
+					Carto_order_add(Carto_order_build(GO_BACK,1));
+					
 				break;
 		//----------------------------------------------------------
 				case GO_BACK:
@@ -93,7 +104,7 @@ void Carto_order_actualise(Carto_Poss * evalbot){
 				break;
 		//----------------------------------------------------------
 				default:
-					neworder = Carto_order_build(WAIT,1);
+					Carto_order_build(WAIT,1);
 				break;
 		//----------------------------------------------------------
 		}
@@ -208,6 +219,11 @@ void Carto_evalbot_update_data(Carto_Map *  map){
 		HAVE_GO_UP,
 	HAVE_GO_DOWN,
 	*/
+
+		
+	
+	
+	
 	if(
 		!(
 			map->evalbot->angle == A0 	|| 
@@ -218,6 +234,10 @@ void Carto_evalbot_update_data(Carto_Map *  map){
 		){
 		return ;
 	}
+
+
+	
+	
 	
 	switch(map->evalbot->order->event){
 //----------------------------------------------------------
@@ -270,9 +290,9 @@ void Carto_evalbot_update_data(Carto_Map *  map){
 					break;
 					
 					case TURN_LEFT:
-						map->evalbot->angle =(map->evalbot->angle+ 1 +28)%28;
+						map->evalbot->angle++;
 					case TURN_RIGHT:
-						map->evalbot->angle =(map->evalbot->angle- 1 +28)%28;
+						map->evalbot->angle--;
 					break;
 					
 				default:
@@ -324,7 +344,7 @@ Carto_subMap* Carto_subMap_build(int x,int y,Carto_Map * map){
 }
 
 
-Carto_Poss* Carto_cons_Poss(int x,int y,unsigned char angle){
+Carto_Poss* Carto_cons_Poss(int x,int y,int angle){
 	
 	Carto_Poss* pos = malloc(sizeof(Carto_Poss));
 	pos->X = x;
@@ -413,12 +433,20 @@ Carto_order * Carto_order_build(Carto_order_list action,unsigned int time){
 	return ret;
 }
 
-void Carto_order_add(Carto_order * g,Carto_order* next){
-	g->next = next;
+
+void Carto_order_add(Carto_order* next){
+	if(theLast == NULL || theLast->ordre == WAIT ){
+		GLOBAL_VAR_MAP->evalbot->order = next;
+		theLast = GLOBAL_VAR_MAP->evalbot->order;
+	}else{
+		theLast->next = next;
+		theLast = next;
+	}
 }
 
 void Carto_order_interprete(Carto_order * order){
 		
+	if(order == NULL )return;
 	
 	if(order->state == DOING){
 		return;
@@ -431,6 +459,7 @@ void Carto_order_interprete(Carto_order * order){
 	
 	if(order->state == DONE){
 		Carto_order_actualise(GLOBAL_VAR_MAP->evalbot);
+		
 		return;
 	}
 
@@ -496,7 +525,7 @@ void Carto_map_set(Carto_Map * map ,int x,int y , Carto_data_Type data){
 }
 
 char isScan(Carto_Map * map ,int x ,int y){
-
+return 0;
 }
 
 
@@ -512,6 +541,103 @@ void Carto_evalbot_scan(Carto_Map * map ,int x ,int y){
 	(25,0)
 	*/
 	
+}
+int* Carto_evalbot_spiral(int n);
+
+Carto_order* carto_evalbot_rotation(int n ){
 	
+	int ang = GLOBAL_VAR_MAP->evalbot->angle;
+	int a = n - ang;
+	a =( a + A360 + A360)%A360;
+	if(a ==  A90 || a ==  -A270){
+			
+			return Carto_order_build(TURN_RIGHT,A90);
+	}
+	if(a ==	-A90  || a== -A270){
+			return Carto_order_build(TURN_LEFT,A90);
+	}
+	if(a == A180 ||a == -A180){
+			return Carto_order_build(TURN_RIGHT,A180);
+	}
+
+	return Carto_order_build(GO_BACK,1);;
 	
+}
+
+void carto_evalbot_generate_instruction(int * possitioToGo){
+	
+	//int*possitioToGo = Carto_evalbot_spiral( GLOBAL_VAR_MAP->evalbot->spiralCounter);
+	if(
+		possitioToGo[0]==GLOBAL_VAR_MAP->evalbot->X &&
+		possitioToGo[1]==GLOBAL_VAR_MAP->evalbot->Y )
+	{
+		return ;
+	}
+	
+	if(possitioToGo[0]<GLOBAL_VAR_MAP->evalbot->X){
+		carto_evalbot_rotation(270);
+	}else	if(possitioToGo[0]>GLOBAL_VAR_MAP->evalbot->X){
+		carto_evalbot_rotation(90);
+	}else if( possitioToGo[1]<GLOBAL_VAR_MAP->evalbot->Y){
+		carto_evalbot_rotation(180);
+	}else if( possitioToGo[1]>GLOBAL_VAR_MAP->evalbot->Y){
+		carto_evalbot_rotation(0);
+	}
+}
+
+
+
+int* Carto_evalbot_spiral(int n){
+    // given n an index in the squared spiral
+    // p the sum of point in inner square
+    // a the position on the current square
+    // n = p + a
+
+    double r = floor((sqrt(n + 1) - 1) / 2) + 1;
+
+    // compute radius : inverse arithmetic sum of 8+16+24+...=
+    int p = (8 * r * (r - 1)) / 2;
+    // compute total point on radius -1 : arithmetic sum of 8+16+24+...
+
+    int en =(int) r * 2;
+    // points by face
+
+    int a =(int) (1 + n - p) % ((int)(r * 8));
+    // compute de position and shift it so the first is (-r,-r) but (-r+1,-r)
+    // so square can connect
+
+		int* pos = malloc(sizeof(int)*3);
+    pos[0] = 0;
+		pos[1] = 0;
+		pos[2] = r;
+    switch ((int)floor(a / (r * 2))) {
+        // find the face : 0 top, 1 right, 2, bottom, 3 left
+        case 0:
+            {
+                pos[0] = a - r;
+                pos[1] = -r;
+            }
+            break;
+        case 1:
+            {
+                pos[0] = r;
+                pos[1] = (a % en) - r;
+
+            }
+            break;
+        case 2:
+            {
+                pos[0] = r - (a % en);
+                pos[1] = r;
+            }
+            break;
+        case 3:
+            {
+                pos[0] = -r;
+                pos[1] = r - (a % en);
+            }
+            break;
+    }
+    
+    return pos;
 }

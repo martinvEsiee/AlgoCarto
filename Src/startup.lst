@@ -562,10 +562,11 @@ ARM Macro Assembler    Page 9
   342 00000000         ;*******************************************************
                        ***********************
   343 00000000                 END
-Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=.\startu
-p.d -o.\startup.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\
-ARM\Inc\Luminary --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --
-list=.\startup.lst Startup.s
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\startup.d -o.\startup.o -ID:\pgr\Keil_v5\ARM\RV31\INC -ID:\pgr\K
+eil_v5\ARM\CMSIS\Include -ID:\pgr\Keil_v5\ARM\Inc\Luminary --predefine="__EVAL 
+SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 517
+" --list=.\startup.lst Startup.s
 
 
 
@@ -888,4 +889,4 @@ Symbol: __main
       At line 262 in file Startup.s
 Comment: __main used once
 2 symbols
-350 symbols in table
+351 symbols in table
