@@ -1,9 +1,0 @@
-.\io.o: ..\lib\StellarisWare\boards\ek-evalbot\drivers\io.c
-.\io.o: ..\lib\StellarisWare\inc/hw_memmap.h
-.\io.o: ..\lib\StellarisWare\inc/hw_types.h
-.\io.o: ..\lib\StellarisWare\driverlib/debug.h
-.\io.o: ..\lib\StellarisWare\driverlib/gpio.h
-.\io.o: ..\lib\StellarisWare\driverlib/pin_map.h
-.\io.o: ..\lib\StellarisWare\driverlib/sysctl.h
-.\io.o: ..\lib\StellarisWare\driverlib/rom.h
-.\io.o: ..\lib\StellarisWare\boards\ek-evalbot\drivers\io.h

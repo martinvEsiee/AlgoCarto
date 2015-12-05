@@ -1,70 +1,0 @@
-Dependencies for Project 'Carto', Target 'Target 1': (DO NOT MODIFY !)
-F (.\Startup.s)(0x56499D51)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I D:\pgr\Keil_v5\ARM\RV31\INC-I D:\pgr\Keil_v5\ARM\CMSIS\Include-I D:\pgr\Keil_v5\ARM\Inc\Luminary--pd "__UVISION_VERSION SETA 517"--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
-F (.\main.c)(0x56534805)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\lib\StellarisWare -D__UVISION_VERSION="517" -DPART_LM3S9B92 -DNO_SERVEUR_DEF-o .\main.o --omf_browse .\main.crf --depend .\main.d)
-I (..\lib\StellarisWare\inc/hw_memmap.h)(0x56499D61)
-I (..\lib\StellarisWare\inc/hw_types.h)(0x56499D61)
-I (..\lib\StellarisWare\driverlib/sysctl.h)(0x56499D60)
-I (..\lib\StellarisWare\driverlib/gpio.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/pin_map.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/rom.h)(0x56499D5F)
-I (..\lib\StellarisWare\boards/ek-evalbot/drivers/motor.h)(0x56499D58)
-I (..\lib\StellarisWare\boards/ek-evalbot/drivers/sensors.h)(0x56499D58)
-I (..\lib\StellarisWare\boards/ek-evalbot/drivers/display96x16x1.h)(0x56499D58)
-I (..\lib\StellarisWare\boards/ek-evalbot/drivers/io.h)(0x56499D58)
-I (Xbee_Protoc.h)(0x56499D51)
-I (Carto.h)(0x565334BA)
-I (D:\pgr\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x55DB7FD8)
-I (D:\pgr\Keil_v5\ARM\ARMCC\include\stdio.h)(0x55DB7FD6)
-F (..\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib)(0x56499D5F)()
-F (..\lib\StellarisWare\boards\ek-evalbot\drivers\io.c)(0x56499D58)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\lib\StellarisWare -D__UVISION_VERSION="517" -DPART_LM3S9B92 -DNO_SERVEUR_DEF-o .\io.o --omf_browse .\io.crf --depend .\io.d)
-I (..\lib\StellarisWare\inc/hw_memmap.h)(0x56499D61)
-I (..\lib\StellarisWare\inc/hw_types.h)(0x56499D61)
-I (..\lib\StellarisWare\driverlib/debug.h)(0x56499D5E)
-I (..\lib\StellarisWare\driverlib/gpio.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/pin_map.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/sysctl.h)(0x56499D60)
-I (..\lib\StellarisWare\driverlib/rom.h)(0x56499D5F)
-I (..\lib\StellarisWare\boards\ek-evalbot\drivers\io.h)(0x56499D58)
-F (..\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c)(0x56499D58)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\lib\StellarisWare -D__UVISION_VERSION="517" -DPART_LM3S9B92 -DNO_SERVEUR_DEF-o .\motor.o --omf_browse .\motor.crf --depend .\motor.d)
-I (..\lib\StellarisWare\inc/hw_memmap.h)(0x56499D61)
-I (..\lib\StellarisWare\inc/hw_types.h)(0x56499D61)
-I (..\lib\StellarisWare\driverlib/debug.h)(0x56499D5E)
-I (..\lib\StellarisWare\driverlib/gpio.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/pin_map.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/pwm.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/rom.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/sysctl.h)(0x56499D60)
-I (..\lib\StellarisWare\boards\ek-evalbot\drivers\motor.h)(0x56499D58)
-F (..\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.c)(0x56499D58)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\lib\StellarisWare -D__UVISION_VERSION="517" -DPART_LM3S9B92 -DNO_SERVEUR_DEF-o .\sensors.o --omf_browse .\sensors.crf --depend .\sensors.d)
-I (..\lib\StellarisWare\inc/hw_types.h)(0x56499D61)
-I (..\lib\StellarisWare\inc/hw_memmap.h)(0x56499D61)
-I (..\lib\StellarisWare\inc/hw_i2c.h)(0x56499D61)
-I (..\lib\StellarisWare\inc/hw_ints.h)(0x56499D61)
-I (..\lib\StellarisWare\driverlib/sysctl.h)(0x56499D60)
-I (..\lib\StellarisWare\driverlib/gpio.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/pin_map.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/i2c.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/interrupt.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/debug.h)(0x56499D5E)
-I (..\lib\StellarisWare\driverlib/rom.h)(0x56499D5F)
-I (..\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.h)(0x56499D58)
-F (.\carto.c)(0x56533179)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\lib\StellarisWare -D__UVISION_VERSION="517" -DPART_LM3S9B92 -DNO_SERVEUR_DEF-o .\carto.o --omf_browse .\carto.crf --depend .\carto.d)
-I (carto.h)(0x565334BA)
-I (D:\pgr\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x55DB7FD8)
-I (..\lib\StellarisWare\boards/ek-evalbot/drivers/motor.h)(0x56499D58)
-I (..\lib\StellarisWare\boards/ek-evalbot/drivers/sensors.h)(0x56499D58)
-I (..\lib\StellarisWare\inc/hw_types.h)(0x56499D61)
-I (D:\pgr\Keil_v5\ARM\ARMCC\include\stdio.h)(0x55DB7FD6)
-I (D:\pgr\Keil_v5\ARM\ARMCC\include\math.h)(0x55DB7FDE)
-F (.\Xbee_Protoc.c)(0x56534212)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I..\lib\StellarisWare -D__UVISION_VERSION="517" -DPART_LM3S9B92 -DNO_SERVEUR_DEF-o .\xbee_protoc.o --omf_browse .\xbee_protoc.crf --depend .\xbee_protoc.d)
-I (Xbee_Protoc.h)(0x56499D51)
-I (..\lib\StellarisWare\driverlib/uart.h)(0x56499D61)
-I (..\lib\StellarisWare\inc/hw_types.h)(0x56499D61)
-I (..\lib\StellarisWare\driverlib/sysctl.h)(0x56499D60)
-I (..\lib\StellarisWare\driverlib/gpio.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/pin_map.h)(0x56499D5F)
-I (..\lib\StellarisWare\driverlib/rom.h)(0x56499D5F)
-I (..\lib\StellarisWare\inc/hw_memmap.h)(0x56499D61)
-I (D:\pgr\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x55DB7FD8)
-I (D:\pgr\Keil_v5\ARM\ARMCC\include\string.h)(0x55DB7FD8)
-I (carto.h)(0x565334BA)
