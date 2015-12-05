@@ -373,7 +373,7 @@
               <MiscControls></MiscControls>
               <Define>PART_LM3S9B92</Define>
               <Undefine></Undefine>
-              <IncludePath>..\AlgoCarto\lib\StellarisWare</IncludePath>
+              <IncludePath>..\lib\StellarisWare</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -444,17 +444,17 @@
             <File>
               <FileName>driverlib-cm3.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\AlgoCarto\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib</FilePath>
+              <FilePath>..\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib</FilePath>
             </File>
             <File>
               <FileName>sensors.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\AlgoCarto\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.c</FilePath>
+              <FilePath>..\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.c</FilePath>
             </File>
             <File>
               <FileName>motor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\AlgoCarto\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c</FilePath>
+              <FilePath>..\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c</FilePath>
             </File>
           </Files>
         </Group>

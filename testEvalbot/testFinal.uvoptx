@@ -190,7 +190,7 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>3</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\capteur.c</PathWithFileName>
@@ -214,7 +214,7 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>5</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\message.c</PathWithFileName>
@@ -229,7 +229,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\AlgoCarto\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib</PathWithFileName>
+      <PathWithFileName>..\lib\StellarisWare\driverlib\rvmdk-cm3\driverlib-cm3.lib</PathWithFileName>
       <FilenameWithoutPath>driverlib-cm3.lib</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -238,10 +238,10 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>7</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\AlgoCarto\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.c</PathWithFileName>
+      <PathWithFileName>..\lib\StellarisWare\boards\ek-evalbot\drivers\sensors.c</PathWithFileName>
       <FilenameWithoutPath>sensors.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -250,10 +250,10 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>8</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\AlgoCarto\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c</PathWithFileName>
+      <PathWithFileName>..\lib\StellarisWare\boards\ek-evalbot\drivers\motor.c</PathWithFileName>
       <FilenameWithoutPath>motor.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
