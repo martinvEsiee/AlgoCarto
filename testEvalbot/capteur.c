@@ -19,7 +19,7 @@
 
 
 void wheel_interuptFunction(tWheel a){
-	tBumper bump;
+	
 	if(evalbot->state == PB){
 	
 		if(a == WHEEL_LEFT){
@@ -125,12 +125,12 @@ void wheel_interuptFunction(tWheel a){
 ///////////////////////////////////
 			case WAIT:
 				return;
-				break;
+			
+
 			
 ///////////////////////////////////
 			case PB:
 				return;
-				break;
 			
 		}
 		

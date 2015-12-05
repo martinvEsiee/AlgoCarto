@@ -3,7 +3,7 @@
 .\objects\main.o: message.h
 .\objects\main.o: motor_my.h
 .\objects\main.o: capteur.h
-.\objects\main.o: ..\AlgoCarto\lib\StellarisWare\boards/ek-evalbot/drivers/sensors.h
-.\objects\main.o: ..\AlgoCarto\lib\StellarisWare\inc/hw_types.h
+.\objects\main.o: ..\lib\StellarisWare\boards/ek-evalbot/drivers/sensors.h
+.\objects\main.o: ..\lib\StellarisWare\inc/hw_types.h
 .\objects\main.o: order.h
 .\objects\main.o: D:\pgr\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
